@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="blush">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Something Important 💌</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Say Yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FF6F61" id="themeColorMeta">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+/* ─── THEMES ─── */
+[data-theme="blush"]   { --bg:#FFF6EE;--accent:#FF6F61;--accent2:#e85d51;--soft:#FFD9E3;--text:#4A2E3A;--card:#fff;--card2:#fffaf6;--border:#f0dee3;--muted:#9b818a;--label:#b69aa3; }
+[data-theme="midnight"]{ --bg:#0f0720;--accent:#c084fc;--accent2:#a855f7;--soft:#3b1f6e;--text:#f3e5ff;--card:#1e0f3a;--card2:#2a1550;--border:#4a2d80;--muted:#9d77cc;--label:#7c5a9e; }
+[data-theme="mint"]    { --bg:#f0faf8;--accent:#14b8a6;--accent2:#0d9488;--soft:#ccfbf1;--text:#134e4a;--card:#fff;--card2:#f0fdf9;--border:#99f6e4;--muted:#4d9e94;--label:#6db5ad; }
+[data-theme="golden"]  { --bg:#fffbeb;--accent:#f59e0b;--accent2:#d97706;--soft:#fde68a;--text:#451a03;--card:#fff;--card2:#fffdf5;--border:#fcd34d;--muted:#b47a1a;--label:#c48a20; }
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100vh;background:var(--bg);font-family:'Quicksand',sans-serif;color:var(--text);overflow-x:hidden;transition:background 0.4s ease,color 0.4s ease;}
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+
+/* FLOATING HEARTS */
+.bg-heart{position:fixed;bottom:-10vh;opacity:0.5;animation:floatUp linear infinite;pointer-events:none;user-select:none;z-index:0;}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:0;}10%{opacity:0.55;}90%{opacity:0.45;}100%{transform:translateY(-115vh) rotate(25deg);opacity:0;}}
+
+/* MAIN CARD */
+.card{position:relative;z-index:1;background:var(--card);border-radius:32px;max-width:540px;width:100%;padding:44px 36px 36px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.14);border:3px solid var(--soft);transition:background 0.4s,border 0.4s,transform 0.08s ease;}
+.card.shake{animation:shake 0.35s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px) rotate(-0.5deg);}40%{transform:translateX(6px) rotate(0.5deg);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+
+/* TAGS */
+.tag{display:inline-block;font-family:'Fredoka',sans-serif;font-size:12.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);background:var(--soft);padding:6px 14px;border-radius:999px;margin-bottom:14px;transition:all 0.4s;}
+.sender-line{font-size:13px;color:var(--label);font-weight:600;margin-bottom:8px;}
+
+/* TYPOGRAPHY */
+h1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(26px,6vw,36px);line-height:1.2;margin:0 0 12px;}
+h2.step-title{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(21px,5.2vw,27px);margin:0 0 6px;}
+.subtext{font-size:15.5px;color:var(--muted);margin:0 0 20px;line-height:1.5;}
+.step-vibe{font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--label);margin-bottom:10px;}
+
+/* STEPS */
+.step{display:none;}
+.step.active{display:block;animation:pop 0.35s ease;}
+@keyframes pop{0%{transform:scale(0.94);opacity:0;}100%{transform:scale(1);opacity:1;}}
+
+/* BUTTONS */
+button{font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;border:none;border-radius:999px;padding:16px 30px;cursor:pointer;transition:transform 0.18s ease,box-shadow 0.18s ease,font-size 0.18s ease,opacity 0.2s;}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px rgba(0,0,0,0.18);}
+.btn-primary:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 14px 30px rgba(0,0,0,0.22);}
+.btn-primary:active{transform:scale(0.97);}
+.btn-primary:disabled{opacity:0.45;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-secondary{background:var(--card);color:var(--text);border:2px solid var(--border);font-size:14.5px;padding:12px 22px;}
+.btn-secondary:hover{background:var(--card2);}
+
+#yesBtn{background:var(--accent);color:#fff;box-shadow:0 10px 24px rgba(0,0,0,0.2);}
+#yesBtn:hover{transform:translateY(-2px) scale(1.04);}
+
+#noBtn{background:var(--card);color:var(--text);border:2px solid var(--border);position:relative;touch-action:none;user-select:none;}
+#noBtn.runaway{position:fixed;z-index:50;}
+#noBtn.poof{animation:poofOut 0.4s ease forwards;pointer-events:none;}
+@keyframes poofOut{0%{transform:scale(1) rotate(0deg);opacity:1;}100%{transform:scale(0) rotate(180deg);opacity:0;}}
+
+.buttons{position:relative;display:flex;gap:18px;justify-content:center;align-items:center;min-height:90px;flex-wrap:wrap;}
+.nav-row{display:flex;gap:12px;justify-content:center;margin-top:8px;flex-wrap:wrap;}
+
+/* EXCUSE + METER */
+.excuse{margin-top:14px;font-size:14px;color:var(--accent);font-weight:600;min-height:20px;}
+.meter-wrap{margin-top:20px;display:none;}
+.meter-wrap.show{display:block;}
+.meter-label{font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--label);margin-bottom:6px;}
+.meter-track{background:var(--soft);border-radius:999px;height:10px;overflow:hidden;}
+.meter-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--soft),var(--accent));transition:width 0.35s ease;}
+
+/* TIMER BANNER */
+.timer-banner{display:none;background:var(--soft);border-radius:14px;padding:10px 16px;margin-top:16px;font-size:14px;font-weight:700;color:var(--accent);animation:pulse 1s ease infinite;}
+.timer-banner.show{display:block;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.7;}}
+
+/* WHY SAY YES */
+.why-btn{background:none;border:none;font-size:13px;color:var(--label);cursor:pointer;text-decoration:underline;padding:4px 8px;font-family:'Quicksand',sans-serif;margin-top:8px;}
+.why-btn:hover{color:var(--accent);}
+.why-card{display:none;background:var(--card2);border:2px solid var(--soft);border-radius:16px;padding:14px 16px;margin-top:10px;font-size:14.5px;font-weight:600;color:var(--text);animation:pop 0.3s ease;}
+.why-card.show{display:block;}
+
+/* OPTION CARDS */
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.option-card{border:2px solid var(--border);background:var(--card2);border-radius:18px;padding:16px 10px;cursor:pointer;transition:all 0.18s ease;text-align:center;}
+.option-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.option-card.selected{border-color:var(--accent);background:var(--soft);box-shadow:0 6px 14px rgba(0,0,0,0.1);}
+.option-card .emoji{font-size:28px;display:block;margin-bottom:6px;}
+.option-card .label{font-family:'Fredoka',sans-serif;font-weight:600;font-size:14.5px;display:block;}
+.option-card .joke{font-size:11.5px;color:var(--muted);margin-top:4px;display:block;line-height:1.3;}
+
+/* PICK CHIPS */
+.pick-list{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;}
+.pick-chip{display:flex;align-items:center;justify-content:space-between;gap:10px;border:2px solid var(--border);background:var(--card2);border-radius:16px;padding:14px 18px;cursor:pointer;transition:all 0.16s ease;text-align:left;}
+.pick-chip:hover{border-color:var(--accent);transform:translateY(-1px);}
+.pick-chip.selected{border-color:var(--accent);background:var(--soft);}
+.pick-chip .main-label{font-family:'Fredoka',sans-serif;font-weight:600;font-size:15px;}
+.pick-chip .sub-label{font-size:12px;color:var(--muted);margin-top:2px;}
+.pick-chip .check{font-size:18px;opacity:0;transition:opacity 0.15s;}
+.pick-chip.selected .check{opacity:1;}
+
+/* FOOD CHIPS */
+.chip-wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:22px;}
+.chip{border:2px solid var(--border);background:var(--card2);border-radius:999px;padding:10px 16px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;cursor:pointer;transition:all 0.18s ease;}
+.chip.selected{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* FIELDS */
+.field-wrap{text-align:left;margin-bottom:16px;margin-top:6px;}
+.field-wrap label{font-family:'Fredoka',sans-serif;font-size:13px;font-weight:600;color:var(--text);display:block;margin-bottom:6px;}
+.field-wrap input{width:100%;padding:12px 14px;border-radius:14px;border:2px solid var(--border);font-family:'Quicksand',sans-serif;font-size:15px;color:var(--text);background:var(--card2);}
+.field-wrap input:focus{outline:none;border-color:var(--accent);}
+
+/* SPIN WHEEL MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn 0.25s ease;}
+.modal-overlay.hide{display:none;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.modal-box{background:var(--card);border-radius:28px;padding:30px 24px;max-width:380px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.3);border:3px solid var(--soft);}
+.modal-box h3{font-family:'Fredoka',sans-serif;font-size:22px;margin-bottom:6px;}
+.modal-box p{font-size:13.5px;color:var(--muted);margin-bottom:18px;}
+.wheel-wrap{position:relative;display:inline-block;margin-bottom:16px;}
+#wheelCanvas{border-radius:50%;display:block;}
+.wheel-pointer{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:22px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));}
+.wheel-result{font-family:'Fredoka',sans-serif;font-size:18px;min-height:26px;margin-bottom:14px;color:var(--accent);}
+.wheel-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* BOARDING PASS */
+.boarding-wrap{border-radius:20px;overflow:hidden;margin-bottom:18px;box-shadow:0 8px 30px rgba(0,0,0,0.15);}
+.boarding-pass{display:flex;background:var(--card);border:2px solid var(--border);}
+.bp-main{flex:1;padding:22px 20px;text-align:left;}
+.bp-stub{width:90px;border-left:3px dashed var(--border);padding:22px 12px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;background:var(--card2);}
+.bp-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--label);}
+.bp-value{font-family:'Fredoka',sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-top:2px;}
+.bp-big{font-family:'Fredoka',sans-serif;font-size:28px;font-weight:700;color:var(--accent);margin:6px 0;}
+.bp-row{margin-bottom:12px;}
+.bp-stub-val{font-family:'Fredoka',sans-serif;font-weight:700;font-size:13px;color:var(--text);text-align:center;writing-mode:vertical-lr;transform:rotate(180deg);}
+.bp-stub-label{font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--label);}
+.bp-barcode{font-size:28px;letter-spacing:-2px;color:var(--border);margin-top:8px;}
+
+/* RECAP */
+.recap-card{background:linear-gradient(135deg,var(--card2),var(--card));border:2px dashed var(--accent);border-radius:20px;padding:22px 18px;text-align:left;margin-bottom:18px;font-size:14.5px;}
+.recap-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start;}
+.recap-row:last-child{margin-bottom:0;}
+.recap-row .r-emoji{font-size:18px;}
+.recap-row b{font-family:'Fredoka',sans-serif;}
+
+/* OVERLAYS */
+.overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn 0.3s ease;}
+.overlay.hide{display:none;}
+.popup{background:var(--card);border-radius:28px;padding:36px 28px 28px;max-width:440px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.3);border:3px solid var(--soft);animation:pop 0.4s ease;}
+.popup h2{font-family:'Fredoka',sans-serif;font-size:22px;margin:0 0 8px;}
+.popup p{font-size:14px;color:var(--muted);margin:0 0 18px;line-height:1.5;}
+.popup-options{display:flex;flex-direction:column;gap:8px;}
+.popup-option{border:2px solid var(--border);background:var(--card2);border-radius:14px;padding:12px 16px;cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:600;font-size:14.5px;display:flex;gap:10px;align-items:center;text-align:left;transition:all 0.16s ease;}
+.popup-option:hover{border-color:var(--accent);background:var(--soft);}
+.popup-opt-joke{font-size:11.5px;color:var(--muted);font-weight:400;display:block;margin-top:2px;}
+.popup-input{width:100%;padding:12px 14px;border-radius:14px;border:2px solid var(--border);font-family:'Quicksand',sans-serif;font-size:15px;color:var(--text);background:var(--card2);margin-top:10px;}
+.popup-input:focus{outline:none;border-color:var(--accent);}
+
+/* THEME PICKER */
+.theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}
+.theme-card{border:3px solid var(--border);border-radius:18px;padding:16px 12px;cursor:pointer;transition:all 0.18s ease;text-align:center;}
+.theme-card:hover{transform:translateY(-2px);}
+.theme-card.selected{border-width:3px;}
+.theme-swatch{width:44px;height:44px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.theme-name{font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;}
+.theme-sub{font-size:11.5px;color:var(--muted);margin-top:2px;}
+
+/* PERSONAL NOTE */
+#step-note .note-letter{background:var(--card2);border:2px solid var(--soft);border-radius:20px;padding:24px 20px;text-align:left;margin-bottom:22px;font-size:15px;line-height:1.7;color:var(--text);font-style:italic;position:relative;}
+#step-note .note-letter::before{content:'✉️';font-size:28px;display:block;margin-bottom:10px;font-style:normal;}
+
+/* ADMIN */
+#adminPanel{display:none;position:fixed;inset:0;z-index:500;background:var(--bg);overflow-y:auto;padding:24px;}
+#adminPanel.show{display:block;}
+.admin-card{background:var(--card);border-radius:20px;border:2px solid var(--border);padding:20px;margin-bottom:16px;text-align:left;}
+.admin-card h4{font-family:'Fredoka',sans-serif;font-size:18px;margin-bottom:8px;color:var(--accent);}
+.admin-row{font-size:13.5px;margin-bottom:5px;display:flex;gap:8px;}
+.admin-label{font-weight:700;color:var(--label);min-width:80px;}
+
+/* ALREADY ANSWERED */
+#alreadyScreen{display:none;text-align:center;}
+#alreadyScreen.show{display:block;animation:pop 0.4s ease;}
+
+/* SHARE ROW */
+.share-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px;}
+
+/* CONFETTI */
+.confetti{position:fixed;top:-10px;width:10px;height:14px;border-radius:2px;z-index:400;pointer-events:none;animation:confettiFall linear forwards;}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(105vh) rotate(540deg);opacity:0.9;}}
+
+footer.note{margin-top:24px;font-size:12px;color:var(--label);}
+
+@media(max-width:420px){.card{padding:32px 20px 28px;}.bp-stub{width:72px;}}
+@media(prefers-reduced-motion:reduce){.bg-heart,.confetti{animation:none;display:none;}*{transition:none!important;}}
+</style>
+</head>
+<body>
+
+<!-- THEME PICKER -->
+<div class="overlay" id="themeOverlay">
+  <div class="popup">
+    <div style="font-size:36px;margin-bottom:10px;">🎨</div>
+    <h2>First things first —</h2>
+    <p>Pick the vibe for this page</p>
+    <div class="theme-grid" id="themeGrid"></div>
+    <button class="btn-primary" style="width:100%;" onclick="confirmTheme()">Set the vibe ✨</button>
+  </div>
+</div>
+
+<!-- NAME POPUP -->
+<div class="overlay hide" id="nameOverlay">
+  <div class="popup">
+    <div style="font-size:36px;margin-bottom:10px;">📱</div>
+    <h2>Before we begin...</h2>
+    <p>What is my number saved as in your phone?<br><span style="font-size:12px;color:var(--label);">be honest, this decides everything</span></p>
+    <div class="popup-options" id="popupOptions"></div>
+    <input class="popup-input" type="text" id="customNameInput" placeholder="something even better? type it..." maxlength="30">
+    <button class="btn-primary" style="width:100%;margin-top:10px;" onclick="setCustomName()">That's the one 💌</button>
+  </div>
+</div>
+
+<!-- SPIN WHEEL MODAL -->
+<div class="modal-overlay hide" id="spinModal">
+  <div class="modal-box">
+    <h3 id="spinModalTitle">Spin to decide 🎡</h3>
+    <p id="spinModalSub">fate will choose for you</p>
+    <div class="wheel-wrap">
+      <div class="wheel-pointer">▼</div>
+      <canvas id="wheelCanvas" width="260" height="260"></canvas>
+    </div>
+    <div class="wheel-result" id="wheelResult"></div>
+    <div class="wheel-btns">
+      <button class="btn-secondary" id="spinAgainBtn" onclick="spinWheel()">Spin again 🎲</button>
+      <button class="btn-primary" id="useThisBtn" onclick="acceptSpin()" style="display:none;">Use this ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+  <div style="max-width:700px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+      <h2 style="font-family:'Fredoka',sans-serif;font-size:28px;">📊 Admin</h2>
+      <button class="btn-secondary" onclick="closeAdmin()">← Back</button>
+    </div>
+    <div id="adminLogin">
+      <div class="admin-card">
+        <h4>Enter password</h4>
+        <input class="popup-input" type="password" id="adminPassInput" placeholder="password..." style="margin-bottom:10px;">
+        <button class="btn-primary" onclick="loadAdmin()">View responses</button>
+        <div id="adminErr" style="font-size:13px;color:var(--accent);margin-top:8px;"></div>
+      </div>
+    </div>
+    <div id="adminData" style="display:none;">
+      <div id="adminCards"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CARD -->
+<div class="card" id="card">
+  <div id="stage">
+
+    <!-- PERSONAL NOTE -->
+    <div class="step" id="step-note">
+      <span class="tag">a note, before anything else ✉️</span>
+      <div class="note-letter" id="noteLetter"></div>
+      <button class="btn-primary" style="width:100%;" onclick="goToStep('step-question');startTimerAndTilt()">Okay, I'm ready →</button>
+    </div>
+
+    <!-- MAIN QUESTION -->
+    <div class="step active" id="step-question">
+      <div class="sender-line" id="senderLine"></div>
+      <span class="tag" id="tagLine">something important</span>
+      <h1>Will you go on a date with me? 🥹</h1>
+      <p class="subtext">Take your time. No pressure.<br><span style="font-size:13px;">(There is a little pressure.)</span></p>
+      <div class="buttons">
+        <button id="yesBtn" onclick="sayYes()">Yes, obviously 💌</button>
+        <button id="noBtn" onmouseenter="dodge()" onmousemove="dodge()" ontouchstart="dodge(event)" onclick="return false;">No</button>
+      </div>
+      <div class="excuse" id="excuseText"></div>
+      <div class="timer-banner" id="timerBanner"></div>
+      <div class="meter-wrap" id="meterWrap">
+        <div class="meter-label" id="meterLabel">Regret-o-meter</div>
+        <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+      </div>
+      <button class="why-btn" onclick="showWhyReason()">why should I say yes? 🤔</button>
+      <div class="why-card" id="whyCard"></div>
+    </div>
+
+    <!-- MISSION -->
+    <div class="step" id="step-mission">
+      <div class="step-vibe">she said yes 🎉</div>
+      <span class="tag">pick our vibe</span>
+      <h2 class="step-title">Okay, what are we doing?</h2>
+      <p class="subtext">Choose wisely. (It doesn't actually matter, but choose wisely.)</p>
+      <div class="option-grid" id="missionGrid"></div>
+    </div>
+
+    <!-- SINGLE PICK -->
+    <div class="step" id="step-pick">
+      <div class="step-vibe" id="pickVibe"></div>
+      <span class="tag" id="pickTag">let's figure it out</span>
+      <h2 class="step-title" id="pickTitle">Question</h2>
+      <p class="subtext" id="pickSub"></p>
+      <div class="pick-list" id="pickList"></div>
+      <div class="nav-row" id="pickNav">
+        <button class="btn-secondary" onclick="goBackFlow()">← Back</button>
+      </div>
+    </div>
+
+    <!-- FOOD MULTI -->
+    <div class="step" id="step-food">
+      <div class="step-vibe" id="foodVibe"></div>
+      <span class="tag">food time 🍽️</span>
+      <h2 class="step-title" id="foodTitle">What are we eating?</h2>
+      <p class="subtext">Pick as many as you want. Indecisive is a valid preference here.</p>
+      <div class="chip-wrap" id="foodChips"></div>
+      <div class="nav-row">
+        <button class="btn-secondary" onclick="goBackFlow()">← Back</button>
+        <button class="btn-primary" id="foodNextBtn" onclick="goToRecap()" disabled>Seal the deal →</button>
+      </div>
+    </div>
+
+    <!-- ALREADY ANSWERED -->
+    <div class="step" id="step-done">
+      <div style="font-size:48px;margin-bottom:12px;">🎟️</div>
+      <h2 class="step-title">Already confirmed!</h2>
+      <p class="subtext">Looks like you already filled this out. The plan is in the works.<br><span style="font-size:12px;">triple-tap the footer to reset</span></p>
+    </div>
+
+    <!-- RECAP / BOARDING PASS -->
+    <div class="step" id="step-recap">
+      <div style="font-size:44px;margin-bottom:8px;">🎟️✨</div>
+      <h2 class="step-title">Booking confirmed.</h2>
+      <p class="subtext" style="margin-bottom:16px;">Your official, legally-unbinding, emotionally very much binding ticket:</p>
+
+      <div class="boarding-wrap" id="boardingPass">
+        <div class="boarding-pass">
+          <div class="bp-main">
+            <div class="bp-row">
+              <div class="bp-label">Event</div>
+              <div class="bp-big" id="bp-mission"></div>
+            </div>
+            <div class="bp-row">
+              <div class="bp-label">Details</div>
+              <div class="bp-value" id="bp-details"></div>
+            </div>
+            <div class="bp-row">
+              <div class="bp-label">Location</div>
+              <div class="bp-value" id="bp-location"></div>
+            </div>
+            <div class="bp-row">
+              <div class="bp-label">Food</div>
+              <div class="bp-value" id="bp-food"></div>
+            </div>
+            <div class="bp-barcode">|||||  ||| ||||||  |||  |||||</div>
+          </div>
+          <div class="bp-stub">
+            <div><div class="bp-stub-label">Date</div><div class="bp-stub-val" id="bp-date"></div></div>
+            <div><div class="bp-stub-label">Time</div><div class="bp-stub-val" id="bp-time"></div></div>
+            <div style="font-size:22px;">💌</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="share-row">
+        <button class="btn-secondary" onclick="downloadTicket()">💾 Save ticket</button>
+        <button class="btn-secondary" id="calBtn" onclick="addToCalendar()">📅 Add to calendar</button>
+      </div>
+
+      <div class="field-wrap" style="margin-top:18px;">
+        <label for="emailInput">Drop your email so the plan actually reaches someone</label>
+        <input type="email" id="emailInput" placeholder="you@example.com">
+      </div>
+      <div class="nav-row">
+        <button class="btn-primary" id="sendConfirmBtn" onclick="sendConfirmation()">Send confirmation 💌</button>
+      </div>
+      <div style="font-size:12px;color:var(--accent);font-weight:600;min-height:18px;margin-top:8px;text-align:center;" id="confirmStatus"></div>
+      <p class="subtext" id="recapFooter" style="font-size:13px;margin-top:10px;"></p>
+      <div class="nav-row"><button class="btn-secondary" onclick="resetToHome()">🏠 Start over</button></div>
+    </div>
+
+  </div>
+  <footer class="note" id="footerNote" onclick="handleFooterTap()">made with way too many redrafted texts</footer>
+</div>
+
+<script>
+/* ─── CONFIG (edit these) ─── */
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzf9T5VU46NFqjmQellNcwPEHxqDox0rGas7JKWYmgM6mE6ObMYytv428NivtXtTGCG/exec";
+const PERSONAL_NOTE = "Hey — I've been meaning to say something for a while now. I kept finding reasons to wait for the right moment. This is me deciding the right moment is now. No big speech, just one honest question. 🥹";
+const ADMIN_PASSWORD = "date2025"; /* change this — also update your Apps Script */
+
+/* ─── THEMES ─── */
+const themes = [
+  { id:'blush',   name:'Warm Blush',       sub:'soft & romantic',  emoji:'🌸', accent:'#FF6F61', bg:'#FFF6EE', soft:'#FFD9E3', themeColor:'#FF6F61' },
+  { id:'midnight',name:'Midnight Romance', sub:'dark & mysterious', emoji:'🌙', accent:'#c084fc', bg:'#0f0720', soft:'#3b1f6e', themeColor:'#c084fc' },
+  { id:'mint',    name:'Mint Chill',        sub:'fresh & cool',     emoji:'🌿', accent:'#14b8a6', bg:'#f0faf8', soft:'#ccfbf1', themeColor:'#14b8a6' },
+  { id:'golden',  name:'Golden Hour',       sub:'warm & golden',    emoji:'☀️', accent:'#f59e0b', bg:'#fffbeb', soft:'#fde68a', themeColor:'#f59e0b' },
+];
+let currentTheme = themes[0];
+
+const themeGrid = document.getElementById('themeGrid');
+themes.forEach(t => {
+  const el = document.createElement('div');
+  el.className = 'theme-card' + (t.id === 'blush' ? ' selected' : '');
+  el.style.borderColor = t.accent;
+  el.innerHTML = `<div class="theme-swatch" style="background:${t.soft}">${t.emoji}</div><div class="theme-name">${t.name}</div><div class="theme-sub">${t.sub}</div>`;
+  el.onclick = () => {
+    document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    currentTheme = t;
+    document.documentElement.setAttribute('data-theme', t.id);
+    document.getElementById('themeColorMeta').setAttribute('content', t.themeColor);
+  };
+  themeGrid.appendChild(el);
+});
+
+function confirmTheme() {
+  document.getElementById('themeOverlay').classList.add('hide');
+  document.getElementById('nameOverlay').classList.remove('hide');
+}
+
+/* ─── NAME POPUP ─── */
+let askerName = "";
+const nameOptions = [
+  { label:"that random guy", joke:"we've all been there" },
+  { label:"😬 unknown number", joke:"bold of you to open this" },
+  { label:"do not pick up 🚫", joke:"okay but you did open it" },
+  { label:"the coffee guy ☕", joke:"at least we have history" },
+  { label:"him 😏", joke:"we both know which one" },
+  { label:"Mr. Important 🎩", joke:"very formal, I respect it" },
+  { label:"that one person 👀", joke:"the only one that matters" },
+];
+
+const popupOptions = document.getElementById('popupOptions');
+nameOptions.forEach(opt => {
+  const el = document.createElement('div');
+  el.className = 'popup-option';
+  el.innerHTML = `<span style="font-size:20px;">📱</span><div><span>${opt.label}</span><span class="popup-opt-joke">${opt.joke}</span></div>`;
+  el.onclick = () => chooseName(opt.label);
+  popupOptions.appendChild(el);
+});
+document.getElementById('customNameInput').addEventListener('keydown', e => { if(e.key==='Enter') setCustomName(); });
+
+function setCustomName() {
+  const val = document.getElementById('customNameInput').value.trim();
+  chooseName(val || "mystery contact");
+}
+
+function chooseName(name) {
+  askerName = name;
+  document.getElementById('nameOverlay').classList.add('hide');
+  document.getElementById('senderLine').textContent = `saved as "${askerName}" in your phone 📱`;
+  document.getElementById('footerNote').textContent = `made with way too many redrafted texts — from "${askerName}"`;
+  document.getElementById('noteLetter').textContent = PERSONAL_NOTE;
+  goToStep('step-note');
+  burstConfetti(15);
+}
+
+/* ─── MISSIONS ─── */
+const missions = [
+  { id:'shopping', emoji:'🛍️', label:'Shopping spree', joke:'I carry bags, you carry the budget',
+    subQ:[
+      { key:'style', title:'Shopping energy?', sub:'pick your fighting style', wheel:false, opts:[
+        {l:'Window shopping',s:'(we both know this is a lie)'},{l:'Full mall crawl',s:'every floor, no mercy'},
+        {l:'Thrift hunting 🕵️',s:'hidden gems only'},{l:'Retail therapy, your treat 💳',s:'bold and expensive'}]},
+      { key:'eatAfter', title:'Food after?', sub:'this is not actually optional', wheel:false, opts:[
+        {l:'Obviously yes 🍔',s:'earned it'},{l:'Yes, snacks count 🍟',s:'a snack is a meal'}]}
+    ]},
+  { id:'finedine', emoji:'🍷', label:'Fine dining', joke:'Forks left to right, panic optional',
+    subQ:[
+      { key:'cuisine', title:'Cuisine vibes?', sub:'no wrong answers, only expensive ones', wheel:true, opts:[
+        {l:'Italian 🍝',s:'pasta solves everything'},{l:'Indian 🍛',s:'spice level: ambitious'},
+        {l:'Asian fusion 🍜',s:'chopsticks optional'},{l:'Continental 🥩',s:'we are committing'},
+        {l:'Surprise me 🎲',s:"chef's choice, basically"},{l:'Mexican 🌮',s:'tacos at fine dining, why not'}]}
+    ]},
+  { id:'movie', emoji:'🎬', label:'Movie night', joke:'I will steal popcorn, no negotiations',
+    subQ:[
+      { key:'genre', title:'What genre?', sub:'choose carefully, I will judge you slightly', wheel:true, opts:[
+        {l:'Comedy',s:'low effort, high laughs'},{l:'Action / Thriller',s:'I will grip the armrest'},
+        {l:'Horror 😱',s:'hand-holding mandatory'},{l:'Romance 🥀',s:'foreshadowing, much?'},
+        {l:'Animated',s:'we are still kids, fight me'},{l:'Sci-Fi 🚀',s:'big brain date'}]},
+      { key:'eatAfter', title:'Dinner after?', sub:'popcorn does not count as dinner', wheel:false, opts:[
+        {l:'Yes, obviously 🍿➡️🍝',s:'earned it'},{l:'Yes, dessert counts 🍰',s:'priorities'}]}
+    ]},
+  { id:'trip', emoji:'✈️', label:'Spontaneous trip', joke:'Passport not included, vibes are',
+    subQ:[
+      { key:'length', title:'Day trip or night trip?', sub:'pack accordingly', wheel:false, opts:[
+        {l:'Day trip ☀️',s:'back by dinner, responsible adults'},{l:'Overnight ✨',s:'pack a bag, tell no one'}]},
+      { key:'destination', title:'What kind of place?', sub:'pick the vibe, not the address', wheel:true, opts:[
+        {l:'Sea 🌊',s:'sandy shoes, no regrets'},{l:'Mountains ⛰️',s:'cold hands, warm chai'},
+        {l:'River 🏞️',s:'underrated honestly'},{l:'Forest 🌲',s:'main character energy'},
+        {l:'Hill station 🌄',s:'chai and clouds'},{l:'Anywhere with good WiFi 😅',s:'a compromise'}]}
+    ]},
+  { id:'coffee', emoji:'☕', label:'Coffee & talk', joke:'Low effort, high emotional damage',
+    subQ:[
+      { key:'cafeVibe', title:'What kind of cafe?', sub:'set the scene', wheel:false, opts:[
+        {l:'Cozy corner spot',s:'soft lighting, soft feelings'},{l:'Aesthetic for the gram 📸',s:'coffee is secondary'},
+        {l:'Old-school chai tapri',s:'no Wi-Fi, all vibes'},{l:'Quiet bookstore cafe',s:'nothing productive will happen'}]},
+      { key:'coffeeType', title:'How do you take it?', sub:'this matters more than you think', wheel:false, opts:[
+        {l:'Latte',s:'soft and predictable'},{l:'Cappuccino',s:'foam enthusiast'},
+        {l:'Cold brew',s:'unbothered, built different'},{l:'Filter coffee',s:'a purist'},
+        {l:'Honestly, chai ☕',s:'we will let this slide'}]}
+    ]},
+  { id:'adventure', emoji:'🎢', label:'Adventure outdoors', joke:'Screaming together builds trust',
+    subQ:[
+      { key:'outdoorType', title:'Outdoor style?', sub:'choose your difficulty level', wheel:true, opts:[
+        {l:'Hiking 🥾',s:'cardio but make it romantic'},{l:'Beach walk 🌊',s:'low stakes, high charm'},
+        {l:'Amusement park 🎡',s:'screaming is mandatory'},{l:'Picnic 🧺',s:'ants are part of the vibe'},
+        {l:'Cycling 🚲',s:'racing each other, casually'},{l:'Stargazing 🌠',s:'minimal movement, max romance'}]},
+      { key:'eatAfter', title:'Food after all that?', sub:'you earned it either way', wheel:false, opts:[
+        {l:'Yes, refuel required 🍗',s:''},{l:'Yes, picnic snacks count 🧺',s:''}]}
+    ]},
+];
+
+const foods = [
+  {id:'veg',l:'🥗 Veg'},{id:'nonveg',l:'🍗 Non-veg'},{id:'vegan',l:'🌱 Vegan'},
+  {id:'spicy',l:'🌶️ Spicy, always'},{id:'dessert',l:'🍰 Dessert is main course'},
+  {id:'street',l:'🌮 Street food only'},{id:'fancy',l:'🍝 Fancy & overpriced'},{id:'surprise',l:'🎲 Surprise me'},
+];
+
+const locations = [
+  {id:'local',emoji:'📍',label:'Our city',joke:'home turf advantage'},
+  {id:'nearby',emoji:'🚗',label:'Day drive away',joke:'2 hrs max, vibes intact'},
+  {id:'outstation',emoji:'🚆',label:'Outstation',joke:'proper plan, proper adventure'},
+  {id:'anywhere',emoji:'🌍',label:'Wherever the plan takes us',joke:'chaotic neutral, I love it'},
+];
+
+/* ─── BUILD MISSION GRID ─── */
+const missionGrid = document.getElementById('missionGrid');
+missions.forEach(m => {
+  const el = document.createElement('div');
+  el.className = 'option-card';
+  el.innerHTML = `<span class="emoji">${m.emoji}</span><span class="label">${m.label}</span><span class="joke">${m.joke}</span>`;
+  el.onclick = () => { selectedMission = m; buildFlowQueue(); setTimeout(advanceFlow, 100); };
+  missionGrid.appendChild(el);
+});
+
+/* ─── BUILD FOOD CHIPS ─── */
+const foodChipsEl = document.getElementById('foodChips');
+foods.forEach(f => {
+  const el = document.createElement('div');
+  el.className = 'chip';
+  el.textContent = f.l;
+  el.onclick = () => {
+    if(selectedFoods.has(f.id)){selectedFoods.delete(f.id);el.classList.remove('selected');}
+    else{selectedFoods.add(f.id);el.classList.add('selected');}
+    document.getElementById('foodNextBtn').disabled = selectedFoods.size === 0;
+  };
+  foodChipsEl.appendChild(el);
+});
+
+/* ─── STATE ─── */
+let selectedMission=null,answers={},selectedFoods=new Set(),selectedDate=null,selectedTime=null,selectedLocation=null,flowQueue=[],flowIndex=-1;
+
+/* ─── DATE / TIME DATA ─── */
+function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});}
+function nextDow(b,dow){const d=new Date(b);d.setDate(d.getDate()+(dow-d.getDay()+7)%7);return d;}
+function buildDateOpts(){
+  const today=new Date(),tomorrow=new Date(today);tomorrow.setDate(today.getDate()+1);
+  const sat=nextDow(today,6),sun=nextDow(today,0),weekend=sat<=sun?sat:sun;
+  return[{l:'Today',s:fmtDate(today)},{l:'Tomorrow',s:fmtDate(tomorrow)},{l:'This weekend 🎉',s:fmtDate(weekend)},{l:'Saturday',s:fmtDate(sat)},{l:'Whenever, your call 🎲',s:'no pressure'}];
+}
+function buildTimeOpts(){
+  return[{l:'Morning ☀️',s:'9am – 12pm'},{l:'Afternoon 🌤️',s:'12pm – 4pm'},{l:'Evening 🌇',s:'4pm – 7pm, golden hour'},{l:'Night 🌙',s:'7pm onwards, mood'}];
+}
+
+/* ─── FLOW ─── */
+function buildFlowQueue(){
+  flowQueue=[];selectedMission.subQ.forEach(sq=>flowQueue.push({kind:'sub',def:sq}));
+  flowQueue.push({kind:'location'},{kind:'date'},{kind:'time'},{kind:'food'});
+  flowIndex=-1;answers={};selectedDate=null;selectedTime=null;selectedLocation=null;selectedFoods=new Set();
+  document.querySelectorAll('#foodChips .chip').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('foodNextBtn').disabled=true;
+}
+
+function advanceFlow(){flowIndex++;if(flowIndex>=flowQueue.length){goToRecap();return;}renderFlowStep();}
+function goBackFlow(){if(flowIndex<=0){goToStep('step-mission');flowIndex=-1;return;}flowIndex--;renderFlowStep();}
+
+function renderFlowStep(){
+  const item=flowQueue[flowIndex];
+  const stepNum=flowIndex+2,stepTotal=flowQueue.length+1;
+
+  if(item.kind==='food'){
+    document.getElementById('foodVibe').textContent=`${selectedMission.emoji} ${selectedMission.label} — almost done ✨`;
+    document.getElementById('foodTitle').textContent=selectedMission.id==='coffee'?'Snacks on the side?':'What are we eating?';
+    goToStep('step-food');return;
+  }
+
+  let title,sub,opts,onPick,canSpin=false;
+
+  if(item.kind==='location'){
+    title="Where are we doing this?";sub="set the range — city, road trip, or full send";
+    opts=locations.map(l=>({l:l.emoji+' '+l.label,s:l.joke}));
+    onPick=(_,idx)=>{selectedLocation=locations[idx];advanceFlow();};
+  } else if(item.kind==='date'){
+    title="When's good for you?";sub="pick a real day, not 'someday'";
+    opts=buildDateOpts().map(d=>({l:d.l,s:d.s}));
+    onPick=(opt)=>{selectedDate=opt;advanceFlow();};
+  } else if(item.kind==='time'){
+    title="What time works?";sub="approximate is fine, we're not running a railway";
+    opts=buildTimeOpts().map(t=>({l:t.l,s:t.s}));
+    onPick=(opt)=>{selectedTime=opt;advanceFlow();};
+  } else {
+    const def=item.def;title=def.title;sub=def.sub||'';opts=def.opts;canSpin=!!def.wheel;
+    onPick=(opt)=>{answers[def.key]=opt.l;advanceFlow();};
+  }
+
+  document.getElementById('pickVibe').textContent=`${selectedMission.emoji} ${selectedMission.label} — step ${stepNum} of ${stepTotal}`;
+  document.getElementById('pickTag').textContent=item.kind==='location'?'📍 location':item.kind==='date'?'📅 when':item.kind==='time'?'🕒 time':'✨ details';
+  document.getElementById('pickTitle').textContent=title;
+  document.getElementById('pickSub').textContent=sub;
+
+  const list=document.getElementById('pickList');list.innerHTML='';
+  opts.forEach((opt,idx)=>{
+    const row=document.createElement('div');row.className='pick-chip';
+    row.innerHTML=`<div><div class="main-label">${opt.l}</div>${opt.s?`<div class="sub-label">${opt.s}</div>`:''}</div><div class="check">✓</div>`;
+    row.onclick=()=>{row.classList.add('selected');setTimeout(()=>onPick(opt,idx),220);};
+    list.appendChild(row);
+  });
+
+  const nav=document.getElementById('pickNav');nav.innerHTML='';
+  const backBtn=document.createElement('button');backBtn.className='btn-secondary';backBtn.textContent='← Back';backBtn.onclick=goBackFlow;nav.appendChild(backBtn);
+  if(canSpin){
+    const spinBtn=document.createElement('button');spinBtn.className='btn-secondary';spinBtn.textContent='🎡 Spin to decide';
+    spinBtn.onclick=()=>openSpinWheel(opts.map(o=>o.l),title,onPick);nav.appendChild(spinBtn);
+  }
+
+  goToStep('step-pick');
+}
+
+function goToStep(id){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function sayYes(){
+  if(navigator.vibrate) navigator.vibrate([50,30,80]);
+  burstConfetti(30);
+  goToStep('step-mission');
+}
+
+function goToRecap(){buildBoardingPass();goToStep('step-recap');burstConfetti(90);}
+
+/* ─── SPIN WHEEL ─── */
+const wheelCanvas=document.getElementById('wheelCanvas');
+const wctx=wheelCanvas.getContext('2d');
+const wheelColors=['#FF6F61','#FFC857','#8FD9C4','#c084fc','#fb923c','#34d399','#f472b6','#60a5fa'];
+let wheelOptions=[],wheelCurrentAngle=0,wheelSpinning=false,wheelResultIdx=-1,wheelOnPick=null;
+
+function openSpinWheel(opts,title,onPick){
+  wheelOptions=opts;wheelOnPick=onPick;wheelResultIdx=-1;
+  document.getElementById('spinModalTitle').textContent=title+' 🎡';
+  document.getElementById('spinModalSub').textContent='tap spin — fate decides, not you';
+  document.getElementById('wheelResult').textContent='';
+  document.getElementById('spinAgainBtn').style.display='';
+  document.getElementById('useThisBtn').style.display='none';
+  drawWheel(0);
+  document.getElementById('spinModal').classList.remove('hide');
+}
+
+function drawWheel(extraAngle){
+  const cx=130,cy=130,r=120,n=wheelOptions.length;
+  wctx.clearRect(0,0,260,260);
+  for(let i=0;i<n;i++){
+    const start=extraAngle+(i*2*Math.PI/n)-Math.PI/2;
+    const end=extraAngle+((i+1)*2*Math.PI/n)-Math.PI/2;
+    wctx.beginPath();wctx.moveTo(cx,cy);wctx.arc(cx,cy,r,start,end);wctx.closePath();
+    wctx.fillStyle=wheelColors[i%wheelColors.length];wctx.fill();
+    wctx.strokeStyle='#fff';wctx.lineWidth=2;wctx.stroke();
+    wctx.save();wctx.translate(cx,cy);wctx.rotate(start+Math.PI/n);
+    wctx.textAlign='right';wctx.fillStyle='#fff';wctx.font='bold 11px Quicksand';
+    const txt=wheelOptions[i].replace(/[🎲🍝🍛🍜🥩🌮🎡🥾🌊🎢🧺🚲🌠🌊⛰️🏞️🌲🌄😅🍗🌮☕]/g,'').trim().substring(0,16);
+    wctx.fillText(txt,r-6,4);wctx.restore();
+  }
+  wctx.beginPath();wctx.arc(cx,cy,22,0,2*Math.PI);wctx.fillStyle='#fff';wctx.fill();
+  wctx.fillStyle=currentTheme.accent;wctx.font='bold 14px Fredoka One';wctx.textAlign='center';wctx.fillText('✨',cx,cy+5);
+}
+
+function spinWheel(){
+  if(wheelSpinning)return;
+  wheelSpinning=true;wheelResultIdx=-1;
+  document.getElementById('wheelResult').textContent='';
+  document.getElementById('useThisBtn').style.display='none';
+  const duration=3500+Math.random()*1500;
+  const extra=(5+Math.floor(Math.random()*4))*2*Math.PI+(Math.random()*2*Math.PI);
+  const start=performance.now(),startA=wheelCurrentAngle,target=startA+extra;
+  function animate(now){
+    const p=Math.min((now-start)/duration,1);
+    const e=1-Math.pow(1-p,3);
+    wheelCurrentAngle=startA+(target-startA)*e;
+    drawWheel(wheelCurrentAngle);
+    if(p<1){requestAnimationFrame(animate);}
+    else{
+      wheelSpinning=false;
+      const norm=((-wheelCurrentAngle%(2*Math.PI))+(2*Math.PI))%(2*Math.PI);
+      wheelResultIdx=Math.floor(norm/(2*Math.PI/wheelOptions.length))%wheelOptions.length;
+      document.getElementById('wheelResult').textContent='✨ '+wheelOptions[wheelResultIdx].split(' ')[0]+'!';
+      document.getElementById('useThisBtn').style.display='';
+      burstConfetti(20);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function acceptSpin(){
+  document.getElementById('spinModal').classList.add('hide');
+  if(wheelResultIdx>=0&&wheelOnPick){
+    const opt={l:wheelOptions[wheelResultIdx],s:''};
+    setTimeout(()=>wheelOnPick(opt,wheelResultIdx),150);
+  }
+}
+
+/* ─── BOARDING PASS ─── */
+const subLabels={style:'Style',eatAfter:'Food after',cuisine:'Cuisine',genre:'Genre',length:'Trip',destination:'Destination',cafeVibe:'Cafe',coffeeType:'Coffee',outdoorType:'Activity'};
+
+function buildBoardingPass(){
+  const foodList=[...selectedFoods].map(id=>foods.find(f=>f.id===id).l).join(', ')||'TBD';
+  const detailParts=Object.keys(answers).map(k=>`${subLabels[k]||k}: ${answers[k]}`);
+  document.getElementById('bp-mission').textContent=selectedMission.emoji+' '+selectedMission.label;
+  document.getElementById('bp-details').textContent=detailParts.join('  ·  ')||selectedMission.joke;
+  document.getElementById('bp-location').textContent=selectedLocation?selectedLocation.emoji+' '+selectedLocation.label:'TBD';
+  document.getElementById('bp-food').textContent=foodList;
+  document.getElementById('bp-date').textContent=selectedDate?selectedDate.l:'TBD';
+  document.getElementById('bp-time').textContent=selectedTime?selectedTime.l:'TBD';
+  const footers=[`no refunds. only good times. — "${askerName}"`,`this is legally binding in my head. — "${askerName}"`,`offer valid for one amazing date. — "${askerName}"`];
+  document.getElementById('recapFooter').textContent=footers[Math.floor(Math.random()*footers.length)];
+}
+
+function downloadTicket(){
+  const bp=document.getElementById('boardingPass');
+  html2canvas(bp,{scale:2,backgroundColor:null,useCORS:true}).then(canvas=>{
+    const a=document.createElement('a');
+    a.download='our-date-ticket.png';
+    a.href=canvas.toDataURL('image/png');
+    a.click();
+  }).catch(()=>alert('Tip: screenshot this ticket! 📸'));
+}
+
+function addToCalendar(){
+  const dateText=selectedDate?selectedDate.l:'';const timeText=selectedTime?selectedTime.l:'';
+  const title=encodeURIComponent(`${selectedMission.emoji} ${selectedMission.label} with ${askerName}`);
+  const details=encodeURIComponent(`Activity: ${selectedMission.label}\nLocation: ${selectedLocation?selectedLocation.label:'TBD'}\nFood: ${[...selectedFoods].map(id=>foods.find(f=>f.id===id).l).join(', ')||'TBD'}`);
+  const now=new Date();const ds=now.toISOString().replace(/-|:|\.\d\d\d/g,'').substring(0,15)+'00Z';
+  const url=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`;
+  window.open(url,'_blank');
+}
+
+/* ─── CONFIRMATION EMAIL ─── */
+function isValidEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
+
+async function sendConfirmation(){
+  const emailVal=document.getElementById('emailInput').value.trim();
+  const status=document.getElementById('confirmStatus');
+  const sendBtn=document.getElementById('sendConfirmBtn');
+  if(!isValidEmail(emailVal)){
+    status.style.color='var(--accent)';status.textContent="that doesn't look like a real email 👀";
+    card.classList.remove('shake');void card.offsetWidth;card.classList.add('shake');return;
+  }
+  const foodList=[...selectedFoods].map(id=>foods.find(f=>f.id===id).l).join(', ')||'TBD';
+  const subText=Object.keys(answers).map(k=>`${subLabels[k]||k}: ${answers[k]}`).join(' | ');
+  sendBtn.disabled=true;sendBtn.textContent='Sending...';status.style.color='var(--muted)';status.textContent='';
+  const params=new URLSearchParams({
+    email:emailVal,askedBy:askerName,mission:selectedMission.label,details:subText,
+    location:selectedLocation?selectedLocation.label:'',date:selectedDate?selectedDate.l:'',
+    time:selectedTime?selectedTime.l:'',food:foodList
+  });
+  try{
+    await fetch(GOOGLE_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:params.toString()});
+    status.style.color='#3f9c7d';status.textContent='confirmation sent! 💌';
+    sendBtn.textContent='Confirmation sent ✓';
+    localStorage.setItem('dateSubmitted','1');
+  }catch{
+    status.style.color='var(--accent)';status.textContent="hmm, didn't go through — try again?";
+    sendBtn.disabled=false;sendBtn.textContent='Send confirmation 💌';
+  }
+}
+
+/* ─── ONE-TIME LINK ─── */
+window.addEventListener('load',()=>{
+  if(localStorage.getItem('dateSubmitted')==='1'&&window.location.hash!=='#admin'){
+    document.getElementById('themeOverlay').classList.add('hide');
+    document.getElementById('nameOverlay').classList.add('hide');
+    goToStep('step-done');
+  }
+});
+
+let footerTaps=0,footerTimer=null;
+function handleFooterTap(){
+  footerTaps++;
+  if(footerTimer) clearTimeout(footerTimer);
+  footerTimer=setTimeout(()=>{footerTaps=0;},1000);
+  if(footerTaps>=3){footerTaps=0;localStorage.removeItem('dateSubmitted');location.reload();}
+}
+
+/* ─── ADMIN PAGE ─── */
+window.addEventListener('hashchange',checkAdmin);window.addEventListener('load',()=>{setTimeout(checkAdmin,300);});
+function checkAdmin(){
+  if(window.location.hash==='#admin'){
+    document.getElementById('adminPanel').classList.add('show');
+    document.getElementById('themeOverlay').classList.add('hide');
+    document.getElementById('nameOverlay').classList.add('hide');
+  }
+}
+function closeAdmin(){document.getElementById('adminPanel').classList.remove('show');window.location.hash='';}
+async function loadAdmin(){
+  const pass=document.getElementById('adminPassInput').value;
+  const err=document.getElementById('adminErr');
+  if(pass!==ADMIN_PASSWORD){err.textContent='wrong password 🔐';return;}
+  err.textContent='loading...';
+  try{
+    const res=await fetch(GOOGLE_SCRIPT_URL+'?action=get&password='+encodeURIComponent(pass),{redirect:'follow'});
+    const json=await res.json();
+    if(json.error){err.textContent='access denied — check Apps Script password';return;}
+    err.textContent='';
+    document.getElementById('adminLogin').style.display='none';
+    document.getElementById('adminData').style.display='block';
+    const rows=json.data;const headers=rows[0];const cards=document.getElementById('adminCards');cards.innerHTML='';
+    const dataRows=rows.slice(1).reverse();
+    if(dataRows.length===0){cards.innerHTML='<div class="admin-card"><h4>No responses yet</h4><p>She hasn\'t filled it out yet. Be patient. 😅</p></div>';return;}
+    dataRows.forEach(row=>{
+      const c=document.createElement('div');c.className='admin-card';
+      let h='<h4>💌 Response</h4>';
+      headers.forEach((hdr,i)=>{
+        if(row[i]) h+=`<div class="admin-row"><span class="admin-label">${hdr}:</span><span>${row[i]}</span></div>`;
+      });
+      c.innerHTML=h;cards.appendChild(c);
+    });
+  }catch{err.textContent='fetch failed — make sure Apps Script has doGet and password set';}
+}
+
+/* ─── RESET ─── */
+function resetToHome(){
+  selectedMission=null;answers={};selectedFoods=new Set();selectedDate=null;selectedTime=null;selectedLocation=null;flowQueue=[];flowIndex=-1;
+  document.querySelectorAll('#foodChips .chip').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('foodNextBtn').disabled=true;
+  document.getElementById('emailInput').value='';
+  document.getElementById('confirmStatus').textContent='';
+  document.getElementById('sendConfirmBtn').disabled=false;document.getElementById('sendConfirmBtn').textContent='Send confirmation 💌';
+  dodgeCount=0;yesScale=1;
+  clearInterval(timerInterval);document.getElementById('timerBanner').classList.remove('show');
+  noBtn.classList.remove('runaway','poof');noBtn.style.display='';noBtn.style.transform='scale(1)';
+  noBtn.style.left='';noBtn.style.top='';noBtn.textContent='No';
+  excuseText.textContent='';meterWrap.classList.remove('show');meterFill.style.width='0%';
+  meterLabel.textContent='Regret-o-meter';yesBtn.style.transform='scale(1)';yesBtn.style.fontSize='18px';
+  tagLine.textContent='something important';
+  document.getElementById('whyCard').classList.remove('show');whyIndex=0;
+  goToStep('step-question');
+}
+
+/* ─── TIMER ─── */
+let timerInterval=null,timerSecs=0;
+const urgencyMsgs=[
+  "⏳ offer expires in {s}s","🚨 {s} seconds left to say yes","⚡ {s}s before this page gets embarrassed","😤 fine, {s} more seconds and I'm getting a cat instead","🔥 {s}s... the yes button is getting impatient"
+];
+function startTimerAndTilt(){
+  let countdown=15;
+  setTimeout(()=>{
+    const msg=urgencyMsgs[Math.floor(Math.random()*urgencyMsgs.length)];
+    const banner=document.getElementById('timerBanner');
+    banner.classList.add('show');
+    timerInterval=setInterval(()=>{
+      countdown--;
+      banner.textContent=msg.replace('{s}',countdown);
+      if(countdown<=0){clearInterval(timerInterval);banner.textContent="offer has technically expired. yes button still works tho. 😏";}
+    },1000);
+    banner.textContent=msg.replace('{s}',countdown);
+  },8000);
+}
+
+/* ─── CARD TILT NEAR NO ─── */
+document.addEventListener('mousemove',e=>{
+  if(!document.getElementById('step-question').classList.contains('active'))return;
+  const nb=noBtn.getBoundingClientRect();
+  if(noBtn.classList.contains('runaway')||noBtn.classList.contains('poof')||noBtn.style.display==='none')return;
+  const cx=nb.left+nb.width/2,cy=nb.top+nb.height/2;
+  const dist=Math.hypot(e.clientX-cx,e.clientY-cy);
+  if(dist<180){
+    const tiltX=(e.clientY-cy)/20,tiltY=-(e.clientX-cx)/20;
+    card.style.transform=`perspective(900px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+  }else{card.style.transform='';}
+});
+
+/* ─── WHY SAY YES ─── */
+const whyReasons=["Because I make genuinely great playlists 🎵","Because I let you pick the restaurant... 60% of the time","Because I will pretend to understand your complicated coffee order","Because I laugh at your jokes even when they're terrible","Because I won't judge your movie picks. (Much.)","Because someone has to be the first to say it","Because you're already smiling reading this, so 🤷","Because I reserved the right side of the couch for you","Because we both deserve a good story to tell"];
+let whyIndex=0;
+function showWhyReason(){
+  const card2=document.getElementById('whyCard');
+  card2.textContent=whyReasons[whyIndex%whyReasons.length];
+  card2.classList.add('show');whyIndex++;
+}
+
+/* ─── NO BUTTON DODGE ─── */
+const excuses=["the 'No' button is camera-shy 📸","nope, try again 😏","this button doesn't believe in 'no'","so close! and yet... no.","the button has anxiety, please be gentle","it's not you, it's the button's commitment issues","404: No button not found","this button only responds to 'yes' energy","plot twist: the button is also nervous","scientifically, 'no' has left the building","the button just texted back 'lol no'... to itself","achievement unlocked: Most Persistent Clicker","the button called its lawyer","this is the button's villain origin story","rejected. by the rejection button. how meta.","the button is currently in therapy","sir/ma'am this is a one-button establishment","the No button has left you on read","breaking news: 'No' still cannot be located","the button filed a restraining order. against itself.","at this point the button deserves a participation trophy"];
+const noBtnLabels=["No","Nope","Still no","Are you sure?","Really??","Think again","Hmm, no","You're persistent","Plot twist: no","Almost convinced...","Okay fine, no","This is awkward","I'm getting tired","One more try?","Seriously though","It's basically a yes now"];
+const meterLabels=["Mild curiosity","Getting invested","Mild panic (button's)","Full commitment to the bit","Send help","This is now a sport","Legendary status","Maximum chaos"];
+
+const noBtn=document.getElementById('noBtn');
+const yesBtn=document.getElementById('yesBtn');
+const excuseText=document.getElementById('excuseText');
+const card=document.getElementById('card');
+const meterWrap=document.getElementById('meterWrap');
+const meterFill=document.getElementById('meterFill');
+const meterLabel=document.getElementById('meterLabel');
+const tagLine=document.getElementById('tagLine');
+let dodgeCount=0,yesScale=1,lastDodgeTime=0;
+const POOF=13;
+
+function dodge(e){
+  if(e)e.preventDefault();
+  if(noBtn.classList.contains('poof'))return;
+  const now=Date.now();if(now-lastDodgeTime<280)return;
+  lastDodgeTime=now;dodgeCount++;
+  if(dodgeCount===1)meterWrap.classList.add('show');
+  noBtn.classList.add('runaway');
+  const r=noBtn.getBoundingClientRect(),m=16;
+  noBtn.style.left=Math.max(m,Math.random()*(window.innerWidth-r.width-m))+'px';
+  noBtn.style.top=Math.max(m,Math.random()*(window.innerHeight-r.height-m))+'px';
+  noBtn.textContent=noBtnLabels[Math.min(dodgeCount-1,noBtnLabels.length-1)];
+  excuseText.textContent=excuses[Math.min(dodgeCount-1,excuses.length-1)];
+  const pct=Math.min(100,(dodgeCount/POOF)*100);
+  meterFill.style.width=pct+'%';
+  meterLabel.textContent='Regret-o-meter: '+meterLabels[Math.min(meterLabels.length-1,Math.floor((pct/100)*meterLabels.length))];
+  if(dodgeCount===5)tagLine.textContent='still one question...';
+  if(dodgeCount===9)tagLine.textContent='genuinely, just one question';
+  yesScale=Math.min(1.7,yesScale+0.06);yesBtn.style.transform=`scale(${yesScale})`;yesBtn.style.fontSize=(18+dodgeCount*0.6)+'px';
+  noBtn.style.transform=`scale(${Math.max(0.5,1-dodgeCount*0.03)})`;
+  card.style.transform='';card.classList.remove('shake');void card.offsetWidth;card.classList.add('shake');
+  if(dodgeCount>=POOF){noBtn.classList.add('poof');excuseText.textContent="the No button has left the chat permanently 👻";meterLabel.textContent="Regret-o-meter: it broke. you broke it.";setTimeout(()=>{noBtn.style.display='none';},400);}
+}
+
+/* ─── CONFETTI + HEARTS ─── */
+function burstConfetti(count){
+  const colors=[currentTheme.accent,currentTheme.soft,'#FFC857','#8FD9C4','#ffffff'];
+  for(let i=0;i<count;i++){
+    const p=document.createElement('div');p.className='confetti';
+    p.style.left=Math.random()*100+'vw';p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration=(2.2+Math.random()*1.8)+'s';p.style.animationDelay=(Math.random()*0.4)+'s';
+    document.body.appendChild(p);setTimeout(()=>p.remove(),4500);
+  }
+}
+function spawnHeart(){
+  const h=document.createElement('div');h.className='bg-heart';
+  h.textContent=['💕','💗','💖','✨','🌸'][Math.floor(Math.random()*5)];
+  h.style.left=Math.random()*100+'vw';h.style.animationDuration=(8+Math.random()*6)+'s';h.style.fontSize=(16+Math.random()*16)+'px';
+  document.body.appendChild(h);setTimeout(()=>h.remove(),15000);
+}
+setInterval(spawnHeart,900);for(let i=0;i<5;i++)setTimeout(spawnHeart,i*300);
+</script>
+</body>
+</html>
