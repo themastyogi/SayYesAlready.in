@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
 /* ─── THEMES ─── */
 [data-theme="blush"]   { --bg:#FFF6EE;--accent:#FF6F61;--accent2:#e85d51;--soft:#FFD9E3;--text:#4A2E3A;--card:#fff;--card2:#fffaf6;--border:#f0dee3;--muted:#9b818a;--label:#b69aa3; }
@@ -392,10 +392,11 @@ footer.note{margin-top:24px;font-size:12px;color:var(--label);}
 </div>
 
 <script>
-/* ─── CONFIG (edit these) ─── */
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzf9T5VU46NFqjmQellNcwPEHxqDox0rGas7JKWYmgM6mE6ObMYytv428NivtXtTGCG/exec";
+/* ─── CONFIG ─── */
+/* Only the script URL lives here. ALL passwords and secret keys
+   live exclusively in Apps Script — never in this file. */
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1NEvoN5aLvljdRvxQaQh5KCAdVkJvIZLQNKAAR35c1-7MjL6ymUqEh5o1ypnDPrHV2g/exec;
 const PERSONAL_NOTE = "Hey — I've been meaning to say something for a while now. I kept finding reasons to wait for the right moment. This is me deciding the right moment is now. No big speech, just one honest question. 🥹";
-const ADMIN_PASSWORD = "date2025"; /* change this — also update your Apps Script */
 
 /* ─── THEMES ─── */
 const themes = [
@@ -734,14 +735,110 @@ function buildBoardingPass(){
   document.getElementById('recapFooter').textContent=footers[Math.floor(Math.random()*footers.length)];
 }
 
+function drawRR(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+}
+
 function downloadTicket(){
-  const bp=document.getElementById('boardingPass');
-  html2canvas(bp,{scale:2,backgroundColor:null,useCORS:true}).then(canvas=>{
-    const a=document.createElement('a');
-    a.download='our-date-ticket.png';
-    a.href=canvas.toDataURL('image/png');
-    a.click();
-  }).catch(()=>alert('Tip: screenshot this ticket! 📸'));
+  const DPR=2,W=700,H=320,SPLIT=490,R=18;
+  const canvas=document.createElement('canvas');
+  canvas.width=W*DPR;canvas.height=H*DPR;
+  const ctx=canvas.getContext('2d');
+  ctx.scale(DPR,DPR);
+
+  const acc=currentTheme.accent;
+  const sft=currentTheme.soft;
+
+  /* card shadow */
+  ctx.shadowColor='rgba(0,0,0,0.18)';ctx.shadowBlur=24;ctx.shadowOffsetY=6;
+  ctx.fillStyle='#ffffff';drawRR(ctx,0,0,W,H,R);ctx.fill();
+  ctx.shadowColor='transparent';
+
+  /* left colored panel */
+  ctx.fillStyle=acc;
+  ctx.beginPath();ctx.moveTo(R,0);ctx.lineTo(SPLIT,0);ctx.lineTo(SPLIT,H);ctx.lineTo(R,H);
+  ctx.quadraticCurveTo(0,H,0,H-R);ctx.lineTo(0,R);ctx.quadraticCurveTo(0,0,R,0);ctx.closePath();ctx.fill();
+
+  /* right stub */
+  ctx.fillStyle=sft;
+  ctx.beginPath();ctx.moveTo(SPLIT,0);ctx.lineTo(W-R,0);ctx.quadraticCurveTo(W,0,W,R);
+  ctx.lineTo(W,H-R);ctx.quadraticCurveTo(W,H,W-R,H);ctx.lineTo(SPLIT,H);ctx.closePath();ctx.fill();
+
+  /* perforation holes */
+  ctx.fillStyle='#f0f0f0';
+  for(let yy=24;yy<H-10;yy+=18){ctx.beginPath();ctx.arc(SPLIT,yy,5.5,0,Math.PI*2);ctx.fill();}
+
+  /* dashed separator */
+  ctx.setLineDash([5,7]);ctx.strokeStyle='rgba(255,255,255,0.35)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(SPLIT,14);ctx.lineTo(SPLIT,H-14);ctx.stroke();ctx.setLineDash([]);
+
+  /* ── LEFT TEXT ── */
+  ctx.fillStyle='rgba(255,255,255,0.55)';
+  ctx.font='bold 10px Quicksand,sans-serif';ctx.letterSpacing='2px';
+  ctx.fillText('DATE TICKET',28,34);ctx.letterSpacing='0px';
+
+  /* mission */
+  ctx.fillStyle='#ffffff';
+  ctx.font='bold 27px Fredoka,sans-serif';
+  const mTxt=(selectedMission?selectedMission.emoji+' '+selectedMission.label:'💌 Our Date');
+  ctx.fillText(mTxt,28,76);
+
+  /* divider */
+  ctx.fillStyle='rgba(255,255,255,0.25)';ctx.fillRect(28,88,SPLIT-52,1);
+
+  /* detail rows */
+  const subParts=Object.keys(answers).map(k=>`${subLabels[k]||k}: ${answers[k]}`);
+  const locTxt=selectedLocation?selectedLocation.emoji+' '+selectedLocation.label:'';
+  const foodTxt=[...selectedFoods].map(id=>foods.find(f=>f.id===id).l).join(', ')||'TBD';
+  const detailRows=[
+    subParts.length?['✦',subParts.join('  ·  ')]:null,
+    locTxt?['📍',locTxt]:null,
+    ['🍽',foodTxt.length>44?foodTxt.substring(0,41)+'…':foodTxt],
+  ].filter(Boolean);
+
+  ctx.font='13px Quicksand,sans-serif';
+  detailRows.forEach((row,i)=>{
+    ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText(row[0],28,112+i*22);
+    ctx.fillStyle='rgba(255,255,255,0.9)';ctx.fillText(row[1],50,112+i*22);
+  });
+
+  /* barcode */
+  ctx.fillStyle='rgba(255,255,255,0.2)';ctx.font='14px monospace';
+  ctx.fillText('|||| ||| ||||| || |||| ||| |||||',28,H-26);
+
+  /* signed by */
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='italic 11px Quicksand,sans-serif';
+  ctx.fillText('from "'+( askerName||'someone special')+'"',28,H-10);
+
+  /* ── RIGHT STUB ── */
+  const sx=SPLIT+(W-SPLIT)/2;
+  ctx.textAlign='center';
+
+  ctx.fillStyle=currentTheme.id==='midnight'?'rgba(243,229,255,0.5)':'rgba(74,46,58,0.4)';
+  ctx.font='bold 9px Quicksand,sans-serif';ctx.letterSpacing='1.5px';
+  ctx.fillText('DATE',sx,46);ctx.letterSpacing='0px';
+  ctx.fillStyle=currentTheme.id==='midnight'?'#f3e5ff':'#4A2E3A';
+  ctx.font='bold 15px Fredoka,sans-serif';
+  (selectedDate?selectedDate.l:'TBD').split(' ').forEach((w2,i)=>ctx.fillText(w2,sx,65+i*18));
+
+  ctx.fillStyle=currentTheme.id==='midnight'?'rgba(243,229,255,0.5)':'rgba(74,46,58,0.4)';
+  ctx.font='bold 9px Quicksand,sans-serif';ctx.letterSpacing='1.5px';
+  ctx.fillText('TIME',sx,148);ctx.letterSpacing='0px';
+  ctx.fillStyle=currentTheme.id==='midnight'?'#f3e5ff':'#4A2E3A';
+  ctx.font='bold 15px Fredoka,sans-serif';
+  ctx.fillText(selectedTime?selectedTime.l.split(' ')[0]:'TBD',sx,167);
+
+  ctx.font='30px serif';ctx.fillText('💌',sx,225);
+
+  ctx.textAlign='left';
+
+  /* download */
+  const a=document.createElement('a');
+  a.download='date-ticket.png';
+  a.href=canvas.toDataURL('image/png',1.0);
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
 }
 
 function addToCalendar(){
@@ -767,6 +864,7 @@ async function sendConfirmation(){
   const foodList=[...selectedFoods].map(id=>foods.find(f=>f.id===id).l).join(', ')||'TBD';
   const subText=Object.keys(answers).map(k=>`${subLabels[k]||k}: ${answers[k]}`).join(' | ');
   sendBtn.disabled=true;sendBtn.textContent='Sending...';status.style.color='var(--muted)';status.textContent='';
+  /* No secret in the HTML — Apps Script validates via rate limiting + email check */
   const params=new URLSearchParams({
     email:emailVal,askedBy:askerName,mission:selectedMission.label,details:subText,
     location:selectedLocation?selectedLocation.label:'',date:selectedDate?selectedDate.l:'',
@@ -811,18 +909,19 @@ function checkAdmin(){
 }
 function closeAdmin(){document.getElementById('adminPanel').classList.remove('show');window.location.hash='';}
 async function loadAdmin(){
-  const pass=document.getElementById('adminPassInput').value;
+  const pass=document.getElementById('adminPassInput').value.trim();
   const err=document.getElementById('adminErr');
-  if(pass!==ADMIN_PASSWORD){err.textContent='wrong password 🔐';return;}
-  err.textContent='loading...';
+  if(!pass){err.textContent='enter a password first 🔐';return;}
+  err.textContent='checking...';
+  /* Password is NEVER stored in HTML — Apps Script does the real check */
   try{
     const res=await fetch(GOOGLE_SCRIPT_URL+'?action=get&password='+encodeURIComponent(pass),{redirect:'follow'});
-    const json=await res.json();
-    if(json.error){err.textContent='access denied — check Apps Script password';return;}
+    const data=await res.json();
+    if(data.error){err.textContent='wrong password or access denied 🔐';return;}
     err.textContent='';
     document.getElementById('adminLogin').style.display='none';
     document.getElementById('adminData').style.display='block';
-    const rows=json.data;const headers=rows[0];const cards=document.getElementById('adminCards');cards.innerHTML='';
+    const rows=data.data;const headers=rows[0];const cards=document.getElementById('adminCards');cards.innerHTML='';
     const dataRows=rows.slice(1).reverse();
     if(dataRows.length===0){cards.innerHTML='<div class="admin-card"><h4>No responses yet</h4><p>She hasn\'t filled it out yet. Be patient. 😅</p></div>';return;}
     dataRows.forEach(row=>{
@@ -833,7 +932,7 @@ async function loadAdmin(){
       });
       c.innerHTML=h;cards.appendChild(c);
     });
-  }catch{err.textContent='fetch failed — make sure Apps Script has doGet and password set';}
+  }catch{err.textContent='fetch failed — check your Apps Script deployment';}
 }
 
 /* ─── RESET ─── */
