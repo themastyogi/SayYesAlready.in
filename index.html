@@ -150,9 +150,10 @@ button{font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;border:no
 .recap-row b{font-family:'Fredoka',sans-serif;}
 
 /* OVERLAYS */
-.overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn 0.3s ease;}
+.overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:24px;}
+.overlay.visible{display:flex;animation:fadeIn 0.3s ease;}
 .overlay.hide{display:none;}
-.popup{background:var(--card);border-radius:28px;padding:36px 28px 28px;max-width:440px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.3);border:3px solid var(--soft);animation:pop 0.4s ease;}
+.popup{background:var(--card);border-radius:28px;padding:36px 28px 28px;max-width:440px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.3);border:3px solid var(--soft);animation:pop 0.4s ease;max-height:90vh;overflow-y:auto;}
 .popup h2{font-family:'Fredoka',sans-serif;font-size:22px;margin:0 0 8px;}
 .popup p{font-size:14px;color:var(--muted);margin:0 0 18px;line-height:1.5;}
 .popup-options{display:flex;flex-direction:column;gap:8px;}
@@ -214,7 +215,7 @@ footer.note{margin-top:24px;font-size:12px;color:var(--label);}
 </div>
 
 <!-- NAME POPUP -->
-<div class="overlay hide" id="nameOverlay">
+<div class="overlay" id="nameOverlay">
   <div class="popup">
     <div style="font-size:36px;margin-bottom:10px;">📱</div>
     <h2>Before we begin...</h2>
@@ -395,7 +396,7 @@ footer.note{margin-top:24px;font-size:12px;color:var(--label);}
 /* ─── CONFIG ─── */
 /* Only the script URL lives here. ALL passwords and secret keys
    live exclusively in Apps Script — never in this file. */
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1NEvoN5aLvljdRvxQaQh5KCAdVkJvIZLQNKAAR35c1-7MjL6ymUqEh5o1ypnDPrHV2g/exec;
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzf9T5VU46NFqjmQellNcwPEHxqDox0rGas7JKWYmgM6mE6ObMYytv428NivtXtTGCG/exec";
 const PERSONAL_NOTE = "Hey — I've been meaning to say something for a while now. I kept finding reasons to wait for the right moment. This is me deciding the right moment is now. No big speech, just one honest question. 🥹";
 
 /* ─── THEMES ─── */
@@ -424,8 +425,8 @@ themes.forEach(t => {
 });
 
 function confirmTheme() {
-  document.getElementById('themeOverlay').classList.add('hide');
-  document.getElementById('nameOverlay').classList.remove('hide');
+  document.getElementById('themeOverlay').classList.remove('visible');
+  document.getElementById('nameOverlay').classList.add('visible');
 }
 
 /* ─── NAME POPUP ─── */
@@ -457,7 +458,7 @@ function setCustomName() {
 
 function chooseName(name) {
   askerName = name;
-  document.getElementById('nameOverlay').classList.add('hide');
+  document.getElementById('nameOverlay').classList.remove('visible');
   document.getElementById('senderLine').textContent = `saved as "${askerName}" in your phone 📱`;
   document.getElementById('footerNote').textContent = `made with way too many redrafted texts — from "${askerName}"`;
   document.getElementById('noteLetter').textContent = PERSONAL_NOTE;
@@ -664,7 +665,7 @@ function openSpinWheel(opts,title,onPick){
   document.getElementById('spinAgainBtn').style.display='';
   document.getElementById('useThisBtn').style.display='none';
   drawWheel(0);
-  document.getElementById('spinModal').classList.remove('hide');
+  document.getElementById('spinModal').classList.add('visible');
 }
 
 function drawWheel(extraAngle){
@@ -712,7 +713,7 @@ function spinWheel(){
 }
 
 function acceptSpin(){
-  document.getElementById('spinModal').classList.add('hide');
+  document.getElementById('spinModal').classList.remove('visible');
   if(wheelResultIdx>=0&&wheelOnPick){
     const opt={l:wheelOptions[wheelResultIdx],s:''};
     setTimeout(()=>wheelOnPick(opt,wheelResultIdx),150);
@@ -881,12 +882,27 @@ async function sendConfirmation(){
   }
 }
 
-/* ─── ONE-TIME LINK ─── */
-window.addEventListener('load',()=>{
-  if(localStorage.getItem('dateSubmitted')==='1'&&window.location.hash!=='#admin'){
-    document.getElementById('themeOverlay').classList.add('hide');
-    document.getElementById('nameOverlay').classList.add('hide');
+/* ─── INIT — runs after everything is built ─── */
+window.addEventListener('DOMContentLoaded', () => {
+  /* Admin route */
+  if(window.location.hash === '#admin'){
+    document.getElementById('adminPanel').classList.add('show');
+    return;
+  }
+  /* Already submitted — show done screen */
+  if(localStorage.getItem('dateSubmitted') === '1'){
     goToStep('step-done');
+    return;
+  }
+  /* Normal flow — show theme picker */
+  document.getElementById('themeOverlay').classList.add('visible');
+});
+
+window.addEventListener('hashchange', () => {
+  if(window.location.hash === '#admin'){
+    document.getElementById('adminPanel').classList.add('show');
+    document.getElementById('themeOverlay').classList.remove('visible');
+    document.getElementById('nameOverlay').classList.remove('visible');
   }
 });
 
@@ -894,18 +910,8 @@ let footerTaps=0,footerTimer=null;
 function handleFooterTap(){
   footerTaps++;
   if(footerTimer) clearTimeout(footerTimer);
-  footerTimer=setTimeout(()=>{footerTaps=0;},1000);
+  footerTimer=setTimeout(()=>{footerTaps=0;},1200);
   if(footerTaps>=3){footerTaps=0;localStorage.removeItem('dateSubmitted');location.reload();}
-}
-
-/* ─── ADMIN PAGE ─── */
-window.addEventListener('hashchange',checkAdmin);window.addEventListener('load',()=>{setTimeout(checkAdmin,300);});
-function checkAdmin(){
-  if(window.location.hash==='#admin'){
-    document.getElementById('adminPanel').classList.add('show');
-    document.getElementById('themeOverlay').classList.add('hide');
-    document.getElementById('nameOverlay').classList.add('hide');
-  }
 }
 function closeAdmin(){document.getElementById('adminPanel').classList.remove('show');window.location.hash='';}
 async function loadAdmin(){
