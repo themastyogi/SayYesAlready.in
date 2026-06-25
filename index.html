@@ -500,7 +500,8 @@ function setName(n){
   document.getElementById('senderLine').textContent=`saved as "${myName}" in your phone 📱`;
   document.getElementById('foot').textContent=`made with way too many redrafted texts — from "${myName}"`;
   document.getElementById('noteLetter').textContent=NOTE;
-  show('sNote'); burst(15);
+  show('sModeSelect'); /* show Solo vs Together choice first */
+  burst(15);
 }
 
 /* ══ MISSIONS ══ */
