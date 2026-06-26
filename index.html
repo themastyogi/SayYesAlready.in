@@ -5,218 +5,216 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Something Important 💌</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Say Yes 💌">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAZKDsckbraD_kXtmkNuXmLNsA30quuNdI",
-  authDomain: "date-planner-77589.firebaseapp.com",
-  databaseURL: "https://date-planner-77589-default-rtdb.firebaseio.com",
-  projectId: "date-planner-77589",
-  storageBucket: "date-planner-77589.firebasestorage.app",
-  messagingSenderId: "420757943384",
-  appId: "1:420757943384:web:630e1883fa1cbc535bc62d"
-};
-
-const app = initializeApp(firebaseConfig);
+import { getDatabase, ref, set, onValue, update, push, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+const FB = { apiKey:"AIzaSyAZKDsckbraD_kXtmkNuXmLNsA30quuNdI", authDomain:"date-planner-77589.firebaseapp.com", databaseURL:"https://date-planner-77589-default-rtdb.firebaseio.com", projectId:"date-planner-77589", storageBucket:"date-planner-77589.firebasestorage.app", messagingSenderId:"420757943384", appId:"1:420757943384:web:630e1883fa1cbc535bc62d" };
+const app = initializeApp(FB);
 const db  = getDatabase(app);
-
-/* ── expose to global scope ── */
-window._fb = { db, ref, set, onValue, update, get };
+window._fb = { db, ref, set, onValue, update, push, get };
 window._fbReady = true;
 window.dispatchEvent(new Event('fbready'));
 </script>
 <style>
-/* ── THEMES ── */
-body[data-theme="blush"]   {--bg:#FFF6EE;--a:#FF6F61;--soft:#FFD9E3;--text:#4A2E3A;--card:#fff;--card2:#fffaf6;--bd:#f0dee3;--mt:#9b818a;--lb:#b69aa3;}
-body[data-theme="midnight"]{--bg:#0f0720;--a:#c084fc;--soft:#3b1f6e;--text:#f3e5ff;--card:#1e0f3a;--card2:#2a1550;--bd:#4a2d80;--mt:#9d77cc;--lb:#7c5a9e;}
-body[data-theme="mint"]    {--bg:#f0faf8;--a:#14b8a6;--soft:#ccfbf1;--text:#134e4a;--card:#fff;--card2:#f0fdf9;--bd:#99f6e4;--mt:#4d9e94;--lb:#6db5ad;}
-body[data-theme="golden"]  {--bg:#fffbeb;--a:#f59e0b;--soft:#fde68a;--text:#451a03;--card:#fff;--card2:#fffdf5;--bd:#fcd34d;--mt:#b47a1a;--lb:#c48a20;}
-
+body[data-theme="blush"]   {--bg:#FFF6EE;--a:#FF6F61;--soft:#FFD9E3;--text:#4A2E3A;--card:#fff;--c2:#fffaf6;--bd:#f0dee3;--mt:#9b818a;--lb:#b69aa3;}
+body[data-theme="midnight"]{--bg:#0f0720;--a:#c084fc;--soft:#3b1f6e;--text:#f3e5ff;--card:#1e0f3a;--c2:#2a1550;--bd:#4a2d80;--mt:#9d77cc;--lb:#7c5a9e;}
+body[data-theme="mint"]    {--bg:#f0faf8;--a:#14b8a6;--soft:#ccfbf1;--text:#134e4a;--card:#fff;--c2:#f0fdf9;--bd:#99f6e4;--mt:#4d9e94;--lb:#6db5ad;}
+body[data-theme="golden"]  {--bg:#fffbeb;--a:#f59e0b;--soft:#fde68a;--text:#451a03;--card:#fff;--c2:#fffdf5;--bd:#fcd34d;--mt:#b47a1a;--lb:#c48a20;}
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{min-height:100vh;}
-body{background:var(--bg,#FFF6EE);font-family:'Quicksand',sans-serif;color:var(--text,#4A2E3A);overflow-x:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;transition:background .4s,color .4s;}
-
-/* hearts */
+html,body{min-height:100vh;background:var(--bg,#FFF6EE);font-family:'Quicksand',sans-serif;color:var(--text,#4A2E3A);overflow-x:hidden;transition:background .4s,color .4s;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
 .bh{position:fixed;bottom:-10vh;opacity:.5;animation:fu linear infinite;pointer-events:none;z-index:0;}
 @keyframes fu{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.4}100%{transform:translateY(-115vh) rotate(25deg);opacity:0}}
-
-/* overlay */
+/* overlays */
 .ov{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:20px;}
 .ov.on{display:flex;animation:fi .3s ease;}
 @keyframes fi{from{opacity:0}to{opacity:1}}
-
-/* card / popup */
-.card,.popup{background:var(--card,#fff);border-radius:28px;border:3px solid var(--soft,#FFD9E3);box-shadow:0 20px 55px rgba(0,0,0,.14);width:100%;}
-.card{max-width:560px;padding:38px 32px 32px;text-align:center;position:relative;z-index:1;}
-.popup{max-width:440px;padding:32px 26px 26px;text-align:center;max-height:90vh;overflow-y:auto;animation:pk .35s ease;}
+.popup{background:var(--card,#fff);border-radius:26px;border:3px solid var(--soft,#FFD9E3);box-shadow:0 20px 55px rgba(0,0,0,.14);max-width:440px;width:100%;padding:30px 24px 24px;text-align:center;max-height:90vh;overflow-y:auto;animation:pk .35s ease;}
+/* card */
+.card{position:relative;z-index:1;background:var(--card,#fff);border-radius:28px;max-width:560px;width:100%;padding:36px 30px 30px;text-align:center;box-shadow:0 20px 55px rgba(0,0,0,.13);border:3px solid var(--soft,#FFD9E3);}
 @keyframes pk{0%{transform:scale(.93);opacity:0}100%{transform:scale(1);opacity:1}}
-
-/* typography */
-.tag{display:inline-block;font-family:'Fredoka',sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--a,#FF6F61);background:var(--soft,#FFD9E3);padding:5px 13px;border-radius:999px;margin-bottom:12px;}
-h1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(24px,5.5vw,34px);line-height:1.2;margin:0 0 10px;}
-h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(20px,5vw,26px);margin:0 0 6px;}
-h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;margin:0 0 6px;}
-.sub{font-size:15px;color:var(--mt,#9b818a);margin:0 0 18px;line-height:1.5;}
-.vibe{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb,#b69aa3);margin-bottom:8px;}
-.sender{font-size:13px;color:var(--lb,#b69aa3);font-weight:600;margin-bottom:7px;}
-
+/* type */
+.tag{display:inline-block;font-family:'Fredoka',sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--a,#FF6F61);background:var(--soft,#FFD9E3);padding:5px 13px;border-radius:999px;margin-bottom:11px;}
+h1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(23px,5.5vw,33px);line-height:1.2;margin:0 0 10px;}
+h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(19px,5vw,25px);margin:0 0 6px;}
+h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;margin:0 0 5px;}
+.sub{font-size:14.5px;color:var(--mt,#9b818a);margin:0 0 16px;line-height:1.5;}
+.vibe{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb,#b69aa3);margin-bottom:7px;}
+.sender{font-size:13px;color:var(--lb,#b69aa3);font-weight:600;margin-bottom:6px;}
 /* steps */
 .step{display:none;}.step.on{display:block;animation:pk .3s ease;}
-
-/* buttons */
-.bp{font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;border:none;border-radius:999px;padding:14px 28px;cursor:pointer;background:var(--a,#FF6F61);color:#fff;box-shadow:0 10px 22px rgba(0,0,0,.18);transition:transform .18s,box-shadow .18s;}
+/* btns */
+.bp{font-family:'Fredoka',sans-serif;font-weight:600;font-size:16px;border:none;border-radius:999px;padding:13px 26px;cursor:pointer;background:var(--a,#FF6F61);color:#fff;box-shadow:0 9px 20px rgba(0,0,0,.17);transition:transform .18s,box-shadow .18s,opacity .2s;}
 .bp:hover{transform:translateY(-2px) scale(1.03);}
 .bp:active{transform:scale(.97);}
-.bp:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;}
-.bs{font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;border:2px solid var(--bd,#f0dee3);border-radius:999px;padding:11px 20px;cursor:pointer;background:var(--card,#fff);color:var(--text,#4A2E3A);transition:background .16s;}
-.bs:hover{background:var(--card2,#fffaf6);}
-.nav{display:flex;gap:10px;justify-content:center;margin-top:8px;flex-wrap:wrap;}
-
-/* yes / no */
+.bp:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.bs{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;border:2px solid var(--bd,#f0dee3);border-radius:999px;padding:10px 19px;cursor:pointer;background:var(--card,#fff);color:var(--text,#4A2E3A);transition:background .16s;}
+.bs:hover{background:var(--c2,#fffaf6);}
+.nav{display:flex;gap:9px;justify-content:center;margin-top:7px;flex-wrap:wrap;}
+/* yes/no */
 #yesBtn{font-family:'Fredoka',sans-serif;font-weight:600;background:var(--a,#FF6F61);color:#fff;font-size:18px;border:none;border-radius:999px;padding:15px 28px;cursor:pointer;box-shadow:0 10px 22px rgba(0,0,0,.2);transition:transform .18s,font-size .18s;}
 #yesBtn:hover{transform:translateY(-2px) scale(1.04);}
 #noBtn{font-family:'Fredoka',sans-serif;font-weight:600;background:var(--card,#fff);color:var(--text,#4A2E3A);border:2px solid var(--bd,#f0dee3);font-size:18px;border-radius:999px;padding:15px 28px;cursor:pointer;touch-action:none;user-select:none;}
 #noBtn.away{position:fixed;z-index:50;}
 #noBtn.poof{animation:pf .4s ease forwards;pointer-events:none;}
 @keyframes pf{0%{transform:scale(1) rotate(0);opacity:1}100%{transform:scale(0) rotate(180deg);opacity:0}}
-.btns{display:flex;gap:16px;justify-content:center;align-items:center;min-height:88px;flex-wrap:wrap;}
-.excuse{margin-top:11px;font-size:13px;color:var(--a,#FF6F61);font-weight:600;min-height:18px;}
-.meter-wrap{margin-top:16px;display:none;}.meter-wrap.on{display:block;}
-.meter-lbl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--lb);margin-bottom:5px;}
+.btns{display:flex;gap:14px;justify-content:center;align-items:center;min-height:84px;flex-wrap:wrap;}
+.excuse{margin-top:10px;font-size:13px;color:var(--a,#FF6F61);font-weight:600;min-height:18px;}
+.meter-wrap{margin-top:14px;display:none;}.meter-wrap.on{display:block;}
+.meter-lbl{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--lb);margin-bottom:4px;}
 .meter-tr{background:var(--soft);border-radius:999px;height:8px;overflow:hidden;}
 .meter-fi{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--soft),var(--a));transition:width .35s;}
-.why-btn{background:none;border:none;font-size:12.5px;color:var(--lb);cursor:pointer;text-decoration:underline;padding:4px 8px;font-family:'Quicksand',sans-serif;margin-top:6px;}
-.why-card{display:none;background:var(--card2);border:2px solid var(--soft);border-radius:13px;padding:11px 15px;margin-top:8px;font-size:13.5px;font-weight:600;animation:pk .3s ease;}
-.why-card.on{display:block;}
-.timer{display:none;background:var(--soft);border-radius:11px;padding:8px 14px;margin-top:12px;font-size:13px;font-weight:700;color:var(--a);animation:pulse 1s infinite;}
-.timer.on{display:block;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.65}}
-
-/* option grid */
-.og{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.oc{border:2px solid var(--bd);background:var(--card2);border-radius:16px;padding:14px 8px;cursor:pointer;transition:all .18s;text-align:center;}
+.why-btn{background:none;border:none;font-size:12px;color:var(--lb);cursor:pointer;text-decoration:underline;padding:4px 8px;font-family:'Quicksand',sans-serif;margin-top:6px;}
+.why-card{display:none;background:var(--c2);border:2px solid var(--soft);border-radius:12px;padding:10px 14px;margin-top:7px;font-size:13px;font-weight:600;animation:pk .3s ease;}.why-card.on{display:block;}
+.timer{display:none;background:var(--soft);border-radius:10px;padding:7px 13px;margin-top:11px;font-size:13px;font-weight:700;color:var(--a);animation:pulse 1s infinite;}.timer.on{display:block;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+/* grids */
+.og{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.oc{border:2px solid var(--bd);background:var(--c2);border-radius:15px;padding:13px 8px;cursor:pointer;transition:all .18s;text-align:center;}
 .oc:hover{border-color:var(--a);transform:translateY(-2px);}
 .oc.sel{border-color:var(--a);background:var(--soft);box-shadow:0 5px 12px rgba(0,0,0,.09);}
-.oc .em{font-size:26px;display:block;margin-bottom:5px;}
-.oc .lb{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;display:block;}
-.oc .jk{font-size:11px;color:var(--mt);margin-top:3px;display:block;line-height:1.3;}
-
-/* pick list */
+.oc .em{font-size:25px;display:block;margin-bottom:4px;}
+.oc .lb{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;display:block;}
+.oc .jk{font-size:10.5px;color:var(--mt);margin-top:3px;display:block;line-height:1.3;}
 .pl{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
-.pc{display:flex;align-items:center;justify-content:space-between;gap:10px;border:2px solid var(--bd);background:var(--card2);border-radius:13px;padding:12px 15px;cursor:pointer;transition:all .16s;text-align:left;}
+.pc{display:flex;align-items:center;justify-content:space-between;gap:9px;border:2px solid var(--bd);background:var(--c2);border-radius:12px;padding:11px 14px;cursor:pointer;transition:all .16s;text-align:left;}
 .pc:hover{border-color:var(--a);transform:translateY(-1px);}
 .pc.sel{border-color:var(--a);background:var(--soft);}
-.pc .ml{font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;}
+.pc .ml{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;}
 .pc .sl{font-size:11px;color:var(--mt);margin-top:2px;}
-.pc .ck{font-size:16px;opacity:0;transition:opacity .15s;}.pc.sel .ck{opacity:1;}
-
-/* food chips */
-.cw{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:18px;}
-.ch{border:2px solid var(--bd);background:var(--card2);border-radius:999px;padding:8px 14px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:all .18s;}
+.pc .ck{font-size:15px;opacity:0;transition:opacity .15s;}.pc.sel .ck{opacity:1;}
+.cw{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;}
+.ch{border:2px solid var(--bd);background:var(--c2);border-radius:999px;padding:8px 14px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12.5px;cursor:pointer;transition:all .18s;}
 .ch.sel{background:var(--a);color:#fff;border-color:var(--a);}
-
 /* theme picker */
-.tg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.tc{border:3px solid var(--bd);border-radius:15px;padding:13px 9px;cursor:pointer;transition:all .18s;text-align:center;}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px;}
+.tc{border:3px solid var(--bd);border-radius:14px;padding:12px 8px;cursor:pointer;transition:all .18s;text-align:center;}
 .tc:hover{transform:translateY(-2px);}
-.tc .sw{width:40px;height:40px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:19px;}
-.tc .tn{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;}
-.tc .ts{font-size:11px;color:#9b818a;margin-top:2px;}
-
+.tc .sw{width:38px;height:38px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.tc .tn{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;}
+.tc .ts{font-size:10.5px;color:#9b818a;margin-top:2px;}
 /* name popup */
-.no{border:2px solid var(--bd);background:var(--card2);border-radius:11px;padding:10px 13px;cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;display:flex;gap:9px;align-items:center;text-align:left;transition:all .16s;margin-bottom:7px;}
+.no{border:2px solid var(--bd);background:var(--c2);border-radius:11px;padding:10px 12px;cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;display:flex;gap:8px;align-items:center;text-align:left;transition:all .16s;margin-bottom:7px;}
 .no:hover{border-color:var(--a);background:var(--soft);}
-.nj{font-size:11px;color:var(--mt);font-weight:400;display:block;margin-top:2px;}
-.pi{width:100%;padding:10px 13px;border-radius:11px;border:2px solid var(--bd);font-family:'Quicksand',sans-serif;font-size:14px;color:var(--text);background:var(--card2);margin-top:8px;}
+.nj{font-size:10.5px;color:var(--mt);font-weight:400;display:block;margin-top:2px;}
+.pi{width:100%;padding:10px 12px;border-radius:10px;border:2px solid var(--bd);font-family:'Quicksand',sans-serif;font-size:13.5px;color:var(--text);background:var(--c2);margin-top:7px;}
 .pi:focus{outline:none;border-color:var(--a);}
-
-/* field */
-.fw{text-align:left;margin-bottom:13px;margin-top:5px;}
-.fw label{font-family:'Fredoka',sans-serif;font-size:12px;font-weight:600;color:var(--text);display:block;margin-bottom:5px;}
-.fw input{width:100%;padding:10px 13px;border-radius:11px;border:2px solid var(--bd);font-family:'Quicksand',sans-serif;font-size:14px;color:var(--text);background:var(--card2);}
+.fw{text-align:left;margin-bottom:12px;margin-top:5px;}
+.fw label{font-family:'Fredoka',sans-serif;font-size:12px;font-weight:600;color:var(--text);display:block;margin-bottom:4px;}
+.fw input{width:100%;padding:10px 12px;border-radius:10px;border:2px solid var(--bd);font-family:'Quicksand',sans-serif;font-size:14px;color:var(--text);background:var(--c2);}
 .fw input:focus{outline:none;border-color:var(--a);}
+.nl{background:var(--c2);border:2px solid var(--soft);border-radius:15px;padding:18px 15px;text-align:left;margin-bottom:16px;font-size:14px;line-height:1.75;font-style:italic;}
+.nl::before{content:'✉️';font-size:22px;display:block;margin-bottom:7px;font-style:normal;}
 
-/* note letter */
-.nl{background:var(--card2);border:2px solid var(--soft);border-radius:16px;padding:20px 16px;text-align:left;margin-bottom:18px;font-size:14.5px;line-height:1.75;font-style:italic;}
-.nl::before{content:'✉️';font-size:24px;display:block;margin-bottom:8px;font-style:normal;}
-
-/* ── TOGETHER MODE UI ── */
-.room-entry{background:var(--card2);border:2px solid var(--soft);border-radius:20px;padding:22px 18px;margin-bottom:16px;}
-.room-entry h3{font-family:'Fredoka',sans-serif;font-size:17px;margin-bottom:6px;}
-.room-entry p{font-size:13px;color:var(--mt);margin-bottom:12px;}
-.room-inp{width:100%;padding:12px 16px;border-radius:12px;border:2px solid var(--bd);font-family:'Fredoka',sans-serif;font-weight:600;font-size:16px;color:var(--text);background:var(--card);text-align:center;letter-spacing:.05em;margin-bottom:10px;}
+/* ─── TOGETHER MODE ─── */
+.room-box{background:var(--c2);border:2px solid var(--soft);border-radius:18px;padding:20px 16px;margin-bottom:14px;}
+.room-box h3{font-family:'Fredoka',sans-serif;font-size:16px;margin-bottom:5px;}
+.room-box p{font-size:12.5px;color:var(--mt);margin-bottom:11px;}
+.room-inp{width:100%;padding:11px 15px;border-radius:11px;border:2px solid var(--bd);font-family:'Fredoka',sans-serif;font-weight:600;font-size:15px;color:var(--text);background:var(--card);text-align:center;letter-spacing:.05em;margin-bottom:9px;}
 .room-inp:focus{outline:none;border-color:var(--a);}
-.room-divider{text-align:center;font-size:12px;color:var(--lb);font-weight:600;margin:14px 0;position:relative;}
-.room-divider::before,.room-divider::after{content:'';position:absolute;top:50%;width:38%;height:1px;background:var(--bd);}
-.room-divider::before{left:0;}.room-divider::after{right:0;}
+.rdivider{text-align:center;font-size:11.5px;color:var(--lb);font-weight:600;margin:12px 0;position:relative;}
+.rdivider::before,.rdivider::after{content:'';position:absolute;top:50%;width:36%;height:1px;background:var(--bd);}
+.rdivider::before{left:0;}.rdivider::after{right:0;}
 
-/* together step UI — split picks */
-.together-picks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
-.tp-side{border:2px solid var(--bd);border-radius:16px;padding:14px 12px;text-align:center;transition:border-color .3s,background .3s;}
-.tp-side.picked{border-color:var(--a);background:var(--soft);}
-.tp-side.waiting{opacity:.6;}
-.tp-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb);margin-bottom:6px;}
-.tp-pick{font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;color:var(--text);min-height:20px;}
-.tp-wait{font-size:12px;color:var(--mt);animation:pulse 1.5s infinite;}
+/* together step - the main picking UI */
+.t-status{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.t-badge{display:inline-flex;align-items:center;gap:5px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12px;padding:5px 12px;border-radius:999px;}
+.t-badge.green{background:#d1fae5;color:#065f46;}
+.t-badge.yellow{background:#fef3c7;color:#92400e;}
+.t-badge.red{background:#fee2e2;color:#991b1b;}
+.t-badge.blue{background:#dbeafe;color:#1e40af;}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.5s infinite;}
+
+/* side by side picks */
+.picks-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
+.pick-side{border:2px solid var(--bd);border-radius:14px;padding:14px 12px;text-align:center;transition:border-color .3s,background .3s;}
+.pick-side.has-pick{border-color:var(--a);background:var(--soft);}
+.pick-side.waiting-pick{opacity:.7;}
+.pick-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb);margin-bottom:6px;}
+.pick-val{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;color:var(--text);min-height:20px;}
+.pick-wait{font-size:11.5px;color:var(--mt);animation:pulse 1.5s infinite;margin-top:4px;}
+
+/* negotiation */
+.nego-box{background:var(--c2);border:2px solid var(--soft);border-radius:16px;padding:16px;margin-bottom:12px;}
+.nego-picks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.nego-pick{border-radius:12px;padding:12px 10px;text-align:center;}
+.nego-pick.mine{background:var(--soft);border:2px solid var(--a);}
+.nego-pick.theirs{background:var(--c2);border:2px solid var(--bd);}
+.nego-pick-lbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb);margin-bottom:5px;}
+.nego-pick-val{font-family:'Fredoka',sans-serif;font-weight:700;font-size:13px;color:var(--text);}
+
+/* chat */
+.chat-box{border:2px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:10px;}
+.chat-msgs{min-height:80px;max-height:140px;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:7px;background:var(--c2);}
+.chat-msg{max-width:80%;padding:7px 11px;border-radius:12px;font-size:13px;line-height:1.4;}
+.chat-msg.mine{background:var(--a);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+.chat-msg.theirs{background:var(--bd);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;}
+.chat-msg .cm-from{font-size:10px;font-weight:700;opacity:.7;margin-bottom:2px;}
+.chat-empty{font-size:12px;color:var(--lb);text-align:center;padding:16px 0;font-style:italic;}
+.chat-input-row{display:flex;gap:0;border-top:2px solid var(--bd);}
+.chat-inp{flex:1;padding:10px 13px;border:none;font-family:'Quicksand',sans-serif;font-size:13.5px;color:var(--text);background:var(--card);outline:none;}
+.chat-send{padding:10px 16px;border:none;border-left:2px solid var(--bd);background:var(--soft);color:var(--a);font-family:'Fredoka',sans-serif;font-weight:700;font-size:14px;cursor:pointer;}
+.chat-send:hover{background:var(--a);color:#fff;}
 
 /* coin flip */
-.coin{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--soft));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 14px;box-shadow:0 8px 20px rgba(0,0,0,.15);}
-.coin.flip{animation:coinflip .8s ease;}
-@keyframes coinflip{0%{transform:rotateY(0)}50%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
+.coin{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--soft));display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;box-shadow:0 7px 18px rgba(0,0,0,.14);}
+.coin.spin{animation:cspin .8s ease;}
+@keyframes cspin{0%{transform:rotateY(0)}50%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
+.coin-result-box{background:var(--soft);border:2px solid var(--a);border-radius:14px;padding:14px;margin-bottom:12px;text-align:center;}
+.coin-result-box .cr-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb);margin-bottom:5px;}
+.coin-result-box .cr-val{font-family:'Fredoka',sans-serif;font-weight:700;font-size:17px;color:var(--a);}
 
-/* boarding pass */
-.bp-wrap{border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 7px 24px rgba(0,0,0,.12);}
-.bp-pass{display:flex;background:var(--card);border:2px solid var(--bd);}
-.bp-main{flex:1;padding:18px 16px;text-align:left;}
-.bp-stub{width:82px;border-left:3px dashed var(--bd);padding:18px 10px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px;background:var(--card2);}
-.bpl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lb);}
-.bpv{font-family:'Fredoka',sans-serif;font-weight:700;font-size:14px;color:var(--text);margin-top:2px;}
-.bpb{font-family:'Fredoka',sans-serif;font-size:23px;font-weight:700;color:var(--a);margin:4px 0;}
-.bpr{margin-bottom:9px;}
-.bpbar{font-size:20px;letter-spacing:-2px;color:var(--bd);margin-top:6px;}
-.bpsv{font-family:'Fredoka',sans-serif;font-weight:700;font-size:12px;color:var(--text);writing-mode:vertical-lr;transform:rotate(180deg);}
-.share-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
-
-/* status badge */
-.badge{display:inline-flex;align-items:center;gap:6px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;padding:6px 13px;border-radius:999px;margin-bottom:12px;}
-.badge.green{background:#d1fae5;color:#065f46;}
-.badge.yellow{background:#fef3c7;color:#92400e;}
-.badge.red{background:#fee2e2;color:#991b1b;}
-.dot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.5s infinite;}
-
-/* waiting spinner */
-.waiting-ring{width:44px;height:44px;border:4px solid var(--soft);border-top-color:var(--a);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+/* waiting ring */
+.ring{width:40px;height:40px;border:4px solid var(--soft);border-top-color:var(--a);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* confetti */
-.cf{position:fixed;top:-10px;width:10px;height:14px;border-radius:2px;z-index:400;pointer-events:none;animation:cff linear forwards;}
-@keyframes cff{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:.9}}
-.status{font-size:12px;font-weight:600;min-height:16px;text-align:center;margin-top:6px;}
-footer{margin-top:20px;font-size:12px;color:var(--lb);}
+/* accept row */
+.accept-status{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
+.ac-side{border-radius:10px;padding:9px;text-align:center;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12px;}
+.ac-side.done{background:#d1fae5;color:#065f46;}
+.ac-side.pending{background:var(--c2);border:2px solid var(--bd);color:var(--mt);}
+
+/* boarding pass */
+.bp-wrap{border-radius:15px;overflow:hidden;margin-bottom:12px;box-shadow:0 7px 22px rgba(0,0,0,.12);}
+.bp-pass{display:flex;background:var(--card);border:2px solid var(--bd);}
+.bp-main{flex:1;padding:17px 15px;text-align:left;}
+.bp-stub{width:80px;border-left:3px dashed var(--bd);padding:17px 10px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;background:var(--c2);}
+.bpl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lb);}
+.bpv{font-family:'Fredoka',sans-serif;font-weight:700;font-size:13.5px;color:var(--text);margin-top:2px;}
+.bpb{font-family:'Fredoka',sans-serif;font-size:22px;font-weight:700;color:var(--a);margin:4px 0;}
+.bpr{margin-bottom:8px;}
+.bpbar{font-size:18px;letter-spacing:-2px;color:var(--bd);margin-top:5px;}
+.bpsv{font-family:'Fredoka',sans-serif;font-weight:700;font-size:11.5px;color:var(--text);writing-mode:vertical-lr;transform:rotate(180deg);}
+.share-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:9px;}
+
+/* link share box */
+.link-box{background:var(--c2);border:2px solid var(--soft);border-radius:11px;padding:10px 13px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12.5px;word-break:break-all;color:var(--a);margin-bottom:12px;text-align:left;}
+
+/* status */
+.status{font-size:12px;font-weight:600;min-height:16px;text-align:center;margin-top:5px;}
 
 /* admin */
 #adminPage{display:none;position:fixed;inset:0;z-index:9999;background:#fff;overflow-y:auto;font-family:'Quicksand',sans-serif;}
 #adminPage.on{display:block;}
-.adm-wrap{max-width:700px;margin:0 auto;padding:28px 20px;}
-.adm-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:10px;}
-.adm-head h2{font-family:'Fredoka',sans-serif;font-size:26px;color:#FF6F61;}
-.adm-back{font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;border:2px solid #f0dee3;background:#fff;color:#4A2E3A;border-radius:999px;padding:9px 18px;cursor:pointer;}
-.adm-card{background:#fffaf6;border-radius:18px;border:2px solid #f0dee3;padding:18px;margin-bottom:12px;}
-.adm-card h4{font-family:'Fredoka',sans-serif;font-size:16px;color:#FF6F61;margin-bottom:8px;}
-.adm-row{font-size:13px;margin-bottom:5px;display:flex;gap:8px;flex-wrap:wrap;}
-.adm-lbl{font-weight:700;color:#b69aa3;min-width:76px;flex-shrink:0;}
-.adm-inp{width:100%;padding:11px 13px;border-radius:12px;border:2px solid #f0dee3;font-family:'Quicksand',sans-serif;font-size:14px;color:#4A2E3A;background:#fffaf6;margin-bottom:9px;}
+.adm-wrap{max-width:700px;margin:0 auto;padding:26px 18px;}
+.adm-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:9px;}
+.adm-head h2{font-family:'Fredoka',sans-serif;font-size:24px;color:#FF6F61;}
+.adm-back{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;border:2px solid #f0dee3;background:#fff;color:#4A2E3A;border-radius:999px;padding:8px 17px;cursor:pointer;}
+.adm-card{background:#fffaf6;border-radius:16px;border:2px solid #f0dee3;padding:16px;margin-bottom:11px;}
+.adm-card h4{font-family:'Fredoka',sans-serif;font-size:15.5px;color:#FF6F61;margin-bottom:7px;}
+.adm-inp{width:100%;padding:10px 12px;border-radius:11px;border:2px solid #f0dee3;font-family:'Quicksand',sans-serif;font-size:14px;color:#4A2E3A;background:#fffaf6;margin-bottom:8px;}
 .adm-inp:focus{outline:none;border-color:#FF6F61;}
-.adm-btn{font-family:'Fredoka',sans-serif;font-weight:600;font-size:15px;border:none;border-radius:999px;padding:13px 26px;cursor:pointer;background:#FF6F61;color:#fff;}
-.adm-err{font-size:13px;color:#FF6F61;margin-top:5px;min-height:16px;}
-.adm-sheet{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;background:#34d399;color:#fff;border:none;border-radius:12px;padding:11px 18px;cursor:pointer;text-decoration:none;margin-top:8px;}
+.adm-btn{font-family:'Fredoka',sans-serif;font-weight:600;font-size:15px;border:none;border-radius:999px;padding:12px 24px;cursor:pointer;background:#FF6F61;color:#fff;}
+.adm-err{font-size:12.5px;color:#FF6F61;margin-top:4px;min-height:15px;}
+.adm-sheet{display:inline-flex;align-items:center;gap:6px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;background:#34d399;color:#fff;border:none;border-radius:11px;padding:10px 16px;cursor:pointer;text-decoration:none;}
 
-@media(max-width:420px){.card{padding:28px 16px 24px;}.og{grid-template-columns:1fr 1fr;}.together-picks{grid-template-columns:1fr 1fr;}.bp-stub{width:68px;}}
+/* confetti */
+.cf{position:fixed;top:-10px;width:10px;height:14px;border-radius:2px;z-index:400;pointer-events:none;animation:cff linear forwards;}
+@keyframes cff{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:.9}}
+footer{margin-top:18px;font-size:12px;color:var(--lb);}
+@media(max-width:420px){.card{padding:26px 15px 22px;}.og,.picks-grid,.nego-picks,.accept-status{grid-template-columns:1fr 1fr;}.bp-stub{width:66px;}}
 </style>
 </head>
 <body data-theme="blush">
@@ -224,33 +222,16 @@ footer{margin-top:20px;font-size:12px;color:var(--lb);}
 <!-- ADMIN -->
 <div id="adminPage">
   <div class="adm-wrap">
-    <div class="adm-head">
-      <h2>📊 Admin Panel</h2>
-      <button class="adm-back" onclick="closeAdmin()">← Back</button>
-    </div>
-    <div id="adminLogin">
-      <div class="adm-card">
-        <h4>Enter admin password</h4>
-        <input class="adm-inp" type="password" id="adminPass" placeholder="password..." onkeydown="if(event.key==='Enter')loadAdmin()">
-        <button class="adm-btn" onclick="loadAdmin()">Unlock</button>
-        <div class="adm-err" id="adminErr"></div>
-      </div>
-    </div>
-    <div id="adminData" style="display:none;">
-      <div class="adm-card" style="text-align:center;padding:26px 18px;">
-        <div style="font-size:40px;margin-bottom:9px;">📊</div>
-        <h4 style="margin-bottom:7px;">Your responses are in Google Sheets</h4>
-        <p style="font-size:13px;color:#9b818a;margin-bottom:16px;">Only you can see it — protected by your Google account.</p>
-        <a id="sheetLink" href="https://docs.google.com/spreadsheets/d/1NUszfd3LuFr56UEeUc2T3cvEKD-pwhzUY0IZRukvgpo/edit" target="_blank" class="adm-sheet">Open my Google Sheet →</a>
-      </div>
-    </div>
+    <div class="adm-head"><h2>📊 Admin Panel</h2><button class="adm-back" onclick="closeAdmin()">← Back</button></div>
+    <div id="adminLogin"><div class="adm-card"><h4>Enter admin password</h4><input class="adm-inp" type="password" id="adminPass" placeholder="password..." onkeydown="if(event.key==='Enter')loadAdmin()"><button class="adm-btn" onclick="loadAdmin()">Unlock</button><div class="adm-err" id="adminErr"></div></div></div>
+    <div id="adminData" style="display:none;"><div class="adm-card" style="text-align:center;padding:24px 16px;"><div style="font-size:38px;margin-bottom:8px;">📊</div><h4 style="margin-bottom:6px;">Your responses are in Google Sheets</h4><p style="font-size:12.5px;color:#9b818a;margin-bottom:14px;">Only you can see it — protected by your Google account.</p><a href="https://docs.google.com/spreadsheets/d/1NUszfd3LuFr56UEeUc2T3cvEKD-pwhzUY0IZRukvgpo/edit" target="_blank" class="adm-sheet">Open my Google Sheet →</a></div></div>
   </div>
 </div>
 
 <!-- THEME OVERLAY -->
 <div class="ov" id="themeOv">
   <div class="popup">
-    <div style="font-size:32px;margin-bottom:8px;">🎨</div>
+    <div style="font-size:30px;margin-bottom:7px;">🎨</div>
     <h2>First things first —</h2>
     <p class="sub">Pick the vibe for this page</p>
     <div class="tg" id="themeGrid"></div>
@@ -261,63 +242,43 @@ footer{margin-top:20px;font-size:12px;color:var(--lb);}
 <!-- NAME OVERLAY -->
 <div class="ov" id="nameOv">
   <div class="popup">
-    <div style="font-size:32px;margin-bottom:8px;">📱</div>
-    <h2>Before we begin...</h2>
-    <p class="sub">What is my number saved as in your phone? 👀</p>
+    <div style="font-size:30px;margin-bottom:7px;" id="nameEmoji">📱</div>
+    <h2 id="nameTitle">Before we begin...</h2>
+    <p class="sub" id="nameDesc">What is my number saved as in your phone? 👀</p>
     <div id="nameOpts"></div>
     <input class="pi" type="text" id="customName" placeholder="something even better? type it..." maxlength="30" onkeydown="if(event.key==='Enter')confirmName()">
-    <button class="bp" style="width:100%;margin-top:10px;" onclick="confirmName()">That's the one 💌</button>
+    <button class="bp" style="width:100%;margin-top:9px;" onclick="confirmName()">That's the one 💌</button>
   </div>
 </div>
 
 <!-- SPIN WHEEL OVERLAY -->
 <div class="ov" id="spinOv">
-  <div class="popup" style="max-width:320px;">
+  <div class="popup" style="max-width:310px;">
     <h2 id="spinTitle">Spin to decide 🎡</h2>
-    <p class="sub" id="spinSub">fate will choose for you</p>
-    <div style="position:relative;display:inline-block;margin-bottom:12px;">
-      <div style="position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:18px;">▼</div>
-      <canvas id="wc" width="240" height="240"></canvas>
+    <p class="sub">fate will choose</p>
+    <div style="position:relative;display:inline-block;margin-bottom:11px;">
+      <div style="position:absolute;top:-5px;left:50%;transform:translateX(-50%);font-size:17px;">▼</div>
+      <canvas id="wc" width="230" height="230"></canvas>
     </div>
-    <div style="font-family:'Fredoka',sans-serif;font-size:16px;min-height:22px;margin-bottom:11px;color:var(--a);" id="spinResult"></div>
-    <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap;">
+    <div style="font-family:'Fredoka',sans-serif;font-size:16px;min-height:20px;margin-bottom:10px;color:var(--a);" id="spinResult"></div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
       <button class="bs" onclick="doSpin()">Spin again 🎲</button>
       <button class="bp" id="useSpinBtn" style="display:none;" onclick="acceptSpin()">Use this ✓</button>
     </div>
   </div>
 </div>
 
-<!-- COIN FLIP OVERLAY -->
-<div class="ov" id="coinOv">
-  <div class="popup" style="max-width:360px;">
-    <h2>Disagreement detected 😂</h2>
-    <p class="sub" id="coinDesc"></p>
-    <div class="coin" id="coinEl">🪙</div>
-    <div style="font-family:'Fredoka',sans-serif;font-size:18px;min-height:24px;margin-bottom:14px;color:var(--a);" id="coinResult"></div>
-    <button class="bp" id="flipBtn" onclick="flipCoin()" style="width:100%;">Flip the coin 🎲</button>
-    <div style="font-size:12px;color:var(--lb);margin-top:10px;" id="coinWait"></div>
-  </div>
-</div>
-
 <!-- MAIN CARD -->
 <div class="card" id="mainCard">
 
-  <!-- MODE SELECT -->
-  <div class="step on" id="sModeSelect">
+  <!-- MODE SELECT (solo only, skipped if joining room) -->
+  <div class="step" id="sModeSelect">
     <span class="tag">something important 💌</span>
     <h1>How do you want to do this?</h1>
     <p class="sub">Plan alone or plan together in real-time</p>
-    <div class="og" style="grid-template-columns:1fr 1fr;margin-bottom:12px;">
-      <div class="oc" onclick="startSolo()">
-        <span class="em">🙋</span>
-        <span class="lb">Solo</span>
-        <span class="jk">you plan, she reacts</span>
-      </div>
-      <div class="oc" onclick="showTogetherEntry()">
-        <span class="em">🤝</span>
-        <span class="lb">Together</span>
-        <span class="jk">both plan in real-time</span>
-      </div>
+    <div class="og" style="grid-template-columns:1fr 1fr;">
+      <div class="oc" onclick="startSolo()"><span class="em">🙋</span><span class="lb">Solo</span><span class="jk">you plan, she reacts</span></div>
+      <div class="oc" onclick="showTogetherEntry()"><span class="em">🤝</span><span class="lb">Together</span><span class="jk">both plan in real-time</span></div>
     </div>
   </div>
 
@@ -325,38 +286,34 @@ footer{margin-top:20px;font-size:12px;color:var(--lb);}
   <div class="step" id="sTogetherEntry">
     <span class="tag">together mode 🤝</span>
     <h2>Plan your date together</h2>
-    <p class="sub">Both of you pick in real-time — when you disagree, a coin decides 🪙</p>
-
-    <div class="room-entry">
+    <p class="sub">Both pick in real-time — disagreements get settled by coin flip 🪙</p>
+    <div class="room-box">
       <h3>Create a room</h3>
       <p>Pick a room name and share the link with her</p>
-      <input class="room-inp" type="text" id="createRoomName" placeholder="e.g. vikas" maxlength="20" onkeydown="if(event.key==='Enter')createRoom()">
+      <input class="room-inp" type="text" id="createRoomInp" placeholder="e.g. vikas" maxlength="20" onkeydown="if(event.key==='Enter')createRoom()">
       <button class="bp" style="width:100%;" onclick="createRoom()">Create room 🚀</button>
     </div>
-
-    <div class="room-divider">or</div>
-
-    <div class="room-entry">
+    <div class="rdivider">or</div>
+    <div class="room-box">
       <h3>Join a room</h3>
       <p>Got a room link? Enter the room name</p>
-      <input class="room-inp" type="text" id="joinRoomName" placeholder="e.g. vikas" maxlength="20" onkeydown="if(event.key==='Enter')joinRoom()">
-      <button class="bs" style="width:100%;" onclick="joinRoom()">Join room →</button>
+      <input class="room-inp" type="text" id="joinRoomInp" placeholder="e.g. vikas" maxlength="20" onkeydown="if(event.key==='Enter')joinRoomByName()">
+      <button class="bs" style="width:100%;" onclick="joinRoomByName()">Join room →</button>
     </div>
-
     <div class="nav"><button class="bs" onclick="show('sModeSelect')">← Back</button></div>
   </div>
 
-  <!-- TOGETHER WAITING ROOM -->
+  <!-- WAITING FOR PARTNER -->
   <div class="step" id="sWaiting">
-    <div class="badge yellow"><span class="dot"></span><span id="waitStatus">Waiting for partner...</span></div>
-    <span class="tag" id="waitRoomTag">room: —</span>
-    <h2>Waiting for her to join 👀</h2>
-    <p class="sub">Share this link with her:</p>
-    <div style="background:var(--card2);border:2px solid var(--soft);border-radius:12px;padding:12px 14px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;word-break:break-all;margin-bottom:14px;color:var(--a);" id="shareLink"></div>
-    <button class="bp" style="width:100%;margin-bottom:10px;" onclick="copyLink()">📋 Copy link</button>
-    <div style="font-size:12px;color:var(--lb);" id="copyConfirm"></div>
-    <div class="waiting-ring" style="margin-top:18px;"></div>
-    <p class="sub" style="margin-top:10px;">This page will update the moment she joins</p>
+    <span class="tag" id="waitTag">room: —</span>
+    <div style="font-size:36px;margin:10px 0;">👀</div>
+    <h2>Waiting for her to join</h2>
+    <p class="sub">Share this link:</p>
+    <div class="link-box" id="shareLink"></div>
+    <button class="bp" style="width:100%;margin-bottom:9px;" onclick="copyLink()">📋 Copy link</button>
+    <div style="font-size:12px;color:var(--lb);" id="copyMsg"></div>
+    <div class="ring" style="margin-top:16px;"></div>
+    <p class="sub" style="margin-top:9px;">This page updates the moment she joins ✨</p>
   </div>
 
   <!-- PERSONAL NOTE -->
@@ -377,11 +334,8 @@ footer{margin-top:20px;font-size:12px;color:var(--lb);}
       <button id="noBtn" onmouseenter="dodge()" onmousemove="dodge()" ontouchstart="dodge(event)" onclick="return false;">No</button>
     </div>
     <div class="excuse" id="excuse"></div>
-    <div class="timer" id="timer"></div>
-    <div class="meter-wrap" id="meterWrap">
-      <div class="meter-lbl" id="meterLbl">Regret-o-meter</div>
-      <div class="meter-tr"><div class="meter-fi" id="meterFi"></div></div>
-    </div>
+    <div class="timer" id="timerEl"></div>
+    <div class="meter-wrap" id="meterWrap"><div class="meter-lbl" id="meterLbl">Regret-o-meter</div><div class="meter-tr"><div class="meter-fi" id="meterFi"></div></div></div>
     <button class="why-btn" onclick="showWhy()">why should I say yes? 🤔</button>
     <div class="why-card" id="whyCard"></div>
   </div>
@@ -391,18 +345,63 @@ footer{margin-top:20px;font-size:12px;color:var(--lb);}
     <div class="vibe" id="missionVibe">she said yes 🎉</div>
     <span class="tag">pick our vibe</span>
     <h2>What are we doing?</h2>
-    <p class="sub">Choose wisely. (It won't matter, but choose wisely.)</p>
+    <p class="sub" id="missionSub">Choose wisely. (It won't matter, but choose wisely.)</p>
     <div class="og" id="missionGrid"></div>
   </div>
 
-  <!-- SINGLE PICK -->
-  <div class="step" id="sPick">
-    <div class="vibe" id="pickVibe"></div>
-    <span class="tag" id="pickTag">details</span>
-    <h2 id="pickTitle"></h2>
-    <p class="sub" id="pickSub"></p>
-    <div class="pl" id="pickList"></div>
-    <div class="nav" id="pickNav"></div>
+  <!-- TOGETHER STEP (single pick with partner sync) -->
+  <div class="step" id="sTogetherPick">
+    <div class="t-status">
+      <span class="vibe" id="tpVibe"></span>
+      <span class="t-badge" id="tpBadge"><span class="dot"></span><span id="tpBadgeTxt">picking...</span></span>
+    </div>
+    <span class="tag" id="tpTag">details</span>
+    <h2 id="tpTitle"></h2>
+    <p class="sub" id="tpSub"></p>
+    <!-- side by side current picks -->
+    <div class="picks-grid">
+      <div class="pick-side" id="myPickSide"><div class="pick-label" id="myPickLabel">You</div><div class="pick-val" id="myPickVal">—</div></div>
+      <div class="pick-side waiting-pick" id="theirPickSide"><div class="pick-label" id="theirPickLabel">Them</div><div class="pick-val" id="theirPickVal">—</div><div class="pick-wait" id="theirPickWait">picking...</div></div>
+    </div>
+    <!-- options list -->
+    <div class="pl" id="tpList"></div>
+    <div class="nav" id="tpNav"></div>
+    <!-- accept button shown once both picked same thing -->
+    <div id="tpAcceptArea" style="display:none;margin-top:12px;">
+      <div style="background:#d1fae5;border-radius:12px;padding:11px;margin-bottom:10px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;color:#065f46;" id="tpAgreeMsg"></div>
+      <div class="accept-status" id="tpAcceptStatus"></div>
+      <button class="bp" style="width:100%;margin-top:8px;" id="tpAcceptBtn" onclick="acceptCurrentStep()">I'm in ✓</button>
+    </div>
+  </div>
+
+  <!-- NEGOTIATION STEP -->
+  <div class="step" id="sNego">
+    <span class="tag" id="negoTag">negotiation time 😂</span>
+    <h2>You two disagree</h2>
+    <p class="sub" id="negoSub">Make your case. Then let the coin decide.</p>
+    <div class="nego-box">
+      <div class="nego-picks" id="negoPicks"></div>
+      <!-- chat -->
+      <div class="chat-box">
+        <div class="chat-msgs" id="chatMsgs"><div class="chat-empty" id="chatEmpty">No messages yet. Make your case! 🗣️</div></div>
+        <div class="chat-input-row">
+          <input class="chat-inp" type="text" id="chatInp" placeholder="convince them..." maxlength="120" onkeydown="if(event.key==='Enter')sendMsg()">
+          <button class="chat-send" onclick="sendMsg()">Send</button>
+        </div>
+      </div>
+    </div>
+    <!-- coin flip area -->
+    <div id="coinArea">
+      <div class="coin" id="coinEl">🪙</div>
+      <div style="font-size:13px;color:var(--mt);margin-bottom:10px;" id="coinStatus">Ready to flip? Either of you can do it.</div>
+      <button class="bp" style="width:100%;" id="flipBtn" onclick="flipCoin()">Flip the coin 🎲</button>
+    </div>
+    <!-- coin result -->
+    <div id="coinResultArea" style="display:none;margin-top:10px;">
+      <div class="coin-result-box"><div class="cr-label">The coin has spoken 🎲</div><div class="cr-val" id="coinWinner"></div></div>
+      <div class="accept-status" id="negoAcceptStatus"></div>
+      <button class="bp" style="width:100%;margin-top:8px;" id="negoAcceptBtn" onclick="acceptNegoResult()">Accept &amp; continue ✓</button>
+    </div>
   </div>
 
   <!-- FOOD -->
@@ -412,24 +411,30 @@ footer{margin-top:20px;font-size:12px;color:var(--lb);}
     <h2 id="foodTitle">What are we eating?</h2>
     <p class="sub">Pick as many as you want.</p>
     <div class="cw" id="foodChips"></div>
+    <div id="foodTogetherArea" style="display:none;margin-bottom:10px;">
+      <div class="picks-grid">
+        <div class="pick-side" id="myFoodSide"><div class="pick-label">Your picks</div><div class="pick-val" id="myFoodVal" style="font-size:11.5px;">—</div></div>
+        <div class="pick-side waiting-pick" id="theirFoodSide"><div class="pick-label">Their picks</div><div class="pick-val" id="theirFoodVal" style="font-size:11.5px;">—</div><div class="pick-wait" id="theirFoodWait">picking...</div></div>
+      </div>
+    </div>
     <div class="nav">
       <button class="bs" onclick="flowBack()">← Back</button>
-      <button class="bp" id="foodNext" onclick="toRecap()" disabled>Seal the deal →</button>
+      <button class="bp" id="foodNext" onclick="confirmFood()" disabled>Confirm food ✓</button>
     </div>
   </div>
 
   <!-- ALREADY DONE -->
   <div class="step" id="sDone">
-    <div style="font-size:44px;margin-bottom:10px;">🎟️</div>
+    <div style="font-size:42px;margin-bottom:9px;">🎟️</div>
     <h2>Already confirmed!</h2>
     <p class="sub">The plan is in the works 💌<br><small style="font-size:11px;">triple-tap footer to reset</small></p>
   </div>
 
   <!-- RECAP -->
   <div class="step" id="sRecap">
-    <div style="font-size:40px;margin-bottom:7px;">🎟️✨</div>
+    <div style="font-size:38px;margin-bottom:6px;">🎟️✨</div>
     <h2>Booking confirmed.</h2>
-    <p class="sub" style="margin-bottom:13px;">Your official, emotionally binding ticket:</p>
+    <p class="sub" style="margin-bottom:12px;">Your official, emotionally binding ticket:</p>
     <div class="bp-wrap">
       <div class="bp-pass">
         <div class="bp-main">
@@ -442,7 +447,7 @@ footer{margin-top:20px;font-size:12px;color:var(--lb);}
         <div class="bp-stub">
           <div><div class="bpl">Date</div><div class="bpsv" id="bpDate"></div></div>
           <div><div class="bpl">Time</div><div class="bpsv" id="bpTime"></div></div>
-          <div style="font-size:20px;">💌</div>
+          <div style="font-size:19px;">💌</div>
         </div>
       </div>
     </div>
@@ -450,326 +455,436 @@ footer{margin-top:20px;font-size:12px;color:var(--lb);}
       <button class="bs" onclick="dlTicket()">💾 Save ticket</button>
       <button class="bs" onclick="addCal()">📅 Calendar</button>
     </div>
-    <div class="fw" style="margin-top:14px;">
+    <div class="fw" style="margin-top:13px;">
       <label>Your email — so the plan actually lands somewhere</label>
       <input type="email" id="emailIn" placeholder="you@example.com">
     </div>
     <div class="nav"><button class="bp" id="sendBtn" onclick="sendConf()">Send confirmation 💌</button></div>
     <div class="status" id="confStatus"></div>
-    <p class="sub" id="recapFoot" style="font-size:12px;margin-top:8px;"></p>
-    <div class="nav" style="margin-top:10px;"><button class="bs" onclick="resetAll()">🏠 Start over</button></div>
+    <p class="sub" id="recapFoot" style="font-size:12px;margin-top:7px;"></p>
+    <div class="nav" style="margin-top:9px;"><button class="bs" onclick="resetAll()">🏠 Start over</button></div>
   </div>
 
-</div><!-- end .card -->
-
+</div><!-- .card -->
 <footer id="foot" onclick="footTap()">made with way too many redrafted texts</footer>
 
 <script>
 /* ══ CONFIG ══ */
-const SCRIPT_URL  = "https://script.google.com/macros/s/AKfycbzf9T5VU46NFqjmQellNcwPEHxqDox0rGas7JKWYmgM6mE6ObMYytv428NivtXtTGCG/exec";
-const SHEET_URL   = "https://docs.google.com/spreadsheets/d/1NUszfd3LuFr56UEeUc2T3cvEKD-pwhzUY0IZRukvgpo/edit";
-const NOTE        = "Hey — I've been meaning to say something for a while now. I kept finding reasons to wait for the right moment. This is me deciding the right moment is now. No big speech, just one honest question. 🥹";
-const ADMIN_PWD   = "date2025";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzf9T5VU46NFqjmQellNcwPEHxqDox0rGas7JKWYmgM6mE6ObMYytv428NivtXtTGCG/exec";
+const ADMIN_PWD  = "date2025";
+const NOTE       = "Hey — I've been meaning to say something for a while now. I kept finding reasons to wait for the right moment. This is me deciding the right moment is now. No big speech, just one honest question. 🥹";
 
 /* ══ THEMES ══ */
-const THEMES = [
-  {id:'blush',   name:'Warm Blush',       sub:'soft & romantic',  em:'🌸', a:'#FF6F61', soft:'#FFD9E3'},
-  {id:'midnight',name:'Midnight Romance', sub:'dark & mysterious', em:'🌙', a:'#c084fc', soft:'#3b1f6e'},
-  {id:'mint',    name:'Mint Chill',        sub:'fresh & cool',     em:'🌿', a:'#14b8a6', soft:'#ccfbf1'},
-  {id:'golden',  name:'Golden Hour',       sub:'warm & golden',    em:'☀️', a:'#f59e0b', soft:'#fde68a'},
-];
-let curTheme = THEMES[0];
-const tg = document.getElementById('themeGrid');
-THEMES.forEach(t => {
-  const el = document.createElement('div'); el.className='tc'+(t.id==='blush'?' sel':''); el.style.borderColor=t.a;
-  el.innerHTML=`<div class="sw" style="background:${t.soft}">${t.em}</div><div class="tn">${t.name}</div><div class="ts">${t.sub}</div>`;
-  el.onclick=()=>{ document.querySelectorAll('.tc').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); curTheme=t; document.body.setAttribute('data-theme',t.id); };
-  tg.appendChild(el);
-});
-function pickTheme(){ hide('themeOv'); show_ov('nameOv'); }
+const THEMES=[{id:'blush',name:'Warm Blush',sub:'soft & romantic',em:'🌸',a:'#FF6F61',soft:'#FFD9E3'},{id:'midnight',name:'Midnight Romance',sub:'dark & mysterious',em:'🌙',a:'#c084fc',soft:'#3b1f6e'},{id:'mint',name:'Mint Chill',sub:'fresh & cool',em:'🌿',a:'#14b8a6',soft:'#ccfbf1'},{id:'golden',name:'Golden Hour',sub:'warm & golden',em:'☀️',a:'#f59e0b',soft:'#fde68a'}];
+let curTheme=THEMES[0];
+const tg=document.getElementById('themeGrid');
+THEMES.forEach(t=>{const el=document.createElement('div');el.className='tc'+(t.id==='blush'?' sel':'');el.style.borderColor=t.a;el.innerHTML=`<div class="sw" style="background:${t.soft}">${t.em}</div><div class="tn">${t.name}</div><div class="ts">${t.sub}</div>`;el.onclick=()=>{document.querySelectorAll('.tc').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');curTheme=t;document.body.setAttribute('data-theme',t.id);};tg.appendChild(el);});
+function pickTheme(){hide('themeOv');show_ov('nameOv');}
 
 /* ══ NAME ══ */
-let myName='', myRole=''; // 'p1' or 'p2'
+let myName='',myRole='',roomId='',joiningRoom='';
 const NAME_OPTS=[{l:'that random guy',j:"we've all been there"},{l:'😬 unknown number',j:'bold of you to open this'},{l:'do not pick up 🚫',j:'okay but you did open it'},{l:'the coffee guy ☕',j:'at least we have history'},{l:'him 😏',j:'we both know which one'},{l:'Mr. Important 🎩',j:'very formal, I respect it'},{l:'that one person 👀',j:'the only one that matters'}];
-const no=document.getElementById('nameOpts');
-NAME_OPTS.forEach(o=>{ const el=document.createElement('div');el.className='no';el.innerHTML=`<span style="font-size:17px;">📱</span><div><span>${o.l}</span><span class="nj">${o.j}</span></div>`;el.onclick=()=>setName(o.l);no.appendChild(el); });
+const noEl=document.getElementById('nameOpts');
+NAME_OPTS.forEach(o=>{const el=document.createElement('div');el.className='no';el.innerHTML=`<span style="font-size:16px;">📱</span><div><span>${o.l}</span><span class="nj">${o.j}</span></div>`;el.onclick=()=>setName(o.l);noEl.appendChild(el);});
 document.getElementById('customName').addEventListener('keydown',e=>{if(e.key==='Enter')confirmName();});
-function confirmName(){ setName(document.getElementById('customName').value.trim()||'mystery contact'); }
+function confirmName(){setName(document.getElementById('customName').value.trim()||'mystery contact');}
+
 function setName(n){
   myName=n; hide('nameOv');
   document.getElementById('senderLine').textContent=`saved as "${myName}" in your phone 📱`;
   document.getElementById('foot').textContent=`made with way too many redrafted texts — from "${myName}"`;
   document.getElementById('noteLetter').textContent=NOTE;
-  show('sModeSelect'); /* show Solo vs Together choice first */
+  /* if joining a room from URL, skip mode select and go straight to join */
+  if(joiningRoom){ myRole='p2'; roomId=joiningRoom; doJoinRoom(); return; }
+  show('sModeSelect');
   burst(15);
 }
 
-/* ══ MISSIONS ══ */
+/* hint for partner: first char + stars */
+function nameHint(n){ if(!n||n.length<1)return '???'; return n[0]+'*'.repeat(Math.max(1,n.length-1))+` (${n.length} letters)`; }
+
+/* ══ DATA ══ */
 const MISSIONS=[
-  {id:'shopping',em:'🛍️',lb:'Shopping spree',jk:'I carry bags, you carry the budget',sq:[{k:'style',t:'Shopping energy?',s:'pick your fighting style',wheel:false,o:[{l:'Window shopping',s:'(we both know this is a lie)'},{l:'Full mall crawl',s:'every floor, no mercy'},{l:'Thrift hunting 🕵️',s:'hidden gems only'},{l:'Retail therapy 💳',s:'bold and expensive'}]},{k:'eat',t:'Food after?',s:'not actually optional',wheel:false,o:[{l:'Obviously yes 🍔',s:'earned it'},{l:'Yes, snacks count 🍟',s:'a snack is a meal'}]}]},
-  {id:'finedine',em:'🍷',lb:'Fine dining',jk:'Forks left to right, panic optional',sq:[{k:'cuisine',t:'Cuisine vibes?',s:'no wrong answers, only expensive ones',wheel:true,o:[{l:'Italian 🍝',s:'pasta solves everything'},{l:'Indian 🍛',s:'spice level: ambitious'},{l:'Asian fusion 🍜',s:'chopsticks optional'},{l:'Continental 🥩',s:'committing'},{l:'Mexican 🌮',s:'tacos at fine dining, why not'},{l:'Surprise me 🎲',s:"chef's choice"}]}]},
-  {id:'movie',em:'🎬',lb:'Movie night',jk:'I will steal popcorn, no negotiations',sq:[{k:'genre',t:'What genre?',s:'I will judge slightly',wheel:true,o:[{l:'Comedy',s:'low effort, high laughs'},{l:'Action / Thriller',s:'grip the armrest'},{l:'Horror 😱',s:'hand-holding mandatory'},{l:'Romance 🥀',s:'foreshadowing, much?'},{l:'Animated',s:'we are still kids'},{l:'Sci-Fi 🚀',s:'big brain date'}]},{k:'eat',t:'Dinner after?',s:'popcorn is not dinner',wheel:false,o:[{l:'Yes obviously 🍿➡️🍝',s:''},{l:'Yes, dessert counts 🍰',s:''}]}]},
-  {id:'trip',em:'✈️',lb:'Spontaneous trip',jk:'Passport not included, vibes are',sq:[{k:'len',t:'Day trip or night trip?',s:'pack accordingly',wheel:false,o:[{l:'Day trip ☀️',s:'back by dinner'},{l:'Overnight ✨',s:'pack a bag, tell no one'}]},{k:'dest',t:'What kind of place?',s:'pick the vibe',wheel:true,o:[{l:'Sea 🌊',s:'sandy shoes, no regrets'},{l:'Mountains ⛰️',s:'cold hands, warm chai'},{l:'River 🏞️',s:'underrated'},{l:'Forest 🌲',s:'main character energy'},{l:'Hill station 🌄',s:'chai and clouds'},{l:'Anywhere with WiFi 😅',s:'a compromise'}]}]},
-  {id:'coffee',em:'☕',lb:'Coffee & talk',jk:'Low effort, high emotional damage',sq:[{k:'cafe',t:'What kind of cafe?',s:'set the scene',wheel:false,o:[{l:'Cozy corner spot',s:'soft lighting, soft feelings'},{l:'Aesthetic for the gram 📸',s:'coffee is secondary'},{l:'Old-school chai tapri',s:'no Wi-Fi, all vibes'},{l:'Quiet bookstore cafe',s:'nothing productive will happen'}]},{k:'coff',t:'How do you take it?',s:'this matters',wheel:false,o:[{l:'Latte',s:'soft and predictable'},{l:'Cappuccino',s:'foam enthusiast'},{l:'Cold brew',s:'unbothered, built different'},{l:'Filter coffee',s:'a purist'},{l:'Honestly, chai ☕',s:'we will let this slide'}]}]},
-  {id:'adventure',em:'🎢',lb:'Adventure outdoors',jk:'Screaming together builds trust',sq:[{k:'out',t:'Outdoor style?',s:'choose difficulty',wheel:true,o:[{l:'Hiking 🥾',s:'cardio but romantic'},{l:'Beach walk 🌊',s:'low stakes, high charm'},{l:'Amusement park 🎡',s:'screaming is mandatory'},{l:'Picnic 🧺',s:'ants included'},{l:'Cycling 🚲',s:'racing each other'},{l:'Stargazing 🌠',s:'max romance'}]},{k:'eat',t:'Food after?',s:'you earned it',wheel:false,o:[{l:'Yes, refuel required 🍗',s:''},{l:'Yes, picnic snacks count 🧺',s:''}]}]},
+  {id:'shopping',em:'🛍️',lb:'Shopping spree',jk:'I carry bags, you carry the budget',sq:[{k:'style',t:'Shopping energy?',s:'pick your fighting style',wheel:false,o:[{l:'Window shopping',s:'(lie)'},{l:'Full mall crawl',s:'no mercy'},{l:'Thrift hunting 🕵️',s:'hidden gems'},{l:'Retail therapy 💳',s:'bold'}]},{k:'eat',t:'Food after?',s:'not optional',wheel:false,o:[{l:'Obviously yes 🍔',s:''},{l:'Yes, snacks count 🍟',s:''}]}]},
+  {id:'finedine',em:'🍷',lb:'Fine dining',jk:'Forks left to right, panic optional',sq:[{k:'cuisine',t:'Cuisine vibes?',s:'no wrong answers, only expensive ones',wheel:true,o:[{l:'Italian 🍝',s:'pasta'},{l:'Indian 🍛',s:'ambitious'},{l:'Asian fusion 🍜',s:''},{l:'Continental 🥩',s:''},{l:'Mexican 🌮',s:''},{l:'Surprise 🎲',s:"chef's choice"}]}]},
+  {id:'movie',em:'🎬',lb:'Movie night',jk:'I will steal popcorn, no negotiations',sq:[{k:'genre',t:'What genre?',s:'choose carefully',wheel:true,o:[{l:'Comedy',s:''},{l:'Action',s:''},{l:'Horror 😱',s:'hand-holding mandatory'},{l:'Romance 🥀',s:'foreshadowing'},{l:'Animated',s:'still kids'},{l:'Sci-Fi 🚀',s:'big brain'}]},{k:'eat',t:'Dinner after?',s:'popcorn ≠ dinner',wheel:false,o:[{l:'Yes 🍿➡️🍝',s:''},{l:'Yes, dessert 🍰',s:''}]}]},
+  {id:'trip',em:'✈️',lb:'Spontaneous trip',jk:'Passport not included, vibes are',sq:[{k:'len',t:'Day or night trip?',s:'pack accordingly',wheel:false,o:[{l:'Day trip ☀️',s:'responsible'},{l:'Overnight ✨',s:'tell no one'}]},{k:'dest',t:'Where to?',s:'pick the vibe',wheel:true,o:[{l:'Sea 🌊',s:'sandy shoes'},{l:'Mountains ⛰️',s:'cold hands, warm chai'},{l:'River 🏞️',s:''},{l:'Forest 🌲',s:'main character'},{l:'Hill station 🌄',s:'chai & clouds'},{l:'Anywhere 😅',s:''}]}]},
+  {id:'coffee',em:'☕',lb:'Coffee & talk',jk:'Low effort, high emotional damage',sq:[{k:'cafe',t:'What kind of cafe?',s:'set the scene',wheel:false,o:[{l:'Cozy corner',s:'soft feelings'},{l:'Aesthetic 📸',s:'gram worthy'},{l:'Chai tapri',s:'no WiFi'},{l:'Bookstore cafe',s:'nothing productive'}]},{k:'coff',t:'How do you take it?',s:'matters more than you think',wheel:false,o:[{l:'Latte',s:''},{l:'Cappuccino',s:''},{l:'Cold brew',s:'unbothered'},{l:'Filter coffee',s:'purist'},{l:'Chai ☕',s:'let this slide'}]}]},
+  {id:'adventure',em:'🎢',lb:'Adventure outdoors',jk:'Screaming together builds trust',sq:[{k:'out',t:'Outdoor style?',s:'choose difficulty',wheel:true,o:[{l:'Hiking 🥾',s:'cardio romantic'},{l:'Beach walk 🌊',s:''},{l:'Amusement park 🎡',s:'mandatory screaming'},{l:'Picnic 🧺',s:'ants included'},{l:'Cycling 🚲',s:''},{l:'Stargazing 🌠',s:'max romance'}]},{k:'eat',t:'Food after?',s:'you earned it',wheel:false,o:[{l:'Yes 🍗',s:''},{l:'Picnic snacks 🧺',s:''}]}]},
 ];
-const FOODS=[{id:'veg',l:'🥗 Veg'},{id:'nv',l:'🍗 Non-veg'},{id:'vgn',l:'🌱 Vegan'},{id:'sp',l:'🌶️ Spicy, always'},{id:'ds',l:'🍰 Dessert is main course'},{id:'st',l:'🌮 Street food only'},{id:'fn',l:'🍝 Fancy & overpriced'},{id:'sr',l:'🎲 Surprise me'}];
+const FOODS=[{id:'veg',l:'🥗 Veg'},{id:'nv',l:'🍗 Non-veg'},{id:'vgn',l:'🌱 Vegan'},{id:'sp',l:'🌶️ Spicy, always'},{id:'ds',l:'🍰 Dessert is main'},{id:'st',l:'🌮 Street food'},{id:'fn',l:'🍝 Fancy & overpriced'},{id:'sr',l:'🎲 Surprise me'}];
 const LOCS=[{em:'📍',lb:'Our city',jk:'home turf'},{em:'🚗',lb:'Day drive away',jk:'2hrs max'},{em:'🚆',lb:'Outstation',jk:'proper adventure'},{em:'🌍',lb:'Wherever we end up',jk:'chaotic neutral'}];
-const SUB_LABELS={style:'Style',eat:'Food after',cuisine:'Cuisine',genre:'Genre',len:'Trip',dest:'Destination',cafe:'Cafe',coff:'Coffee',out:'Outdoor'};
+const SUB_LBL={style:'Style',eat:'Food after',cuisine:'Cuisine',genre:'Genre',len:'Trip',dest:'Destination',cafe:'Cafe',coff:'Coffee',out:'Outdoor'};
 
 /* build mission grid */
 const mg=document.getElementById('missionGrid');
-MISSIONS.forEach(m=>{ const el=document.createElement('div');el.className='oc';el.innerHTML=`<span class="em">${m.em}</span><span class="lb">${m.lb}</span><span class="jk">${m.jk}</span>`;el.onclick=()=>pickMission(m);mg.appendChild(el); });
-
+MISSIONS.forEach(m=>{const el=document.createElement('div');el.className='oc';el.innerHTML=`<span class="em">${m.em}</span><span class="lb">${m.lb}</span><span class="jk">${m.jk}</span>`;el.onclick=()=>pickMission(m);mg.appendChild(el);});
 /* build food chips */
 const fc=document.getElementById('foodChips');
-FOODS.forEach(f=>{ const el=document.createElement('div');el.className='ch';el.textContent=f.l;el.onclick=()=>{ if(selFoods.has(f.id)){selFoods.delete(f.id);el.classList.remove('sel');}else{selFoods.add(f.id);el.classList.add('sel');} document.getElementById('foodNext').disabled=selFoods.size===0; if(roomId)syncPick('food',['food',[...selFoods].join(',')]); };fc.appendChild(el); });
+FOODS.forEach(f=>{const el=document.createElement('div');el.className='ch';el.textContent=f.l;el.onclick=()=>{if(selFoods.has(f.id)){selFoods.delete(f.id);el.classList.remove('sel');}else{selFoods.add(f.id);el.classList.add('sel');}document.getElementById('foodNext').disabled=selFoods.size===0;if(roomId)syncField('foodPick',[...selFoods].join(','));};fc.appendChild(el);});
 
 /* ══ STATE ══ */
 let selMission=null,answers={},selFoods=new Set(),selDate=null,selTime=null,selLoc=null,flow=[],fi=-1;
-let roomId='',isSolo=true,p1Picks={},p2Picks={},pendingCoinKey='',pendingCoinChoices=[];
+let isSolo=true;
+
+/* ══ FIREBASE HELPERS ══ */
+function waitFB(){return new Promise(r=>{if(window._fbReady)r();else window.addEventListener('fbready',r,{once:true});});}
+function fbSet(path,val){const {db,ref,set}=window._fb;return set(ref(db,path),val);}
+function fbUpdate(path,val){const {db,ref,update}=window._fb;return update(ref(db,path),val);}
+function fbGet(path){const {db,ref,get}=window._fb;return get(ref(db,path)).then(s=>s.exists()?s.val():null);}
+function fbPush(path,val){const {db,ref,push}=window._fb;return push(ref(db,path),val);}
+function fbListen(path,cb){const {db,ref,onValue}=window._fb;return onValue(ref(db,path),snap=>cb(snap.exists()?snap.val():null));}
 
 /* ══ MODE SELECT ══ */
-function startSolo(){ isSolo=true; show('sNote'); }
-function showTogetherEntry(){ isSolo=false; show('sTogetherEntry'); }
+function startSolo(){isSolo=true;show('sNote');}
+function showTogetherEntry(){isSolo=false;show('sTogetherEntry');}
 
-/* ══ TOGETHER MODE — FIREBASE ══ */
-let db,fbRef,fbSet,fbOnValue,fbUpdate,fbGet;
-
-function waitForFB(){ return new Promise(res=>{ if(window._fbReady){res();}else{window.addEventListener('fbready',res,{once:true});} }); }
-
+/* ══ CREATE ROOM ══ */
 async function createRoom(){
-  await waitForFB();
-  const n=document.getElementById('createRoomName').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
-  if(!n){alert('Enter a room name');return;}
+  await waitFB();
+  const n=document.getElementById('createRoomInp').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
+  if(!n){alert('Enter a room name first!');return;}
   roomId=n; myRole='p1';
-  const {db,ref,set}=window._fb;
-  await set(ref(db,`rooms/${roomId}`),{p1:{name:myName||'Player 1',picks:{},joined:true,ts:Date.now()},p2:{joined:false},status:'waiting',ts:Date.now()});
+  await fbSet(`rooms/${roomId}`,{
+    status:'waiting',ts:Date.now(),
+    p1:{name:myName,nameHint:nameHint(myName),joined:true,ts:Date.now(),picks:{}},
+    p2:{joined:false}
+  });
   startRoomListener();
-  document.getElementById('waitRoomTag').textContent=`room: ${roomId}`;
-  const link=window.location.href.split('#')[0]+'#room='+roomId;
+  document.getElementById('waitTag').textContent=`room: ${roomId}`;
+  const link=location.href.split('#')[0]+'#room='+roomId;
   document.getElementById('shareLink').textContent=link;
   show('sWaiting');
 }
 
-async function joinRoom(){
-  await waitForFB();
-  const n=document.getElementById('joinRoomName').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
-  if(!n){alert('Enter a room name');return;}
-  roomId=n; myRole='p2';
-  const {db,ref,update,get}=window._fb;
-  const snap=await get(ref(db,`rooms/${roomId}`));
-  if(!snap.exists()){alert('Room not found! Check the room name.');return;}
-  await update(ref(db,`rooms/${roomId}/p2`),{name:myName||'Player 2',picks:{},joined:true,ts:Date.now()});
-  await update(ref(db,`rooms/${roomId}`),{status:'active'});
+/* ══ JOIN ROOM ══ */
+function joinRoomByName(){
+  const n=document.getElementById('joinRoomInp').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
+  if(!n){alert('Enter a room name first!');return;}
+  joiningRoom=n; myRole='p2';
+  /* show name popup customised for joiner */
+  document.getElementById('nameEmoji').textContent='🤝';
+  document.getElementById('nameTitle').textContent='Quick — before you join...';
+  document.getElementById('nameDesc').textContent='What is their number saved as in YOUR phone?';
+  show_ov('nameOv');
+}
+
+async function doJoinRoom(){
+  await waitFB();
+  const roomData=await fbGet(`rooms/${roomId}`);
+  if(!roomData){alert('Room not found! Check the room name.');show('sTogetherEntry');return;}
+  /* show partner hint */
+  const hint=roomData.p1?.nameHint||'someone';
+  const hintMsg=document.createElement('div');
+  hintMsg.style.cssText='background:var(--soft);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13.5px;font-weight:600;color:var(--a);text-align:center;';
+  hintMsg.textContent=`👀 Someone is waiting for you... they saved themselves as "${hint}"`;
+  document.getElementById('sMission').insertBefore(hintMsg,document.getElementById('sMission').firstChild);
+  await fbUpdate(`rooms/${roomId}/p2`,{name:myName,nameHint:nameHint(myName),joined:true,ts:Date.now(),picks:{}});
+  await fbUpdate(`rooms/${roomId}`,{status:'active'});
   startRoomListener();
   show('sMission');
   document.getElementById('missionVibe').textContent=`🤝 together mode — room: ${roomId}`;
+  document.getElementById('missionSub').textContent=`Both of you pick — disagreements → coin flip 🪙`;
+  burst(20);
 }
 
+/* ══ ROOM LISTENER ══ */
+let unsubRoom=null,unsubChat=null,currentFlowKey='',awaitingBothAccept=false;
 function startRoomListener(){
-  const {db,ref,onValue}=window._fb;
-  onValue(ref(db,`rooms/${roomId}`),snap=>{
-    if(!snap.exists())return;
-    const data=snap.val();
-    handleRoomUpdate(data);
+  fbListen(`rooms/${roomId}`,data=>{
+    if(!data)return;
+    if(myRole==='p1'&&data.status==='active'&&document.getElementById('sWaiting').classList.contains('on')){
+      const p2hint=data.p2?.nameHint||'someone';
+      show('sMission');
+      document.getElementById('missionVibe').textContent=`🤝 together mode — room: ${roomId}`;
+      document.getElementById('missionSub').textContent=`${p2hint} has joined! Both pick — disagreements → coin flip 🪙`;
+      burst(20); return;
+    }
+    handleRoomData(data);
   });
 }
 
-function handleRoomUpdate(data){
-  /* P1: partner joined → move to mission */
-  if(myRole==='p1' && data.status==='active' && document.getElementById('sWaiting').classList.contains('on')){
-    burst(20);
-    show('sMission');
-    document.getElementById('missionVibe').textContent=`🤝 together mode — room: ${roomId}`;
-    return;
-  }
-  /* Sync partner picks into UI */
-  const partner=myRole==='p1'?data.p2:data.p1;
-  const mine=myRole==='p1'?data.p1:data.p2;
-  if(partner&&partner.picks){
-    updatePartnerPickDisplay(partner.picks);
-    checkAgreement(mine?.picks||{},partner.picks,data);
-  }
-  /* coin flip result */
-  if(data.coinResult&&data.coinKey===pendingCoinKey){
-    resolveCoin(data.coinResult,data.coinKey,data.coinChoices);
-  }
-}
+function handleRoomData(data){
+  const me=data[myRole]||{};const them=data[myRole==='p1'?'p2':'p1']||{};
+  const step=data.step||{};
+  if(!step.key) return;
 
-function syncPick(key,value){
-  if(!roomId)return;
-  const {db,ref,update}=window._fb;
-  const path=`rooms/${roomId}/${myRole}/picks/${key}`;
-  update(ref(db,path.split('/').slice(0,-1).join('/')),{[key]:value});
-}
-
-function updatePartnerPickDisplay(picks){
-  /* update any visible partner side in together-picks UI */
-  const pSide=document.getElementById('partnerSide');
-  if(pSide&&picks.current){
-    pSide.classList.add('picked');
-    pSide.querySelector('.tp-pick').textContent=picks.current;
-    pSide.querySelector('.tp-wait').style.display='none';
+  /* ── update together pick UI ── */
+  if(document.getElementById('sTogetherPick').classList.contains('on')){
+    const myPick=me.picks?.[step.key];
+    const theirPick=them.picks?.[step.key];
+    updatePickUI(myPick,theirPick,step,data,me,them);
   }
-}
 
-function checkAgreement(myPicks,partnerPicks,data){
-  const key=myPicks.currentKey;
-  if(!key||myPicks.currentKey!==partnerPicks.currentKey)return;
-  if(myPicks.current&&partnerPicks.current&&myPicks.currentKey===partnerPicks.currentKey){
-    if(myPicks.current===partnerPicks.current){
-      /* AGREE — auto advance */
-    } else {
-      /* DISAGREE — coin flip */
-      if(pendingCoinKey!==key){
-        pendingCoinKey=key;
-        pendingCoinChoices=[myPicks.current,partnerPicks.current];
-        showCoinFlip(myPicks.current,partnerPicks.current,key);
-      }
+  /* ── update negotiation UI ── */
+  if(document.getElementById('sNego').classList.contains('on')){
+    /* coin result arrived */
+    if(step.coinResult&&step.coinKey===currentFlowKey){
+      showCoinResult(step.coinResult,step);
+    }
+    /* check accept status */
+    updateNegoAccept(step,me,them);
+  }
+
+  /* ── update food ui ── */
+  if(document.getElementById('sFood').classList.contains('on')&&roomId){
+    const theirFood=them.picks?.foodPick||'';
+    if(theirFood){
+      document.getElementById('theirFoodSide').classList.add('has-pick');
+      document.getElementById('theirFoodVal').textContent=theirFood.split(',').map(id=>FOODS.find(f=>f.id===id)?.l||id).join(', ')||'—';
+      document.getElementById('theirFoodWait').style.display='none';
     }
   }
 }
 
-/* ══ MISSION PICK ══ */
-function pickMission(m){
-  selMission=m;
-  if(roomId) syncPick('mission',m.lb);
-  buildFlow(); setTimeout(flowNext,80);
+function updatePickUI(myPick,theirPick,step,data,me,them){
+  /* my side */
+  if(myPick){document.getElementById('myPickSide').classList.add('has-pick');document.getElementById('myPickVal').textContent=myPick;}
+  /* their side */
+  if(theirPick){document.getElementById('theirPickSide').classList.add('has-pick');document.getElementById('theirPickSide').classList.remove('waiting-pick');document.getElementById('theirPickVal').textContent=theirPick;document.getElementById('theirPickWait').style.display='none';}
+
+  if(myPick&&theirPick){
+    if(myPick===theirPick){
+      /* AGREE */
+      document.getElementById('tpBadge').className='t-badge green';
+      document.getElementById('tpBadgeTxt').textContent='You agree! 🎉';
+      document.getElementById('tpAcceptArea').style.display='block';
+      document.getElementById('tpAgreeMsg').textContent=`🎉 You both chose "${myPick}"`;
+      /* show accept status */
+      const p1Acc=step.p1Accepted||false,p2Acc=step.p2Accepted||false;
+      const myAcc=myRole==='p1'?p1Acc:p2Acc,theirAcc=myRole==='p1'?p2Acc:p1Acc;
+      document.getElementById('tpAcceptStatus').innerHTML=`<div class="ac-side ${myAcc?'done':'pending'}">${myAcc?'✅ You':'⏳ You'}</div><div class="ac-side ${theirAcc?'done':'pending'}">${theirAcc?'✅ Them':'⏳ Them'}</div>`;
+      if(myAcc) document.getElementById('tpAcceptBtn').disabled=true;
+      /* both accepted → advance */
+      if(p1Acc&&p2Acc){setTimeout(()=>advanceAfterAccept(myPick,step),600);}
+    } else {
+      /* DISAGREE → go to negotiation */
+      if(!document.getElementById('sNego').classList.contains('on')){
+        currentFlowKey=step.key;
+        enterNegotiation(myPick,theirPick,step);
+      }
+    }
+  } else {
+    document.getElementById('tpBadge').className='t-badge yellow';
+    document.getElementById('tpBadgeTxt').textContent=theirPick?'Waiting for you...':'Waiting for them...';
+  }
 }
 
-/* ══ FLOW ══ */
-function buildFlow(){
-  flow=[]; selMission.sq.forEach(q=>flow.push({k:'sub',def:q}));
-  flow.push({k:'loc'},{k:'date'},{k:'time'},{k:'food'});
-  fi=-1;answers={};selDate=null;selTime=null;selLoc=null;selFoods=new Set();
-  document.querySelectorAll('#foodChips .ch').forEach(c=>c.classList.remove('sel'));
-  document.getElementById('foodNext').disabled=true;
-}
-function flowNext(){fi++;if(fi>=flow.length){toRecap();return;}renderFlow();}
-function flowBack(){if(fi<=0){show('sMission');fi=-1;return;}fi--;renderFlow();}
+/* ══ TOGETHER STEP RENDER ══ */
+let currentStepOnPick=null;
+function renderTogetherStep(item,sn,st){
+  let title,sub,opts,key,canSpin=false;
+  if(item.k==='loc'){key='loc';title='Where are we doing this?';sub='city, road trip, or full send';opts=LOCS.map(l=>({l:l.em+' '+l.lb,s:l.jk}));}
+  else if(item.k==='date'){key='date';title="When's good?";sub="pick a real day, not 'someday'";opts=dateOpts().map(d=>({l:d.l,s:d.s}));}
+  else if(item.k==='time'){key='time';title='What time works?';sub="approximate is fine";opts=timeOpts().map(t=>({l:t.l,s:t.s}));}
+  else{const d=item.def;key=d.k;title=d.t;sub=d.s||'';opts=d.o;canSpin=!!d.wheel;}
+  currentFlowKey=key;
 
-function fmtD(d){return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});}
-function nextDow(b,dow){const d=new Date(b);d.setDate(d.getDate()+(dow-d.getDay()+7)%7);return d;}
-function dateOpts(){const t=new Date(),tm=new Date(t);tm.setDate(t.getDate()+1);const sat=nextDow(t,6),sun=nextDow(t,0),wknd=sat<=sun?sat:sun;return[{l:'Today',s:fmtD(t)},{l:'Tomorrow',s:fmtD(tm)},{l:'This weekend 🎉',s:fmtD(wknd)},{l:'Saturday',s:fmtD(sat)},{l:'Whenever 🎲',s:'no pressure'}];}
-function timeOpts(){return[{l:'Morning ☀️',s:'9am–12pm'},{l:'Afternoon 🌤️',s:'12pm–4pm'},{l:'Evening 🌇',s:'4pm–7pm golden hour'},{l:'Night 🌙',s:'7pm onwards, mood'}];}
+  /* init step in Firebase */
+  fbUpdate(`rooms/${roomId}/step`,{key,phase:'picking',p1Accepted:false,p2Accepted:false,coinResult:null,coinKey:null});
+  fbUpdate(`rooms/${roomId}/${myRole}/picks`,{[key]:null,currentKey:key});
+  /* also clear partner's pick for this key */
 
-function renderFlow(){
-  const item=flow[fi],sn=fi+2,st=flow.length+1;
-  if(item.k==='food'){
-    document.getElementById('foodVibe').textContent=`${selMission.em} ${selMission.lb} — almost done ✨`+(roomId?' 🤝':'');
-    document.getElementById('foodTitle').textContent=selMission.id==='coffee'?'Snacks on the side?':'What are we eating?';
-    show('sFood');return;
-  }
-  let title,sub,opts,onPick,canSpin=false;
-  if(item.k==='loc'){title='Where are we doing this?';sub='city, road trip, or full send';opts=LOCS.map(l=>({l:l.em+' '+l.lb,s:l.jk}));onPick=(_,i)=>{selLoc=LOCS[i];if(roomId)syncPick('loc',selLoc.lb);flowNext();};}
-  else if(item.k==='date'){title="When's good?";sub="pick a real day, not 'someday'";opts=dateOpts().map(d=>({l:d.l,s:d.s}));onPick=o=>{selDate=o;if(roomId)syncPick('date',o.l);flowNext();};}
-  else if(item.k==='time'){title='What time works?';sub="approximate is fine";opts=timeOpts().map(t=>({l:t.l,s:t.s}));onPick=o=>{selTime=o;if(roomId)syncPick('time',o.l);flowNext();};}
-  else{const d=item.def;title=d.t;sub=d.s||'';opts=d.o;canSpin=!!d.wheel;onPick=o=>{answers[d.k]=o.l;if(roomId)syncPick(d.k,o.l);flowNext();};}
+  document.getElementById('tpVibe').textContent=`${selMission.em} ${selMission.lb} — step ${sn} of ${st}`;
+  document.getElementById('tpTag').textContent=key==='loc'?'📍 location':key==='date'?'📅 when':key==='time'?'🕒 time':'✨ details';
+  document.getElementById('tpTitle').textContent=title;
+  document.getElementById('tpSub').textContent=sub;
+  document.getElementById('myPickSide').className='pick-side';document.getElementById('myPickVal').textContent='—';
+  document.getElementById('theirPickSide').className='pick-side waiting-pick';document.getElementById('theirPickVal').textContent='—';document.getElementById('theirPickWait').style.display='';
+  document.getElementById('tpAcceptArea').style.display='none';
+  document.getElementById('tpBadge').className='t-badge yellow';document.getElementById('tpBadgeTxt').textContent='both picking...';
 
-  document.getElementById('pickVibe').textContent=`${selMission.em} ${selMission.lb} — step ${sn} of ${st}`+(roomId?' 🤝':'');
-  document.getElementById('pickTag').textContent=item.k==='loc'?'📍 location':item.k==='date'?'📅 when':item.k==='time'?'🕒 time':'✨ details';
-  document.getElementById('pickTitle').textContent=title;
-  document.getElementById('pickSub').textContent=sub;
+  /* label sides */
+  document.getElementById('myPickLabel').textContent='You';
+  document.getElementById('theirPickLabel').textContent='Them';
 
-  /* Together mode: show split picks UI above the list */
-  const existingTP=document.getElementById('togetherPicks');
-  if(existingTP)existingTP.remove();
-  if(roomId){
-    const tp=document.createElement('div');tp.id='togetherPicks';tp.className='together-picks';tp.style.marginBottom='12px';
-    const myLabel=myRole==='p1'?'You (Player 1)':'You (Player 2)';
-    const ptLabel=myRole==='p1'?'Her pick':'His pick';
-    tp.innerHTML=`<div class="tp-side" id="mySide"><div class="tp-label">${myLabel}</div><div class="tp-pick" id="myPickDisplay">—</div></div><div class="tp-side waiting" id="partnerSide"><div class="tp-label">${ptLabel}</div><div class="tp-pick" id="partnerPickDisplay">—</div><div class="tp-wait">picking...</div></div>`;
-    document.getElementById('pickList').before(tp);
-  }
-
-  const pl=document.getElementById('pickList');pl.innerHTML='';
+  const list=document.getElementById('tpList');list.innerHTML='';
+  let myChosen=false;
   opts.forEach((o,i)=>{
     const r=document.createElement('div');r.className='pc';
     r.innerHTML=`<div><div class="ml">${o.l}</div>${o.s?`<div class="sl">${o.s}</div>`:''}</div><div class="ck">✓</div>`;
     r.onclick=()=>{
-      document.querySelectorAll('#pickList .pc').forEach(x=>x.classList.remove('sel'));
-      r.classList.add('sel');
-      if(roomId){
-        const mySide=document.getElementById('mySide');
-        if(mySide){mySide.classList.add('picked');document.getElementById('myPickDisplay').textContent=o.l;}
-        syncPick('current',o.l);
-        syncPick('currentKey',item.k==='sub'?item.def.k:item.k);
-      }
-      if(!roomId) setTimeout(()=>onPick(o,i),210);
-      else setTimeout(()=>onPick(o,i),400); /* slight delay in together mode to show pick */
+      if(myChosen)return; myChosen=true;
+      document.querySelectorAll('#tpList .pc').forEach(x=>x.classList.remove('sel'));r.classList.add('sel');
+      fbUpdate(`rooms/${roomId}/${myRole}/picks`,{[key]:o.l,currentKey:key});
+      document.getElementById('myPickSide').classList.add('has-pick');
+      document.getElementById('myPickVal').textContent=o.l;
+      document.getElementById('tpBadge').className='t-badge yellow';document.getElementById('tpBadgeTxt').textContent='waiting for them...';
     };
-    pl.appendChild(r);
+    list.appendChild(r);
   });
+  currentStepOnPick=opts;
 
-  const nav=document.getElementById('pickNav');nav.innerHTML='';
-  const bb=document.createElement('button');bb.className='bs';bb.textContent='← Back';bb.onclick=flowBack;nav.appendChild(bb);
-  if(canSpin){const sb=document.createElement('button');sb.className='bs';sb.textContent='🎡 Spin to decide';sb.onclick=()=>openSpin(opts.map(o=>o.l),title,onPick);nav.appendChild(sb);}
-  show('sPick');
+  const nav=document.getElementById('tpNav');nav.innerHTML='';
+  if(canSpin){const sb=document.createElement('button');sb.className='bs';sb.textContent='🎡 Spin to decide';sb.onclick=()=>openSpin(opts.map(o=>o.l),title,o=>{if(myChosen)return;myChosen=true;fbUpdate(`rooms/${roomId}/${myRole}/picks`,{[key]:o.l,currentKey:key});document.getElementById('myPickSide').classList.add('has-pick');document.getElementById('myPickVal').textContent=o.l;});nav.appendChild(sb);}
+
+  show('sTogetherPick');
 }
 
-/* ══ COIN FLIP ══ */
-function showCoinFlip(myPick,partnerPick,key){
-  document.getElementById('coinDesc').textContent=`You picked "${myPick}" · They picked "${partnerPick}"`;
-  document.getElementById('coinResult').textContent='';
-  document.getElementById('coinWait').textContent='';
-  const flipBtn=document.getElementById('flipBtn');
-  flipBtn.style.display='';
-  /* Only P1 flips — P2 waits */
-  if(myRole==='p2'){flipBtn.style.display='none';document.getElementById('coinWait').textContent='Waiting for the coin flip...';}
-  show_ov('coinOv');
+async function acceptCurrentStep(){
+  document.getElementById('tpAcceptBtn').disabled=true;
+  await fbUpdate(`rooms/${roomId}/step`,{[myRole+'Accepted']:true});
 }
 
-function flipCoin(){
-  const coin=document.getElementById('coinEl');
-  const flipBtn=document.getElementById('flipBtn');
-  flipBtn.disabled=true;
-  coin.classList.add('flip');
-  setTimeout(()=>{
-    coin.classList.remove('flip');
-    const winner=Math.random()<0.5?pendingCoinChoices[0]:pendingCoinChoices[1];
-    document.getElementById('coinResult').textContent=`🎲 Coin says: ${winner}!`;
-    if(roomId){
-      const {db,ref,update}=window._fb;
-      update(ref(db,`rooms/${roomId}`),{coinResult:winner,coinKey:pendingCoinKey,coinChoices:pendingCoinChoices,coinTs:Date.now()});
-    } else {
-      resolveCoin(winner,pendingCoinKey,pendingCoinChoices);
-    }
-    flipBtn.disabled=false;
+function advanceAfterAccept(winner,step){
+  const k=step.key;
+  if(k==='loc'){selLoc=LOCS.find(l=>winner.includes(l.lb))||{em:'📍',lb:winner,jk:''};} 
+  else if(k==='date'){selDate={l:winner};} 
+  else if(k==='time'){selTime={l:winner};} 
+  else{answers[k]=winner;}
+  flowNext();
+}
+
+/* ══ NEGOTIATION ══ */
+function enterNegotiation(myPick,theirPick,step){
+  document.getElementById('negoTag').textContent=`${selMission.em} negotiation time 😂`;
+  document.getElementById('negoSub').textContent=`You picked "${myPick}" — they picked "${theirPick}". Make your case.`;
+  const np=document.getElementById('negoPicks');
+  np.innerHTML=`<div class="nego-pick mine"><div class="nego-pick-lbl">Your pick</div><div class="nego-pick-val">${myPick}</div></div><div class="nego-pick theirs"><div class="nego-pick-lbl">Their pick</div><div class="nego-pick-val">${theirPick}</div></div>`;
+  document.getElementById('coinArea').style.display='block';
+  document.getElementById('coinResultArea').style.display='none';
+  document.getElementById('coinEl').className='coin';document.getElementById('coinStatus').textContent='Ready to flip? Either of you can do it.';
+  document.getElementById('flipBtn').disabled=false;
+  /* start chat listener */
+  startChatListener();
+  show('sNego');
+}
+
+function startChatListener(){
+  if(unsubChat)return; /* already listening */
+  fbListen(`rooms/${roomId}/chat/${currentFlowKey}`,msgs=>{
+    const box=document.getElementById('chatMsgs');
+    box.innerHTML='';
+    if(!msgs||Object.keys(msgs).length===0){box.innerHTML='<div class="chat-empty" id="chatEmpty">No messages yet. Make your case! 🗣️</div>';return;}
+    Object.values(msgs).sort((a,b)=>a.ts-b.ts).forEach(m=>{
+      const d=document.createElement('div');
+      d.className='chat-msg '+(m.role===myRole?'mine':'theirs');
+      d.innerHTML=`<div class="cm-from">${m.role===myRole?'You':'Them'}</div>${m.text}`;
+      box.appendChild(d);
+    });
+    box.scrollTop=box.scrollHeight;
+  });
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('chatInp');const txt=inp.value.trim();if(!txt)return;inp.value='';
+  await fbPush(`rooms/${roomId}/chat/${currentFlowKey}`,{role:myRole,text:txt,ts:Date.now()});
+}
+
+async function flipCoin(){
+  document.getElementById('flipBtn').disabled=true;
+  document.getElementById('coinEl').classList.add('spin');
+  setTimeout(async()=>{
+    document.getElementById('coinEl').classList.remove('spin');
+    const myPick=document.getElementById('myPickVal').textContent;
+    const theirPick=document.getElementById('theirPickVal').textContent;
+    const choices=[myPick,theirPick].filter(x=>x&&x!=='—');
+    const winner=choices[Math.floor(Math.random()*choices.length)];
+    await fbUpdate(`rooms/${roomId}/step`,{coinResult:winner,coinKey:currentFlowKey,coinChoices:choices,coinFlippedBy:myRole,p1Accepted:false,p2Accepted:false});
   },900);
 }
 
-function resolveCoin(winner,key,choices){
-  if(document.getElementById('coinOv').classList.contains('on')){
-    document.getElementById('coinResult').textContent=`🎲 Coin says: ${winner}!`;
-    setTimeout(()=>{
-      hide('coinOv');
-      /* apply the coin result to the answers */
-      answers[key]=winner;
-      pendingCoinKey='';
-      flowNext();
-    },1800);
-  }
+function showCoinResult(winner,step){
+  document.getElementById('coinArea').style.display='none';
+  document.getElementById('coinResultArea').style.display='block';
+  document.getElementById('coinWinner').textContent=winner;
+  updateNegoAccept(step,null,null);
 }
+
+function updateNegoAccept(step,me,them){
+  if(!step.coinResult)return;
+  const p1A=step.p1Accepted||false,p2A=step.p2Accepted||false;
+  const myA=myRole==='p1'?p1A:p2A,theirA=myRole==='p1'?p2A:p1A;
+  document.getElementById('negoAcceptStatus').innerHTML=`<div class="ac-side ${myA?'done':'pending'}">${myA?'✅ You':'⏳ You'}</div><div class="ac-side ${theirA?'done':'pending'}">${theirA?'✅ Them':'⏳ Them'}</div>`;
+  if(myA)document.getElementById('negoAcceptBtn').disabled=true;
+  if(p1A&&p2A){setTimeout(()=>advanceAfterAccept(step.coinResult,step),600);}
+}
+
+async function acceptNegoResult(){
+  document.getElementById('negoAcceptBtn').disabled=true;
+  await fbUpdate(`rooms/${roomId}/step`,{[myRole+'Accepted']:true});
+}
+
+/* ══ FOOD (TOGETHER) ══ */
+async function confirmFood(){
+  if(roomId){
+    const foodStr=[...selFoods].join(',');
+    await fbUpdate(`rooms/${roomId}/${myRole}/picks`,{foodPick:foodStr,foodDone:true});
+    /* wait for partner */
+    document.getElementById('foodNext').disabled=true;
+    document.getElementById('foodNext').textContent='Waiting for them...';
+    /* check if both done via listener — already running */
+    const checkBoth=setInterval(async()=>{
+      const data=await fbGet(`rooms/${roomId}`);
+      if(!data)return;
+      const them=data[myRole==='p1'?'p2':'p1']||{};
+      if(them.picks?.foodDone){
+        clearInterval(checkBoth);
+        toRecap();
+      }
+    },2000);
+  } else { toRecap(); }
+}
+
+/* ══ FLOW (SOLO) ══ */
+function buildFlow(){
+  flow=[];selMission.sq.forEach(q=>flow.push({k:'sub',def:q}));
+  flow.push({k:'loc'},{k:'date'},{k:'time'},{k:'food'});
+  fi=-1;answers={};selDate=null;selTime=null;selLoc=null;selFoods=new Set();
+  document.querySelectorAll('#foodChips .ch').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('foodNext').disabled=true;document.getElementById('foodNext').textContent='Confirm food ✓';
+}
+function flowNext(){fi++;if(fi>=flow.length){toRecap();return;}const item=flow[fi];if(roomId){renderTogetherStep(item,fi+2,flow.length+1);}else{renderSoloStep(item,fi+2,flow.length+1);}}
+function flowBack(){if(fi<=0){show(roomId?'sMission':'sMission');fi=-1;return;}fi--;if(roomId){renderTogetherStep(flow[fi],fi+2,flow.length+1);}else{renderSoloStep(flow[fi],fi+2,flow.length+1);}}
+
+function fmtD(d){return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});}
+function nextDow(b,dow){const d=new Date(b);d.setDate(d.getDate()+(dow-d.getDay()+7)%7);return d;}
+function dateOpts(){const t=new Date(),tm=new Date(t);tm.setDate(t.getDate()+1);const sat=nextDow(t,6),sun=nextDow(t,0),wknd=sat<=sun?sat:sun;return[{l:'Today',s:fmtD(t)},{l:'Tomorrow',s:fmtD(tm)},{l:'This weekend 🎉',s:fmtD(wknd)},{l:'Saturday',s:fmtD(sat)},{l:'Whenever 🎲',s:'no pressure'}];}
+function timeOpts(){return[{l:'Morning ☀️',s:'9am–12pm'},{l:'Afternoon 🌤️',s:'12pm–4pm'},{l:'Evening 🌇',s:'4pm–7pm'},{l:'Night 🌙',s:'7pm onwards'}];}
+
+function renderSoloStep(item,sn,st){
+  if(item.k==='food'){document.getElementById('foodVibe').textContent=`${selMission.em} ${selMission.lb} — almost done ✨`;document.getElementById('foodTitle').textContent=selMission.id==='coffee'?'Snacks on the side?':'What are we eating?';document.getElementById('foodTogetherArea').style.display='none';show('sFood');return;}
+  let title,sub,opts,onPick,canSpin=false;
+  if(item.k==='loc'){title='Where?';sub='set the range';opts=LOCS.map(l=>({l:l.em+' '+l.lb,s:l.jk}));onPick=(_,i)=>{selLoc=LOCS[i];flowNext();};}
+  else if(item.k==='date'){title="When's good?";sub="pick a day";opts=dateOpts().map(d=>({l:d.l,s:d.s}));onPick=o=>{selDate=o;flowNext();};}
+  else if(item.k==='time'){title='What time?';sub="approximate is fine";opts=timeOpts().map(t=>({l:t.l,s:t.s}));onPick=o=>{selTime=o;flowNext();};}
+  else{const d=item.def;title=d.t;sub=d.s||'';opts=d.o;canSpin=!!d.wheel;onPick=o=>{answers[d.k]=o.l;flowNext();};}
+  // solo uses sPick step
+  document.getElementById('pickVibe').textContent=`${selMission.em} ${selMission.lb} — step ${sn} of ${st}`;
+  document.getElementById('pickTag').textContent=item.k==='loc'?'📍 location':item.k==='date'?'📅 when':item.k==='time'?'🕒 time':'✨ details';
+  document.getElementById('pickTitle').textContent=title;document.getElementById('pickSub').textContent=sub;
+  const pl=document.getElementById('pickList');pl.innerHTML='';
+  opts.forEach((o,i)=>{const r=document.createElement('div');r.className='pc';r.innerHTML=`<div><div class="ml">${o.l}</div>${o.s?`<div class="sl">${o.s}</div>`:''}</div><div class="ck">✓</div>`;r.onclick=()=>{r.classList.add('sel');setTimeout(()=>onPick(o,i),210);};pl.appendChild(r);});
+  const nav=document.getElementById('pickNav');nav.innerHTML='';
+  const bb=document.createElement('button');bb.className='bs';bb.textContent='← Back';bb.onclick=flowBack;nav.appendChild(bb);
+  if(canSpin){const sb=document.createElement('button');sb.className='bs';sb.textContent='🎡 Spin';sb.onclick=()=>openSpin(opts.map(o=>o.l),title,o=>{onPick(o,0);});nav.appendChild(sb);}
+  show('sPick');
+}
+
+function pickMission(m){
+  selMission=m;buildFlow();
+  if(roomId){
+    document.getElementById('foodVibe').textContent=`${selMission.em} ${selMission.lb} — almost done ✨`;
+    document.getElementById('foodTitle').textContent=selMission.id==='coffee'?'Snacks on the side?':'What are we eating?';
+    document.getElementById('foodTogetherArea').style.display='block';
+    fbUpdate(`rooms/${roomId}/${myRole}/picks`,{mission:m.lb});
+  }
+  setTimeout(flowNext,80);
+}
+
+/* ══ YES ══ */
+function sayYes(){if(navigator.vibrate)navigator.vibrate([50,30,80]);burst(30);show('sMission');}
+function toRecap(){buildRecap();show('sRecap');burst(90);}
 
 /* ══ STEP CONTROL ══ */
 function show(id){document.querySelectorAll('.step').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
 function show_ov(id){document.getElementById(id).classList.add('on');}
 function hide(id){document.getElementById(id).classList.remove('on');}
 
-/* ══ YES / NO ══ */
-function sayYes(){
-  if(navigator.vibrate)navigator.vibrate([50,30,80]);
-  burst(30);
-  if(roomId){show('sMission');document.getElementById('missionVibe').textContent=`🤝 together mode — room: ${roomId}`;}
-  else{show('sMission');}
-}
-function toRecap(){buildRecap();show('sRecap');burst(90);}
-
 /* ══ RECAP ══ */
 function buildRecap(){
   const fl=[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD';
-  const dp=Object.keys(answers).map(k=>`${SUB_LABELS[k]||k}: ${answers[k]}`).join(' · ');
+  const dp=Object.keys(answers).map(k=>`${SUB_LBL[k]||k}: ${answers[k]}`).join(' · ');
   document.getElementById('bpMission').textContent=(selMission?selMission.em+' '+selMission.lb:'💌 Our date');
   document.getElementById('bpDetails').textContent=dp||selMission?.jk||'';
   document.getElementById('bpLoc').textContent=selLoc?selLoc.em+' '+selLoc.lb:'TBD';
@@ -780,60 +895,18 @@ function buildRecap(){
   document.getElementById('recapFoot').textContent=FT[Math.floor(Math.random()*FT.length)];
 }
 
-/* ══ TICKET DOWNLOAD ══ */
-function dlTicket(){
-  const DPR=2,W=680,H=310,SP=468,R=16;
-  const cv=document.createElement('canvas');cv.width=W*DPR;cv.height=H*DPR;
-  const cx=cv.getContext('2d');cx.scale(DPR,DPR);
-  const ac=curTheme.a,sf=curTheme.soft;
-  cx.shadowColor='rgba(0,0,0,.18)';cx.shadowBlur=22;cx.shadowOffsetY=5;cx.fillStyle='#fff';rr(cx,0,0,W,H,R);cx.fill();cx.shadowColor='transparent';
-  cx.fillStyle=ac;cx.beginPath();cx.moveTo(R,0);cx.lineTo(SP,0);cx.lineTo(SP,H);cx.lineTo(R,H);cx.quadraticCurveTo(0,H,0,H-R);cx.lineTo(0,R);cx.quadraticCurveTo(0,0,R,0);cx.closePath();cx.fill();
-  cx.fillStyle=sf;cx.beginPath();cx.moveTo(SP,0);cx.lineTo(W-R,0);cx.quadraticCurveTo(W,0,W,R);cx.lineTo(W,H-R);cx.quadraticCurveTo(W,H,W-R,H);cx.lineTo(SP,H);cx.closePath();cx.fill();
-  cx.fillStyle='#f0f0f0';for(let y=20;y<H-8;y+=16){cx.beginPath();cx.arc(SP,y,5,0,Math.PI*2);cx.fill();}
-  cx.setLineDash([4,6]);cx.strokeStyle='rgba(255,255,255,.3)';cx.lineWidth=1.5;cx.beginPath();cx.moveTo(SP,12);cx.lineTo(SP,H-12);cx.stroke();cx.setLineDash([]);
-  cx.fillStyle='rgba(255,255,255,.5)';cx.font='bold 10px Quicksand,sans-serif';cx.fillText('DATE TICKET',26,30);
-  cx.fillStyle='#fff';cx.font='bold 26px Fredoka,sans-serif';cx.fillText(selMission?selMission.em+' '+selMission.lb:'💌 Our Date',26,70);
-  cx.fillStyle='rgba(255,255,255,.25)';cx.fillRect(26,82,SP-46,1);
-  const rows=[Object.keys(answers).length?['✦',Object.keys(answers).map(k=>`${SUB_LABELS[k]||k}: ${answers[k]}`).join(' · ')]:null,selLoc?['📍',selLoc.em+' '+selLoc.lb]:null,['🍽',[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD']].filter(Boolean);
-  cx.font='12.5px Quicksand,sans-serif';rows.forEach((r,i)=>{cx.fillStyle='rgba(255,255,255,.5)';cx.fillText(r[0],26,105+i*21);cx.fillStyle='rgba(255,255,255,.88)';cx.fillText(String(r[1]).substring(0,55),46,105+i*21);});
-  cx.fillStyle='rgba(255,255,255,.18)';cx.font='13px monospace';cx.fillText('|||| ||| ||||| || |||| |||',26,H-22);
-  cx.fillStyle='rgba(255,255,255,.35)';cx.font='italic 10.5px Quicksand,sans-serif';cx.fillText(`from "${myName||'someone special'}"`,26,H-8);
-  const sx=SP+(W-SP)/2;cx.textAlign='center';
-  cx.fillStyle='rgba(74,46,58,.35)';cx.font='bold 9px Quicksand,sans-serif';cx.fillText('DATE',sx,44);cx.fillStyle='#4A2E3A';cx.font='bold 14px Fredoka,sans-serif';(selDate?selDate.l:'TBD').split(' ').forEach((w,i)=>cx.fillText(w,sx,62+i*17));
-  cx.fillStyle='rgba(74,46,58,.35)';cx.font='bold 9px Quicksand,sans-serif';cx.fillText('TIME',sx,146);cx.fillStyle='#4A2E3A';cx.font='bold 14px Fredoka,sans-serif';cx.fillText(selTime?selTime.l.split(' ')[0]:'TBD',sx,164);
-  cx.font='28px serif';cx.fillText('💌',sx,218);cx.textAlign='left';
-  const a=document.createElement('a');a.download='date-ticket.png';a.href=cv.toDataURL('image/png',1);document.body.appendChild(a);a.click();document.body.removeChild(a);
-}
+/* ══ TICKET ══ */
+function dlTicket(){const DPR=2,W=680,H=310,SP=468,R=16;const cv=document.createElement('canvas');cv.width=W*DPR;cv.height=H*DPR;const cx=cv.getContext('2d');cx.scale(DPR,DPR);const ac=curTheme.a,sf=curTheme.soft;cx.shadowColor='rgba(0,0,0,.18)';cx.shadowBlur=22;cx.shadowOffsetY=5;cx.fillStyle='#fff';rr(cx,0,0,W,H,R);cx.fill();cx.shadowColor='transparent';cx.fillStyle=ac;cx.beginPath();cx.moveTo(R,0);cx.lineTo(SP,0);cx.lineTo(SP,H);cx.lineTo(R,H);cx.quadraticCurveTo(0,H,0,H-R);cx.lineTo(0,R);cx.quadraticCurveTo(0,0,R,0);cx.closePath();cx.fill();cx.fillStyle=sf;cx.beginPath();cx.moveTo(SP,0);cx.lineTo(W-R,0);cx.quadraticCurveTo(W,0,W,R);cx.lineTo(W,H-R);cx.quadraticCurveTo(W,H,W-R,H);cx.lineTo(SP,H);cx.closePath();cx.fill();cx.fillStyle='#f0f0f0';for(let y=20;y<H-8;y+=16){cx.beginPath();cx.arc(SP,y,5,0,Math.PI*2);cx.fill();}cx.fillStyle='rgba(255,255,255,.5)';cx.font='bold 10px Quicksand';cx.fillText('DATE TICKET',26,30);cx.fillStyle='#fff';cx.font='bold 26px Fredoka';cx.fillText(selMission?selMission.em+' '+selMission.lb:'Our Date',26,70);cx.fillStyle='rgba(255,255,255,.25)';cx.fillRect(26,82,SP-46,1);const rows=[Object.keys(answers).length?['✦',Object.keys(answers).map(k=>`${SUB_LBL[k]||k}: ${answers[k]}`).join(' · ')]:null,selLoc?['📍',selLoc.em+' '+selLoc.lb]:null,['🍽',[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD']].filter(Boolean);cx.font='12.5px Quicksand';rows.forEach((r,i)=>{cx.fillStyle='rgba(255,255,255,.5)';cx.fillText(r[0],26,105+i*21);cx.fillStyle='rgba(255,255,255,.88)';cx.fillText(String(r[1]).substring(0,55),46,105+i*21);});cx.fillStyle='rgba(255,255,255,.18)';cx.font='13px monospace';cx.fillText('|||| ||| ||||| || ||||',26,H-22);cx.fillStyle='rgba(255,255,255,.35)';cx.font='italic 10px Quicksand';cx.fillText(`from "${myName||'someone special'}"`,26,H-8);const sx=SP+(W-SP)/2;cx.textAlign='center';cx.fillStyle='rgba(74,46,58,.35)';cx.font='bold 9px Quicksand';cx.fillText('DATE',sx,44);cx.fillStyle='#4A2E3A';cx.font='bold 14px Fredoka';(selDate?selDate.l:'TBD').split(' ').forEach((w,i)=>cx.fillText(w,sx,62+i*17));cx.fillStyle='rgba(74,46,58,.35)';cx.font='bold 9px Quicksand';cx.fillText('TIME',sx,146);cx.fillStyle='#4A2E3A';cx.font='bold 14px Fredoka';cx.fillText(selTime?selTime.l.split(' ')[0]:'TBD',sx,164);cx.font='28px serif';cx.fillText('💌',sx,218);cx.textAlign='left';const a=document.createElement('a');a.download='date-ticket.png';a.href=cv.toDataURL('image/png',1);document.body.appendChild(a);a.click();document.body.removeChild(a);}
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();}
+function addCal(){const title=encodeURIComponent(`${selMission?selMission.em+' '+selMission.lb:'Date'} with ${myName}`);const details=encodeURIComponent(`Location: ${selLoc?selLoc.lb:'TBD'}\nFood: ${[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD'}`);window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`,'_blank');}
 
-function addCal(){
-  const title=encodeURIComponent(`${selMission?selMission.em+' '+selMission.lb:'Date'} with ${myName}`);
-  const details=encodeURIComponent(`Location: ${selLoc?selLoc.lb:'TBD'}\nFood: ${[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD'}`);
-  window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`,'_blank');
-}
-
-function copyLink(){
-  const link=window.location.href.split('#')[0]+'#room='+roomId;
-  navigator.clipboard.writeText(link).then(()=>{document.getElementById('copyConfirm').textContent='✅ Copied!';setTimeout(()=>document.getElementById('copyConfirm').textContent='',2000);});
-}
+/* ══ COPY LINK ══ */
+function copyLink(){const link=location.href.split('#')[0]+'#room='+roomId;navigator.clipboard.writeText(link).then(()=>{document.getElementById('copyMsg').textContent='✅ Copied!';setTimeout(()=>document.getElementById('copyMsg').textContent='',2000);}).catch(()=>{document.getElementById('copyMsg').textContent='Copy manually: '+link;});}
+function syncField(k,v){if(!roomId)return;fbUpdate(`rooms/${roomId}/${myRole}/picks`,{[k]:v});}
 
 /* ══ EMAIL ══ */
 function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
-async function sendConf(){
-  const ev=document.getElementById('emailIn').value.trim();
-  const st=document.getElementById('confStatus');
-  const btn=document.getElementById('sendBtn');
-  if(!validEmail(ev)){st.style.color='var(--a)';st.textContent="that doesn't look like a real email 👀";return;}
-  const fl=[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD';
-  const dp=Object.keys(answers).map(k=>`${SUB_LABELS[k]||k}: ${answers[k]}`).join(' | ');
-  btn.disabled=true;btn.textContent='Sending...';st.style.color='var(--mt)';st.textContent='';
-  const p=new URLSearchParams({email:ev,askedBy:myName,mission:selMission?selMission.lb:'',details:dp,location:selLoc?selLoc.lb:'',date:selDate?selDate.l:'',time:selTime?selTime.l:'',food:fl,mode:roomId?'together':'solo',room:roomId||''});
-  try{
-    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()});
-    st.style.color='#3f9c7d';st.textContent='confirmation sent! 💌';btn.textContent='Confirmation sent ✓';
-    localStorage.setItem('dateDone','1');
-  }catch(e){st.style.color='var(--a)';st.textContent="didn't go through — try again?";btn.disabled=false;btn.textContent='Send confirmation 💌';}
-}
+async function sendConf(){const ev=document.getElementById('emailIn').value.trim();const st=document.getElementById('confStatus');const btn=document.getElementById('sendBtn');if(!validEmail(ev)){st.style.color='var(--a)';st.textContent="not a real email 👀";return;}const fl=[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD';const dp=Object.keys(answers).map(k=>`${SUB_LBL[k]||k}: ${answers[k]}`).join(' | ');btn.disabled=true;btn.textContent='Sending...';st.style.color='var(--mt)';st.textContent='';const p=new URLSearchParams({email:ev,askedBy:myName,mission:selMission?selMission.lb:'',details:dp,location:selLoc?selLoc.lb:'',date:selDate?selDate.l:'',time:selTime?selTime.l:'',food:fl,mode:roomId?'together':'solo',room:roomId||''});try{await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()});st.style.color='#3f9c7d';st.textContent='confirmation sent! 💌';btn.textContent='Confirmation sent ✓';localStorage.setItem('dateDone','1');}catch(e){st.style.color='var(--a)';st.textContent="didn't go through — try again?";btn.disabled=false;btn.textContent='Send confirmation 💌';}}
 
 /* ══ ADMIN ══ */
 function openAdmin(){document.getElementById('adminPage').classList.add('on');}
@@ -842,58 +915,29 @@ function loadAdmin(){const pw=document.getElementById('adminPass').value.trim();
 
 /* ══ TIMER ══ */
 let timerInt=null;
-function startTimer(){let s=15;setTimeout(()=>{const T=document.getElementById('timer');T.classList.add('on');const msgs=["⏳ offer expires in {s}s","🚨 {s} seconds left","😤 {s}s before I adopt a cat instead","🔥 {s}s — yes button is impatient"];const m=msgs[Math.floor(Math.random()*msgs.length)];timerInt=setInterval(()=>{s--;T.textContent=m.replace('{s}',s);if(s<=0){clearInterval(timerInt);T.textContent="offer has technically expired. yes still works 😏";}},1000);T.textContent=m.replace('{s}',s);},8000);}
+function startTimer(){let s=15;setTimeout(()=>{const T=document.getElementById('timerEl');T.classList.add('on');const msgs=["⏳ offer expires in {s}s","🚨 {s} seconds left","😤 {s}s before I adopt a cat","🔥 {s}s — yes button is impatient"];const m=msgs[Math.floor(Math.random()*msgs.length)];timerInt=setInterval(()=>{s--;T.textContent=m.replace('{s}',s);if(s<=0){clearInterval(timerInt);T.textContent="offer technically expired. yes still works 😏";}},1000);T.textContent=m.replace('{s}',s);},8000);}
 
 /* ══ CARD TILT ══ */
-document.addEventListener('mousemove',e=>{
-  if(!document.getElementById('sQuestion').classList.contains('on'))return;
-  const nb=document.getElementById('noBtn');
-  if(nb.classList.contains('away')||nb.classList.contains('poof')||nb.style.display==='none')return;
-  const r=nb.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dist=Math.hypot(e.clientX-cx,e.clientY-cy);
-  const card=document.getElementById('mainCard');
-  if(dist<180){card.style.transform=`perspective(900px) rotateX(${(e.clientY-cy)/22}deg) rotateY(${-(e.clientX-cx)/22}deg)`;}
-  else card.style.transform='';
-});
+document.addEventListener('mousemove',e=>{if(!document.getElementById('sQuestion').classList.contains('on'))return;const nb=document.getElementById('noBtn');if(nb.classList.contains('away')||nb.classList.contains('poof')||nb.style.display==='none')return;const r=nb.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dist=Math.hypot(e.clientX-cx,e.clientY-cy);const card=document.getElementById('mainCard');if(dist<180){card.style.transform=`perspective(900px) rotateX(${(e.clientY-cy)/22}deg) rotateY(${-(e.clientX-cx)/22}deg)`;}else card.style.transform='';});
 
 /* ══ WHY REASONS ══ */
-const WHYS=["Because I make genuinely great playlists 🎵","Because I let you pick the restaurant... 60% of the time","Because I will pretend to understand your complicated coffee order","Because I laugh at your jokes even when they're terrible","Because I won't judge your movie picks. (Much.)","Because someone has to be the first to say it","Because you're already smiling reading this 😊","Because I reserved the right side of the couch for you","Because we both deserve a good story to tell"];
+const WHYS=["Because I make genuinely great playlists 🎵","Because I let you pick the restaurant... 60% of the time","Because I will pretend to understand your coffee order","Because I laugh at your jokes even the terrible ones","Because I won't judge your movie picks. (Much.)","Because someone has to be the first to say it","Because you're already smiling reading this 😊","Because we both deserve a good story to tell"];
 let whyI=0;
 function showWhy(){const w=document.getElementById('whyCard');w.textContent=WHYS[whyI%WHYS.length];w.classList.add('on');whyI++;}
 
 /* ══ NO DODGE ══ */
-const EXCUSES=["the 'No' button is camera-shy 📸","nope, try again 😏","this button doesn't believe in 'no'","so close! and yet... no.","button has anxiety, please be gentle","commitment issues — it's not you","404: No button not found","only responds to 'yes' energy","plot twist: the button is also nervous","scientifically, 'no' has left the building","the button called its lawyer","this is the button's villain origin story","rejected by the rejection button. how meta.","the button is in therapy","the No button has left you on read","it broke. you broke it."];
-const NO_LBLS=["No","Nope","Still no","Are you sure?","Really??","Think again","Hmm, no","You're persistent","Plot twist: no","Almost convinced...","Okay fine, no","This is awkward","I'm getting tired","One more try?","Seriously though","It's basically a yes now"];
-const MTR_LBLS=["Mild curiosity","Getting invested","Mild panic","Full commitment to the bit","Send help","This is now a sport","Legendary status","Maximum chaos"];
+const EXCUSES=["camera-shy 📸","nope, try again 😏","doesn't believe in 'no'","so close! and yet... no.","button has anxiety","commitment issues","404: No not found","only responds to 'yes' energy","the button is also nervous","'no' has left the building","the button called its lawyer","the button's villain origin story","rejected by the rejection button","the button is in therapy","No has left you on read","it broke. you broke it."];
+const NO_LBLS=["No","Nope","Still no","Are you sure?","Really??","Think again","Hmm, no","Persistent aren't you","Plot twist: no","Almost convinced...","Okay fine, no","This is awkward","Getting tired","One more try?","Seriously though","It's basically a yes now"];
+const MTR_LBLS=["Mild curiosity","Getting invested","Mild panic","Full commitment","Send help","This is a sport now","Legendary","Maximum chaos"];
 let dc=0,ys=1,ldt=0;
-function dodge(e){
-  if(e)e.preventDefault();
-  const nb=document.getElementById('noBtn');
-  if(nb.classList.contains('poof'))return;
-  const now=Date.now();if(now-ldt<280)return;ldt=now;dc++;
-  if(dc===1)document.getElementById('meterWrap').classList.add('on');
-  nb.classList.add('away');
-  const r=nb.getBoundingClientRect(),m=16;
-  nb.style.left=Math.max(m,Math.random()*(window.innerWidth-r.width-m))+'px';
-  nb.style.top=Math.max(m,Math.random()*(window.innerHeight-r.height-m))+'px';
-  nb.textContent=NO_LBLS[Math.min(dc-1,NO_LBLS.length-1)];
-  document.getElementById('excuse').textContent=EXCUSES[Math.min(dc-1,EXCUSES.length-1)];
-  const pct=Math.min(100,(dc/13)*100);
-  document.getElementById('meterFi').style.width=pct+'%';
-  document.getElementById('meterLbl').textContent='Regret-o-meter: '+MTR_LBLS[Math.min(MTR_LBLS.length-1,Math.floor((pct/100)*MTR_LBLS.length))];
-  if(dc===5)document.getElementById('mainTag').textContent='still one question...';
-  if(dc===9)document.getElementById('mainTag').textContent='genuinely, just one question';
-  ys=Math.min(1.7,ys+0.06);document.getElementById('yesBtn').style.transform=`scale(${ys})`;document.getElementById('yesBtn').style.fontSize=(18+dc*.6)+'px';
-  nb.style.transform=`scale(${Math.max(.5,1-dc*.03)})`;
-  const card=document.getElementById('mainCard');card.classList.remove('shake');void card.offsetWidth;card.classList.add('shake');
-  if(dc>=13){nb.classList.add('poof');document.getElementById('excuse').textContent="the No button has left the chat permanently 👻";setTimeout(()=>{nb.style.display='none';},400);}
-}
+function dodge(e){if(e)e.preventDefault();const nb=document.getElementById('noBtn');if(nb.classList.contains('poof'))return;const now=Date.now();if(now-ldt<280)return;ldt=now;dc++;if(dc===1)document.getElementById('meterWrap').classList.add('on');nb.classList.add('away');const r=nb.getBoundingClientRect(),m=16;nb.style.left=Math.max(m,Math.random()*(window.innerWidth-r.width-m))+'px';nb.style.top=Math.max(m,Math.random()*(window.innerHeight-r.height-m))+'px';nb.textContent=NO_LBLS[Math.min(dc-1,NO_LBLS.length-1)];document.getElementById('excuse').textContent=EXCUSES[Math.min(dc-1,EXCUSES.length-1)];const pct=Math.min(100,(dc/13)*100);document.getElementById('meterFi').style.width=pct+'%';document.getElementById('meterLbl').textContent='Regret-o-meter: '+MTR_LBLS[Math.min(MTR_LBLS.length-1,Math.floor((pct/100)*MTR_LBLS.length))];if(dc===5)document.getElementById('mainTag').textContent='still one question...';if(dc===9)document.getElementById('mainTag').textContent='genuinely, just one question';ys=Math.min(1.7,ys+0.06);document.getElementById('yesBtn').style.transform=`scale(${ys})`;document.getElementById('yesBtn').style.fontSize=(18+dc*.6)+'px';nb.style.transform=`scale(${Math.max(.5,1-dc*.03)})`;const card=document.getElementById('mainCard');card.classList.remove('shake');void card.offsetWidth;card.classList.add('shake');if(dc>=13){nb.classList.add('poof');document.getElementById('excuse').textContent="No button has left the chat 👻";setTimeout(()=>{nb.style.display='none';},400);}}
 
 /* ══ SPIN WHEEL ══ */
 const WC=document.getElementById('wc'),WCTX=WC.getContext('2d');
 const WCOLS=['#FF6F61','#FFC857','#8FD9C4','#c084fc','#fb923c','#34d399','#f472b6','#60a5fa'];
 let wOpts=[],wAngle=0,wSpin=false,wIdx=-1,wCB=null;
-function openSpin(opts,title,cb){wOpts=opts;wCB=cb;wIdx=-1;document.getElementById('spinTitle').textContent=title+' 🎡';document.getElementById('spinSub').textContent='fate decides';document.getElementById('spinResult').textContent='';document.getElementById('useSpinBtn').style.display='none';drawW(0);show_ov('spinOv');}
-function drawW(a){const cx=120,cy=120,r=115,n=wOpts.length;WCTX.clearRect(0,0,240,240);for(let i=0;i<n;i++){const s=a+(i*2*Math.PI/n)-Math.PI/2,e=a+((i+1)*2*Math.PI/n)-Math.PI/2;WCTX.beginPath();WCTX.moveTo(cx,cy);WCTX.arc(cx,cy,r,s,e);WCTX.closePath();WCTX.fillStyle=WCOLS[i%WCOLS.length];WCTX.fill();WCTX.strokeStyle='#fff';WCTX.lineWidth=2;WCTX.stroke();WCTX.save();WCTX.translate(cx,cy);WCTX.rotate(s+Math.PI/n);WCTX.textAlign='right';WCTX.fillStyle='#fff';WCTX.font='bold 10px Quicksand';WCTX.fillText(wOpts[i].replace(/[^\w\s,]/g,'').trim().substring(0,14),r-5,4);WCTX.restore();}WCTX.beginPath();WCTX.arc(cx,cy,19,0,2*Math.PI);WCTX.fillStyle='#fff';WCTX.fill();WCTX.fillStyle=curTheme.a;WCTX.font='bold 12px sans-serif';WCTX.textAlign='center';WCTX.fillText('✨',cx,cy+5);}
+function openSpin(opts,title,cb){wOpts=opts;wCB=cb;wIdx=-1;document.getElementById('spinTitle').textContent=title+' 🎡';document.getElementById('spinResult').textContent='';document.getElementById('useSpinBtn').style.display='none';drawW(0);show_ov('spinOv');}
+function drawW(a){const cx=115,cy=115,r=110,n=wOpts.length;WCTX.clearRect(0,0,230,230);for(let i=0;i<n;i++){const s=a+(i*2*Math.PI/n)-Math.PI/2,e=a+((i+1)*2*Math.PI/n)-Math.PI/2;WCTX.beginPath();WCTX.moveTo(cx,cy);WCTX.arc(cx,cy,r,s,e);WCTX.closePath();WCTX.fillStyle=WCOLS[i%WCOLS.length];WCTX.fill();WCTX.strokeStyle='#fff';WCTX.lineWidth=2;WCTX.stroke();WCTX.save();WCTX.translate(cx,cy);WCTX.rotate(s+Math.PI/n);WCTX.textAlign='right';WCTX.fillStyle='#fff';WCTX.font='bold 10px Quicksand';WCTX.fillText(wOpts[i].replace(/[^\w\s,]/g,'').trim().substring(0,13),r-5,4);WCTX.restore();}WCTX.beginPath();WCTX.arc(cx,cy,18,0,2*Math.PI);WCTX.fillStyle='#fff';WCTX.fill();WCTX.fillStyle=curTheme.a;WCTX.font='bold 11px sans-serif';WCTX.textAlign='center';WCTX.fillText('✨',cx,cy+4);}
 function doSpin(){if(wSpin)return;wSpin=true;wIdx=-1;document.getElementById('spinResult').textContent='';document.getElementById('useSpinBtn').style.display='none';const dur=3500+Math.random()*1500,extra=(5+Math.floor(Math.random()*4))*2*Math.PI+Math.random()*2*Math.PI,start=performance.now(),sA=wAngle,tA=sA+extra;function an(now){const p=Math.min((now-start)/dur,1),ep=1-Math.pow(1-p,3);wAngle=sA+(tA-sA)*ep;drawW(wAngle);if(p<1){requestAnimationFrame(an);}else{wSpin=false;const nm=((-wAngle%(2*Math.PI))+(2*Math.PI))%(2*Math.PI);wIdx=Math.floor(nm/(2*Math.PI/wOpts.length))%wOpts.length;document.getElementById('spinResult').textContent='✨ '+wOpts[wIdx].split(' ')[0]+' it is!';document.getElementById('useSpinBtn').style.display='';burst(20);}}requestAnimationFrame(an);}
 function acceptSpin(){hide('spinOv');if(wIdx>=0&&wCB)setTimeout(()=>wCB({l:wOpts[wIdx],s:''},wIdx),150);}
 
@@ -903,21 +947,7 @@ function spawnH(){const h=document.createElement('div');h.className='bh';h.textC
 setInterval(spawnH,900);for(let i=0;i<5;i++)setTimeout(spawnH,i*300);
 
 /* ══ RESET ══ */
-function resetAll(){
-  selMission=null;answers={};selFoods=new Set();selDate=null;selTime=null;selLoc=null;flow=[];fi=-1;dc=0;ys=1;whyI=0;roomId='';isSolo=true;
-  document.querySelectorAll('#foodChips .ch').forEach(c=>c.classList.remove('sel'));
-  document.getElementById('foodNext').disabled=true;
-  document.getElementById('emailIn').value='';document.getElementById('confStatus').textContent='';
-  document.getElementById('sendBtn').disabled=false;document.getElementById('sendBtn').textContent='Send confirmation 💌';
-  document.getElementById('excuse').textContent='';document.getElementById('timer').classList.remove('on');clearInterval(timerInt);
-  document.getElementById('meterWrap').classList.remove('on');document.getElementById('meterFi').style.width='0';
-  document.getElementById('meterLbl').textContent='Regret-o-meter';document.getElementById('mainTag').textContent='something important';
-  document.getElementById('yesBtn').style.transform='scale(1)';document.getElementById('yesBtn').style.fontSize='18px';
-  document.getElementById('whyCard').classList.remove('on');
-  const nb=document.getElementById('noBtn');nb.classList.remove('away','poof');nb.style.display='';nb.style.transform='scale(1)';nb.style.left='';nb.style.top='';nb.textContent='No';
-  document.getElementById('mainCard').style.transform='';
-  show('sModeSelect');
-}
+function resetAll(){selMission=null;answers={};selFoods=new Set();selDate=null;selTime=null;selLoc=null;flow=[];fi=-1;dc=0;ys=1;whyI=0;roomId='';isSolo=true;joiningRoom='';document.querySelectorAll('#foodChips .ch').forEach(c=>c.classList.remove('sel'));document.getElementById('foodNext').disabled=true;document.getElementById('foodNext').textContent='Confirm food ✓';document.getElementById('emailIn').value='';document.getElementById('confStatus').textContent='';document.getElementById('sendBtn').disabled=false;document.getElementById('sendBtn').textContent='Send confirmation 💌';document.getElementById('excuse').textContent='';document.getElementById('timerEl').classList.remove('on');clearInterval(timerInt);document.getElementById('meterWrap').classList.remove('on');document.getElementById('meterFi').style.width='0';document.getElementById('meterLbl').textContent='Regret-o-meter';document.getElementById('mainTag').textContent='something important';document.getElementById('yesBtn').style.transform='scale(1)';document.getElementById('yesBtn').style.fontSize='18px';document.getElementById('whyCard').classList.remove('on');const nb=document.getElementById('noBtn');nb.classList.remove('away','poof');nb.style.display='';nb.style.transform='scale(1)';nb.style.left='';nb.style.top='';nb.textContent='No';document.getElementById('mainCard').style.transform='';show('sModeSelect');}
 
 /* ══ FOOTER TRIPLE TAP ══ */
 let ftaps=0,ftimer=null;
@@ -927,33 +957,20 @@ function footTap(){ftaps++;if(ftimer)clearTimeout(ftimer);ftimer=setTimeout(()=>
 (function init(){
   if(window.location.hash==='#admin'){openAdmin();return;}
   if(localStorage.getItem('dateDone')==='1'){show('sDone');return;}
-  /* check for room in URL e.g. #room=vikas */
+  /* room link — skip mode select, ask name then auto-join */
   const hashRoom=window.location.hash.match(/^#room=([a-z0-9]+)$/i);
   if(hashRoom){
-    document.getElementById('joinRoomName').value=hashRoom[1];
-    /* skip theme+name for room joiners - go straight to name then join */
+    joiningRoom=hashRoom[1].toLowerCase();
+    /* customise name popup for joiner */
+    document.getElementById('nameEmoji').textContent='🤝';
+    document.getElementById('nameTitle').textContent='Quick — before you join...';
+    document.getElementById('nameDesc').textContent='What is THEIR number saved as in YOUR phone?';
     show_ov('nameOv');
-    const origConfirm=window.confirmName;
-    window._afterName=()=>{ joinRoom(); };
     return;
   }
   show_ov('themeOv');
 })();
-
-/* override confirmName to support room join flow */
-const _origSetName=window.setName;
-window.addEventListener('fbready',()=>{
-  if(window._afterName){
-    const orig=setName;
-    window.setNameOverride=function(n){
-      myName=n;hide('nameOv');
-      document.getElementById('senderLine').textContent=`saved as "${myName}" in your phone 📱`;
-      document.getElementById('foot').textContent=`made with way too many redrafted texts — from "${myName}"`;
-      document.getElementById('noteLetter').textContent=NOTE;
-      window._afterName();
-    };
-  }
-});
+window.addEventListener('hashchange',()=>{if(window.location.hash==='#admin')openAdmin();});
 </script>
 </body>
 </html>
