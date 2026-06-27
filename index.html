@@ -10,11 +10,10 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, update, push, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-const FB = { apiKey:"AIzaSyAZKDsckbraD_kXtmkNuXmLNsA30quuNdI", authDomain:"date-planner-77589.firebaseapp.com", databaseURL:"https://date-planner-77589-default-rtdb.firebaseio.com", projectId:"date-planner-77589", storageBucket:"date-planner-77589.firebasestorage.app", messagingSenderId:"420757943384", appId:"1:420757943384:web:630e1883fa1cbc535bc62d" };
-const app = initializeApp(FB);
-const db  = getDatabase(app);
-window._fb = { db, ref, set, onValue, update, push, get };
-window._fbReady = true;
+const app = initializeApp({apiKey:"AIzaSyAZKDsckbraD_kXtmkNuXmLNsA30quuNdI",authDomain:"date-planner-77589.firebaseapp.com",databaseURL:"https://date-planner-77589-default-rtdb.firebaseio.com",projectId:"date-planner-77589",storageBucket:"date-planner-77589.firebasestorage.app",messagingSenderId:"420757943384",appId:"1:420757943384:web:630e1883fa1cbc535bc62d"});
+const db=getDatabase(app);
+window._fb={db,ref,set,onValue,update,push,get};
+window._fbReady=true;
 window.dispatchEvent(new Event('fbready'));
 </script>
 <style>
@@ -26,34 +25,28 @@ body[data-theme="golden"]  {--bg:#fffbeb;--a:#f59e0b;--soft:#fde68a;--text:#451a
 html,body{min-height:100vh;background:var(--bg,#FFF6EE);font-family:'Quicksand',sans-serif;color:var(--text,#4A2E3A);overflow-x:hidden;transition:background .4s,color .4s;}
 body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
 .bh{position:fixed;bottom:-10vh;opacity:.5;animation:fu linear infinite;pointer-events:none;z-index:0;}
-@keyframes fu{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.4}100%{transform:translateY(-115vh) rotate(25deg);opacity:0}}
-/* overlays */
+@keyframes fu{0%{transform:translateY(0);opacity:0}10%{opacity:.5}90%{opacity:.4}100%{transform:translateY(-115vh) rotate(25deg);opacity:0}}
 .ov{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:20px;}
 .ov.on{display:flex;animation:fi .3s ease;}
 @keyframes fi{from{opacity:0}to{opacity:1}}
-.popup{background:var(--card,#fff);border-radius:26px;border:3px solid var(--soft,#FFD9E3);box-shadow:0 20px 55px rgba(0,0,0,.14);max-width:440px;width:100%;padding:30px 24px 24px;text-align:center;max-height:90vh;overflow-y:auto;animation:pk .35s ease;}
-/* card */
-.card{position:relative;z-index:1;background:var(--card,#fff);border-radius:28px;max-width:560px;width:100%;padding:36px 30px 30px;text-align:center;box-shadow:0 20px 55px rgba(0,0,0,.13);border:3px solid var(--soft,#FFD9E3);}
+.popup{background:var(--card,#fff);border-radius:26px;border:3px solid var(--soft,#FFD9E3);box-shadow:0 20px 55px rgba(0,0,0,.14);max-width:440px;width:100%;padding:28px 22px 22px;text-align:center;max-height:90vh;overflow-y:auto;animation:pk .35s ease;}
+.card{position:relative;z-index:1;background:var(--card,#fff);border-radius:28px;max-width:560px;width:100%;padding:34px 28px 28px;text-align:center;box-shadow:0 20px 55px rgba(0,0,0,.13);border:3px solid var(--soft,#FFD9E3);}
 @keyframes pk{0%{transform:scale(.93);opacity:0}100%{transform:scale(1);opacity:1}}
-/* type */
-.tag{display:inline-block;font-family:'Fredoka',sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--a,#FF6F61);background:var(--soft,#FFD9E3);padding:5px 13px;border-radius:999px;margin-bottom:11px;}
-h1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(23px,5.5vw,33px);line-height:1.2;margin:0 0 10px;}
+.tag{display:inline-block;font-family:'Fredoka',sans-serif;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--a,#FF6F61);background:var(--soft,#FFD9E3);padding:5px 12px;border-radius:999px;margin-bottom:11px;}
+h1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(22px,5.5vw,32px);line-height:1.2;margin:0 0 10px;}
 h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(19px,5vw,25px);margin:0 0 6px;}
-h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;margin:0 0 5px;}
-.sub{font-size:14.5px;color:var(--mt,#9b818a);margin:0 0 16px;line-height:1.5;}
-.vibe{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb,#b69aa3);margin-bottom:7px;}
-.sender{font-size:13px;color:var(--lb,#b69aa3);font-weight:600;margin-bottom:6px;}
-/* steps */
+h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:16px;margin:0 0 5px;}
+.sub{font-size:14px;color:var(--mt,#9b818a);margin:0 0 15px;line-height:1.5;}
+.vibe{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb,#b69aa3);margin-bottom:7px;}
+.sender{font-size:12.5px;color:var(--lb,#b69aa3);font-weight:600;margin-bottom:6px;}
 .step{display:none;}.step.on{display:block;animation:pk .3s ease;}
-/* btns */
-.bp{font-family:'Fredoka',sans-serif;font-weight:600;font-size:16px;border:none;border-radius:999px;padding:13px 26px;cursor:pointer;background:var(--a,#FF6F61);color:#fff;box-shadow:0 9px 20px rgba(0,0,0,.17);transition:transform .18s,box-shadow .18s,opacity .2s;}
+.bp{font-family:'Fredoka',sans-serif;font-weight:600;font-size:15.5px;border:none;border-radius:999px;padding:13px 26px;cursor:pointer;background:var(--a,#FF6F61);color:#fff;box-shadow:0 9px 20px rgba(0,0,0,.17);transition:transform .18s,box-shadow .18s,opacity .2s;}
 .bp:hover{transform:translateY(-2px) scale(1.03);}
 .bp:active{transform:scale(.97);}
 .bp:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
-.bs{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;border:2px solid var(--bd,#f0dee3);border-radius:999px;padding:10px 19px;cursor:pointer;background:var(--card,#fff);color:var(--text,#4A2E3A);transition:background .16s;}
+.bs{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;border:2px solid var(--bd,#f0dee3);border-radius:999px;padding:10px 18px;cursor:pointer;background:var(--card,#fff);color:var(--text,#4A2E3A);transition:background .16s;}
 .bs:hover{background:var(--c2,#fffaf6);}
 .nav{display:flex;gap:9px;justify-content:center;margin-top:7px;flex-wrap:wrap;}
-/* yes/no */
 #yesBtn{font-family:'Fredoka',sans-serif;font-weight:600;background:var(--a,#FF6F61);color:#fff;font-size:18px;border:none;border-radius:999px;padding:15px 28px;cursor:pointer;box-shadow:0 10px 22px rgba(0,0,0,.2);transition:transform .18s,font-size .18s;}
 #yesBtn:hover{transform:translateY(-2px) scale(1.04);}
 #noBtn{font-family:'Fredoka',sans-serif;font-weight:600;background:var(--card,#fff);color:var(--text,#4A2E3A);border:2px solid var(--bd,#f0dee3);font-size:18px;border-radius:999px;padding:15px 28px;cursor:pointer;touch-action:none;user-select:none;}
@@ -63,18 +56,18 @@ h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;margin:0 0 5p
 .btns{display:flex;gap:14px;justify-content:center;align-items:center;min-height:84px;flex-wrap:wrap;}
 .excuse{margin-top:10px;font-size:13px;color:var(--a,#FF6F61);font-weight:600;min-height:18px;}
 .meter-wrap{margin-top:14px;display:none;}.meter-wrap.on{display:block;}
-.meter-lbl{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--lb);margin-bottom:4px;}
+.meter-lbl{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--lb);margin-bottom:4px;}
 .meter-tr{background:var(--soft);border-radius:999px;height:8px;overflow:hidden;}
 .meter-fi{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--soft),var(--a));transition:width .35s;}
 .why-btn{background:none;border:none;font-size:12px;color:var(--lb);cursor:pointer;text-decoration:underline;padding:4px 8px;font-family:'Quicksand',sans-serif;margin-top:6px;}
-.why-card{display:none;background:var(--c2);border:2px solid var(--soft);border-radius:12px;padding:10px 14px;margin-top:7px;font-size:13px;font-weight:600;animation:pk .3s ease;}.why-card.on{display:block;}
+.why-card{display:none;background:var(--c2);border:2px solid var(--soft);border-radius:12px;padding:10px 14px;margin-top:7px;font-size:13px;font-weight:600;}.why-card.on{display:block;}
 .timer{display:none;background:var(--soft);border-radius:10px;padding:7px 13px;margin-top:11px;font-size:13px;font-weight:700;color:var(--a);animation:pulse 1s infinite;}.timer.on{display:block;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 /* grids */
 .og{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .oc{border:2px solid var(--bd);background:var(--c2);border-radius:15px;padding:13px 8px;cursor:pointer;transition:all .18s;text-align:center;}
 .oc:hover{border-color:var(--a);transform:translateY(-2px);}
-.oc.sel{border-color:var(--a);background:var(--soft);box-shadow:0 5px 12px rgba(0,0,0,.09);}
+.oc.sel{border-color:var(--a);background:var(--soft);}
 .oc .em{font-size:25px;display:block;margin-bottom:4px;}
 .oc .lb{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;display:block;}
 .oc .jk{font-size:10.5px;color:var(--mt);margin-top:3px;display:block;line-height:1.3;}
@@ -85,17 +78,18 @@ h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;margin:0 0 5p
 .pc .ml{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;}
 .pc .sl{font-size:11px;color:var(--mt);margin-top:2px;}
 .pc .ck{font-size:15px;opacity:0;transition:opacity .15s;}.pc.sel .ck{opacity:1;}
+.pc.locked{pointer-events:none;opacity:.7;}
 .cw{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;}
 .ch{border:2px solid var(--bd);background:var(--c2);border-radius:999px;padding:8px 14px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12.5px;cursor:pointer;transition:all .18s;}
 .ch.sel{background:var(--a);color:#fff;border-color:var(--a);}
-/* theme picker */
+/* theme */
 .tg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px;}
 .tc{border:3px solid var(--bd);border-radius:14px;padding:12px 8px;cursor:pointer;transition:all .18s;text-align:center;}
 .tc:hover{transform:translateY(-2px);}
 .tc .sw{width:38px;height:38px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:18px;}
 .tc .tn{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;}
 .tc .ts{font-size:10.5px;color:#9b818a;margin-top:2px;}
-/* name popup */
+/* name */
 .no{border:2px solid var(--bd);background:var(--c2);border-radius:11px;padding:10px 12px;cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;display:flex;gap:8px;align-items:center;text-align:left;transition:all .16s;margin-bottom:7px;}
 .no:hover{border-color:var(--a);background:var(--soft);}
 .nj{font-size:10.5px;color:var(--mt);font-weight:400;display:block;margin-top:2px;}
@@ -107,114 +101,107 @@ h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;margin:0 0 5p
 .fw input:focus{outline:none;border-color:var(--a);}
 .nl{background:var(--c2);border:2px solid var(--soft);border-radius:15px;padding:18px 15px;text-align:left;margin-bottom:16px;font-size:14px;line-height:1.75;font-style:italic;}
 .nl::before{content:'✉️';font-size:22px;display:block;margin-bottom:7px;font-style:normal;}
-
-/* ─── TOGETHER MODE ─── */
+/* room */
 .room-box{background:var(--c2);border:2px solid var(--soft);border-radius:18px;padding:20px 16px;margin-bottom:14px;}
 .room-box h3{font-family:'Fredoka',sans-serif;font-size:16px;margin-bottom:5px;}
 .room-box p{font-size:12.5px;color:var(--mt);margin-bottom:11px;}
 .room-inp{width:100%;padding:11px 15px;border-radius:11px;border:2px solid var(--bd);font-family:'Fredoka',sans-serif;font-weight:600;font-size:15px;color:var(--text);background:var(--card);text-align:center;letter-spacing:.05em;margin-bottom:9px;}
 .room-inp:focus{outline:none;border-color:var(--a);}
-.rdivider{text-align:center;font-size:11.5px;color:var(--lb);font-weight:600;margin:12px 0;position:relative;}
+.rdivider{text-align:center;font-size:11px;color:var(--lb);font-weight:600;margin:12px 0;position:relative;}
 .rdivider::before,.rdivider::after{content:'';position:absolute;top:50%;width:36%;height:1px;background:var(--bd);}
 .rdivider::before{left:0;}.rdivider::after{right:0;}
-
-/* together step - the main picking UI */
-.t-status{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
-.t-badge{display:inline-flex;align-items:center;gap:5px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12px;padding:5px 12px;border-radius:999px;}
+/* together UI */
+.t-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:7px;}
+.t-badge{display:inline-flex;align-items:center;gap:5px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:11.5px;padding:5px 11px;border-radius:999px;}
 .t-badge.green{background:#d1fae5;color:#065f46;}
 .t-badge.yellow{background:#fef3c7;color:#92400e;}
-.t-badge.red{background:#fee2e2;color:#991b1b;}
 .t-badge.blue{background:#dbeafe;color:#1e40af;}
 .dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.5s infinite;}
-
-/* side by side picks */
-.picks-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
-.pick-side{border:2px solid var(--bd);border-radius:14px;padding:14px 12px;text-align:center;transition:border-color .3s,background .3s;}
-.pick-side.has-pick{border-color:var(--a);background:var(--soft);}
-.pick-side.waiting-pick{opacity:.7;}
-.pick-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb);margin-bottom:6px;}
-.pick-val{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;color:var(--text);min-height:20px;}
-.pick-wait{font-size:11.5px;color:var(--mt);animation:pulse 1.5s infinite;margin-top:4px;}
-
+/* picks side by side */
+.picks-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;}
+.ps{border:2px solid var(--bd);border-radius:14px;padding:12px 10px;text-align:center;transition:border-color .3s,background .3s;}
+.ps.picked{border-color:var(--a);background:var(--soft);}
+.ps.waiting{opacity:.65;}
+.ps-lbl{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb);margin-bottom:5px;}
+.ps-val{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;color:var(--text);min-height:18px;}
+.ps-wait{font-size:11px;color:var(--mt);animation:pulse 1.5s infinite;margin-top:3px;}
+/* agree box */
+.agree-box{background:#d1fae5;border:2px solid #34d399;border-radius:13px;padding:12px;margin:10px 0;text-align:center;}
+.agree-box .ag-title{font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;color:#065f46;margin-bottom:4px;}
+.agree-box .ag-val{font-size:13px;color:#065f46;}
+/* accept row */
+.accept-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
+.ac{border-radius:10px;padding:9px;text-align:center;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12px;}
+.ac.done{background:#d1fae5;color:#065f46;}
+.ac.wait{background:var(--c2);border:2px solid var(--bd);color:var(--mt);}
 /* negotiation */
-.nego-box{background:var(--c2);border:2px solid var(--soft);border-radius:16px;padding:16px;margin-bottom:12px;}
+.nego-box{background:var(--c2);border:2px solid var(--soft);border-radius:16px;padding:14px;margin-bottom:12px;}
 .nego-picks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.nego-pick{border-radius:12px;padding:12px 10px;text-align:center;}
-.nego-pick.mine{background:var(--soft);border:2px solid var(--a);}
-.nego-pick.theirs{background:var(--c2);border:2px solid var(--bd);}
-.nego-pick-lbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb);margin-bottom:5px;}
-.nego-pick-val{font-family:'Fredoka',sans-serif;font-weight:700;font-size:13px;color:var(--text);}
-
+.np{border-radius:12px;padding:12px 10px;text-align:center;}
+.np.mine{background:var(--soft);border:2px solid var(--a);}
+.np.theirs{background:var(--c2);border:2px solid var(--bd);}
+.np-lbl{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb);margin-bottom:5px;}
+.np-val{font-family:'Fredoka',sans-serif;font-weight:700;font-size:13px;color:var(--text);}
 /* chat */
-.chat-box{border:2px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:10px;}
-.chat-msgs{min-height:80px;max-height:140px;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:7px;background:var(--c2);}
-.chat-msg{max-width:80%;padding:7px 11px;border-radius:12px;font-size:13px;line-height:1.4;}
-.chat-msg.mine{background:var(--a);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
-.chat-msg.theirs{background:var(--bd);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;}
-.chat-msg .cm-from{font-size:10px;font-weight:700;opacity:.7;margin-bottom:2px;}
-.chat-empty{font-size:12px;color:var(--lb);text-align:center;padding:16px 0;font-style:italic;}
-.chat-input-row{display:flex;gap:0;border-top:2px solid var(--bd);}
+.chat-wrap{border:2px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:11px;}
+.chat-msgs{min-height:90px;max-height:150px;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:7px;background:var(--c2);}
+.msg{max-width:80%;padding:7px 11px;border-radius:12px;font-size:13px;line-height:1.4;}
+.msg.me{background:var(--a);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+.msg.them{background:var(--bd);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;}
+.msg-from{font-size:9.5px;font-weight:700;opacity:.7;margin-bottom:2px;}
+.chat-empty-msg{font-size:12px;color:var(--lb);text-align:center;padding:16px 0;font-style:italic;}
+.chat-row{display:flex;border-top:2px solid var(--bd);}
 .chat-inp{flex:1;padding:10px 13px;border:none;font-family:'Quicksand',sans-serif;font-size:13.5px;color:var(--text);background:var(--card);outline:none;}
-.chat-send{padding:10px 16px;border:none;border-left:2px solid var(--bd);background:var(--soft);color:var(--a);font-family:'Fredoka',sans-serif;font-weight:700;font-size:14px;cursor:pointer;}
+.chat-send{padding:10px 15px;border:none;border-left:2px solid var(--bd);background:var(--soft);color:var(--a);font-family:'Fredoka',sans-serif;font-weight:700;font-size:14px;cursor:pointer;}
 .chat-send:hover{background:var(--a);color:#fff;}
-
-/* coin flip */
-.coin{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--soft));display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;box-shadow:0 7px 18px rgba(0,0,0,.14);}
+/* coin */
+.coin-wrap{text-align:center;padding:12px 0;}
+.coin{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--soft));display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 10px;box-shadow:0 7px 18px rgba(0,0,0,.14);}
 .coin.spin{animation:cspin .8s ease;}
 @keyframes cspin{0%{transform:rotateY(0)}50%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
-.coin-result-box{background:var(--soft);border:2px solid var(--a);border-radius:14px;padding:14px;margin-bottom:12px;text-align:center;}
-.coin-result-box .cr-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb);margin-bottom:5px;}
-.coin-result-box .cr-val{font-family:'Fredoka',sans-serif;font-weight:700;font-size:17px;color:var(--a);}
-
-/* waiting ring */
+.coin-status{font-size:13px;color:var(--mt);margin-bottom:10px;}
+.coin-result{background:var(--soft);border:2px solid var(--a);border-radius:13px;padding:13px;margin:10px 0;text-align:center;}
+.coin-result .cr-lbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lb);margin-bottom:5px;}
+.coin-result .cr-val{font-family:'Fredoka',sans-serif;font-weight:700;font-size:17px;color:var(--a);}
+/* step progress */
+.step-prog{font-size:11px;font-weight:700;color:var(--lb);margin-bottom:6px;}
+/* link box */
+.link-box{background:var(--c2);border:2px solid var(--soft);border-radius:11px;padding:10px 13px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12.5px;word-break:break-all;color:var(--a);margin-bottom:12px;}
+/* ring */
 .ring{width:40px;height:40px;border:4px solid var(--soft);border-top-color:var(--a);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* accept row */
-.accept-status{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
-.ac-side{border-radius:10px;padding:9px;text-align:center;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12px;}
-.ac-side.done{background:#d1fae5;color:#065f46;}
-.ac-side.pending{background:var(--c2);border:2px solid var(--bd);color:var(--mt);}
-
 /* boarding pass */
 .bp-wrap{border-radius:15px;overflow:hidden;margin-bottom:12px;box-shadow:0 7px 22px rgba(0,0,0,.12);}
 .bp-pass{display:flex;background:var(--card);border:2px solid var(--bd);}
 .bp-main{flex:1;padding:17px 15px;text-align:left;}
 .bp-stub{width:80px;border-left:3px dashed var(--bd);padding:17px 10px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;background:var(--c2);}
 .bpl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lb);}
-.bpv{font-family:'Fredoka',sans-serif;font-weight:700;font-size:13.5px;color:var(--text);margin-top:2px;}
+.bpv{font-family:'Fredoka',sans-serif;font-weight:700;font-size:13px;color:var(--text);margin-top:2px;}
 .bpb{font-family:'Fredoka',sans-serif;font-size:22px;font-weight:700;color:var(--a);margin:4px 0;}
 .bpr{margin-bottom:8px;}
 .bpbar{font-size:18px;letter-spacing:-2px;color:var(--bd);margin-top:5px;}
 .bpsv{font-family:'Fredoka',sans-serif;font-weight:700;font-size:11.5px;color:var(--text);writing-mode:vertical-lr;transform:rotate(180deg);}
 .share-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:9px;}
-
-/* link share box */
-.link-box{background:var(--c2);border:2px solid var(--soft);border-radius:11px;padding:10px 13px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12.5px;word-break:break-all;color:var(--a);margin-bottom:12px;text-align:left;}
-
-/* status */
-.status{font-size:12px;font-weight:600;min-height:16px;text-align:center;margin-top:5px;}
-
 /* admin */
 #adminPage{display:none;position:fixed;inset:0;z-index:9999;background:#fff;overflow-y:auto;font-family:'Quicksand',sans-serif;}
 #adminPage.on{display:block;}
 .adm-wrap{max-width:700px;margin:0 auto;padding:26px 18px;}
 .adm-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:9px;}
 .adm-head h2{font-family:'Fredoka',sans-serif;font-size:24px;color:#FF6F61;}
-.adm-back{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;border:2px solid #f0dee3;background:#fff;color:#4A2E3A;border-radius:999px;padding:8px 17px;cursor:pointer;}
+.adm-back{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;border:2px solid #f0dee3;background:#fff;color:#4A2E3A;border-radius:999px;padding:8px 16px;cursor:pointer;}
 .adm-card{background:#fffaf6;border-radius:16px;border:2px solid #f0dee3;padding:16px;margin-bottom:11px;}
-.adm-card h4{font-family:'Fredoka',sans-serif;font-size:15.5px;color:#FF6F61;margin-bottom:7px;}
+.adm-card h4{font-family:'Fredoka',sans-serif;font-size:15px;color:#FF6F61;margin-bottom:7px;}
 .adm-inp{width:100%;padding:10px 12px;border-radius:11px;border:2px solid #f0dee3;font-family:'Quicksand',sans-serif;font-size:14px;color:#4A2E3A;background:#fffaf6;margin-bottom:8px;}
 .adm-inp:focus{outline:none;border-color:#FF6F61;}
 .adm-btn{font-family:'Fredoka',sans-serif;font-weight:600;font-size:15px;border:none;border-radius:999px;padding:12px 24px;cursor:pointer;background:#FF6F61;color:#fff;}
-.adm-err{font-size:12.5px;color:#FF6F61;margin-top:4px;min-height:15px;}
-.adm-sheet{display:inline-flex;align-items:center;gap:6px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;background:#34d399;color:#fff;border:none;border-radius:11px;padding:10px 16px;cursor:pointer;text-decoration:none;}
-
-/* confetti */
+.adm-err{font-size:12px;color:#FF6F61;margin-top:4px;min-height:15px;}
+.adm-sheet{display:inline-flex;align-items:center;gap:6px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;background:#34d399;color:#fff;border:none;border-radius:11px;padding:10px 16px;cursor:pointer;text-decoration:none;}
+/* spin */
 .cf{position:fixed;top:-10px;width:10px;height:14px;border-radius:2px;z-index:400;pointer-events:none;animation:cff linear forwards;}
 @keyframes cff{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:.9}}
+.status-msg{font-size:12px;font-weight:600;min-height:16px;text-align:center;margin-top:5px;}
 footer{margin-top:18px;font-size:12px;color:var(--lb);}
-@media(max-width:420px){.card{padding:26px 15px 22px;}.og,.picks-grid,.nego-picks,.accept-status{grid-template-columns:1fr 1fr;}.bp-stub{width:66px;}}
+@media(max-width:420px){.card{padding:24px 14px 20px;}.og,.picks-row,.nego-picks,.accept-row{grid-template-columns:1fr 1fr;}.bp-stub{width:66px;}}
 </style>
 </head>
 <body data-theme="blush">
@@ -228,7 +215,7 @@ footer{margin-top:18px;font-size:12px;color:var(--lb);}
   </div>
 </div>
 
-<!-- THEME OVERLAY -->
+<!-- THEME -->
 <div class="ov" id="themeOv">
   <div class="popup">
     <div style="font-size:30px;margin-bottom:7px;">🎨</div>
@@ -239,7 +226,7 @@ footer{margin-top:18px;font-size:12px;color:var(--lb);}
   </div>
 </div>
 
-<!-- NAME OVERLAY -->
+<!-- NAME -->
 <div class="ov" id="nameOv">
   <div class="popup">
     <div style="font-size:30px;margin-bottom:7px;" id="nameEmoji">📱</div>
@@ -251,16 +238,16 @@ footer{margin-top:18px;font-size:12px;color:var(--lb);}
   </div>
 </div>
 
-<!-- SPIN WHEEL OVERLAY -->
+<!-- SPIN -->
 <div class="ov" id="spinOv">
-  <div class="popup" style="max-width:310px;">
-    <h2 id="spinTitle">Spin to decide 🎡</h2>
+  <div class="popup" style="max-width:300px;">
+    <h2 id="spinTitle">Spin 🎡</h2>
     <p class="sub">fate will choose</p>
-    <div style="position:relative;display:inline-block;margin-bottom:11px;">
-      <div style="position:absolute;top:-5px;left:50%;transform:translateX(-50%);font-size:17px;">▼</div>
-      <canvas id="wc" width="230" height="230"></canvas>
+    <div style="position:relative;display:inline-block;margin-bottom:10px;">
+      <div style="position:absolute;top:-5px;left:50%;transform:translateX(-50%);font-size:16px;">▼</div>
+      <canvas id="wc" width="220" height="220"></canvas>
     </div>
-    <div style="font-family:'Fredoka',sans-serif;font-size:16px;min-height:20px;margin-bottom:10px;color:var(--a);" id="spinResult"></div>
+    <div style="font-family:'Fredoka',sans-serif;font-size:15px;min-height:20px;margin-bottom:10px;color:var(--a);" id="spinResult"></div>
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
       <button class="bs" onclick="doSpin()">Spin again 🎲</button>
       <button class="bp" id="useSpinBtn" style="display:none;" onclick="acceptSpin()">Use this ✓</button>
@@ -268,57 +255,56 @@ footer{margin-top:18px;font-size:12px;color:var(--lb);}
   </div>
 </div>
 
-<!-- MAIN CARD -->
+<!-- CARD -->
 <div class="card" id="mainCard">
 
-  <!-- MODE SELECT (solo only, skipped if joining room) -->
+  <!-- MODE SELECT -->
   <div class="step" id="sModeSelect">
     <span class="tag">something important 💌</span>
-    <h1>How do you want to do this?</h1>
-    <p class="sub">Plan alone or plan together in real-time</p>
-    <div class="og" style="grid-template-columns:1fr 1fr;">
+    <h1>How do you want to plan this?</h1>
+    <p class="sub">Solo or together in real-time</p>
+    <div class="og">
       <div class="oc" onclick="startSolo()"><span class="em">🙋</span><span class="lb">Solo</span><span class="jk">you plan, she reacts</span></div>
-      <div class="oc" onclick="showTogetherEntry()"><span class="em">🤝</span><span class="lb">Together</span><span class="jk">both plan in real-time</span></div>
+      <div class="oc" onclick="show('sTogetherEntry')"><span class="em">🤝</span><span class="lb">Together</span><span class="jk">both plan in real-time</span></div>
     </div>
   </div>
 
-  <!-- TOGETHER ROOM ENTRY -->
+  <!-- ROOM ENTRY -->
   <div class="step" id="sTogetherEntry">
     <span class="tag">together mode 🤝</span>
     <h2>Plan your date together</h2>
-    <p class="sub">Both pick in real-time — disagreements get settled by coin flip 🪙</p>
+    <p class="sub">Both pick in real-time — disagreements get a coin flip 🪙</p>
     <div class="room-box">
       <h3>Create a room</h3>
-      <p>Pick a room name and share the link with her</p>
+      <p>Pick a room name and share the link</p>
       <input class="room-inp" type="text" id="createRoomInp" placeholder="e.g. vikas" maxlength="20" onkeydown="if(event.key==='Enter')createRoom()">
       <button class="bp" style="width:100%;" onclick="createRoom()">Create room 🚀</button>
     </div>
-    <div class="rdivider">or</div>
+    <div class="rdivider">or join</div>
     <div class="room-box">
       <h3>Join a room</h3>
-      <p>Got a room link? Enter the room name</p>
       <input class="room-inp" type="text" id="joinRoomInp" placeholder="e.g. vikas" maxlength="20" onkeydown="if(event.key==='Enter')joinRoomByName()">
-      <button class="bs" style="width:100%;" onclick="joinRoomByName()">Join room →</button>
+      <button class="bs" style="width:100%;" onclick="joinRoomByName()">Join →</button>
     </div>
     <div class="nav"><button class="bs" onclick="show('sModeSelect')">← Back</button></div>
   </div>
 
-  <!-- WAITING FOR PARTNER -->
+  <!-- WAITING -->
   <div class="step" id="sWaiting">
     <span class="tag" id="waitTag">room: —</span>
-    <div style="font-size:36px;margin:10px 0;">👀</div>
-    <h2>Waiting for her to join</h2>
+    <div style="font-size:34px;margin:10px 0;">👀</div>
+    <h2>Waiting for them to join</h2>
     <p class="sub">Share this link:</p>
     <div class="link-box" id="shareLink"></div>
-    <button class="bp" style="width:100%;margin-bottom:9px;" onclick="copyLink()">📋 Copy link</button>
+    <button class="bp" style="width:100%;margin-bottom:8px;" onclick="copyLink()">📋 Copy link</button>
     <div style="font-size:12px;color:var(--lb);" id="copyMsg"></div>
-    <div class="ring" style="margin-top:16px;"></div>
-    <p class="sub" style="margin-top:9px;">This page updates the moment she joins ✨</p>
+    <div class="ring" style="margin-top:14px;"></div>
+    <p class="sub" style="margin-top:9px;">Updates the moment they join ✨</p>
   </div>
 
-  <!-- PERSONAL NOTE -->
+  <!-- NOTE -->
   <div class="step" id="sNote">
-    <span class="tag">a note, before anything else ✉️</span>
+    <span class="tag">a note first ✉️</span>
     <div class="nl" id="noteLetter"></div>
     <button class="bp" style="width:100%;" onclick="show('sQuestion');startTimer()">Okay, I'm ready →</button>
   </div>
@@ -340,90 +326,109 @@ footer{margin-top:18px;font-size:12px;color:var(--lb);}
     <div class="why-card" id="whyCard"></div>
   </div>
 
-  <!-- MISSION -->
-  <div class="step" id="sMission">
-    <div class="vibe" id="missionVibe">she said yes 🎉</div>
-    <span class="tag">pick our vibe</span>
-    <h2>What are we doing?</h2>
-    <p class="sub" id="missionSub">Choose wisely. (It won't matter, but choose wisely.)</p>
-    <div class="og" id="missionGrid"></div>
-  </div>
+  <!-- ══ TOGETHER MAIN PICK STEP ══
+       Used for EVERY step in Together mode: mission, sub-questions, date, time, loc, food
+  -->
+  <div class="step" id="sTogetherStep">
+    <div class="t-header">
+      <div>
+        <div class="vibe" id="tVibe"></div>
+        <div class="step-prog" id="tProg"></div>
+      </div>
+      <span class="t-badge yellow" id="tBadge"><span class="dot"></span><span id="tBadgeTxt">picking...</span></span>
+    </div>
+    <span class="tag" id="tTag">details</span>
+    <h2 id="tTitle"></h2>
+    <p class="sub" id="tSub"></p>
 
-  <!-- TOGETHER STEP (single pick with partner sync) -->
-  <div class="step" id="sTogetherPick">
-    <div class="t-status">
-      <span class="vibe" id="tpVibe"></span>
-      <span class="t-badge" id="tpBadge"><span class="dot"></span><span id="tpBadgeTxt">picking...</span></span>
+    <!-- side by side picks -->
+    <div class="picks-row">
+      <div class="ps" id="myPS"><div class="ps-lbl">You</div><div class="ps-val" id="myPSVal">—</div></div>
+      <div class="ps waiting" id="theirPS"><div class="ps-lbl">Them</div><div class="ps-val" id="theirPSVal">—</div><div class="ps-wait">picking...</div></div>
     </div>
-    <span class="tag" id="tpTag">details</span>
-    <h2 id="tpTitle"></h2>
-    <p class="sub" id="tpSub"></p>
-    <!-- side by side current picks -->
-    <div class="picks-grid">
-      <div class="pick-side" id="myPickSide"><div class="pick-label" id="myPickLabel">You</div><div class="pick-val" id="myPickVal">—</div></div>
-      <div class="pick-side waiting-pick" id="theirPickSide"><div class="pick-label" id="theirPickLabel">Them</div><div class="pick-val" id="theirPickVal">—</div><div class="pick-wait" id="theirPickWait">picking...</div></div>
-    </div>
-    <!-- options list -->
-    <div class="pl" id="tpList"></div>
-    <div class="nav" id="tpNav"></div>
-    <!-- accept button shown once both picked same thing -->
-    <div id="tpAcceptArea" style="display:none;margin-top:12px;">
-      <div style="background:#d1fae5;border-radius:12px;padding:11px;margin-bottom:10px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;color:#065f46;" id="tpAgreeMsg"></div>
-      <div class="accept-status" id="tpAcceptStatus"></div>
-      <button class="bp" style="width:100%;margin-top:8px;" id="tpAcceptBtn" onclick="acceptCurrentStep()">I'm in ✓</button>
-    </div>
-  </div>
 
-  <!-- NEGOTIATION STEP -->
-  <div class="step" id="sNego">
-    <span class="tag" id="negoTag">negotiation time 😂</span>
-    <h2>You two disagree</h2>
-    <p class="sub" id="negoSub">Make your case. Then let the coin decide.</p>
-    <div class="nego-box">
-      <div class="nego-picks" id="negoPicks"></div>
-      <!-- chat -->
-      <div class="chat-box">
-        <div class="chat-msgs" id="chatMsgs"><div class="chat-empty" id="chatEmpty">No messages yet. Make your case! 🗣️</div></div>
-        <div class="chat-input-row">
-          <input class="chat-inp" type="text" id="chatInp" placeholder="convince them..." maxlength="120" onkeydown="if(event.key==='Enter')sendMsg()">
-          <button class="chat-send" onclick="sendMsg()">Send</button>
+    <!-- options -->
+    <div class="pl" id="tList"></div>
+    <div class="nav" id="tNav"></div>
+
+    <!-- AGREE STATE -->
+    <div id="agreeArea" style="display:none;margin-top:11px;">
+      <div class="agree-box">
+        <div class="ag-title">🎉 You both agree!</div>
+        <div class="ag-val" id="agreeVal"></div>
+      </div>
+      <div class="accept-row" id="agreeAcceptRow"></div>
+      <button class="bp" style="width:100%;margin-top:8px;" id="agreeAcceptBtn" onclick="tapAccept()">I'm in ✓</button>
+    </div>
+
+    <!-- DISAGREE → NEGOTIATION STATE (shown inline) -->
+    <div id="negoArea" style="display:none;margin-top:11px;">
+      <div class="nego-box">
+        <div class="nego-picks" id="negoPicks2"></div>
+        <!-- CHAT -->
+        <div class="chat-wrap">
+          <div class="chat-msgs" id="chatMsgs"></div>
+          <div class="chat-row">
+            <input class="chat-inp" id="chatInp" type="text" placeholder="make your case... 🗣️" maxlength="120" onkeydown="if(event.key==='Enter')sendMsg()">
+            <button class="chat-send" onclick="sendMsg()">Send</button>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- coin flip area -->
-    <div id="coinArea">
-      <div class="coin" id="coinEl">🪙</div>
-      <div style="font-size:13px;color:var(--mt);margin-bottom:10px;" id="coinStatus">Ready to flip? Either of you can do it.</div>
-      <button class="bp" style="width:100%;" id="flipBtn" onclick="flipCoin()">Flip the coin 🎲</button>
-    </div>
-    <!-- coin result -->
-    <div id="coinResultArea" style="display:none;margin-top:10px;">
-      <div class="coin-result-box"><div class="cr-label">The coin has spoken 🎲</div><div class="cr-val" id="coinWinner"></div></div>
-      <div class="accept-status" id="negoAcceptStatus"></div>
-      <button class="bp" style="width:100%;margin-top:8px;" id="negoAcceptBtn" onclick="acceptNegoResult()">Accept &amp; continue ✓</button>
+      <!-- COIN FLIP -->
+      <div class="coin-wrap" id="coinFlipArea">
+        <div class="coin" id="coinEl">🪙</div>
+        <div class="coin-status" id="coinStatus">Either of you can flip!</div>
+        <button class="bp" style="width:100%;" id="flipBtn" onclick="flipCoin()">Flip the coin 🎲</button>
+      </div>
+      <!-- COIN RESULT -->
+      <div id="coinResultArea" style="display:none;">
+        <div class="coin-result"><div class="cr-lbl">🎲 The coin has spoken</div><div class="cr-val" id="coinWinnerTxt"></div></div>
+        <div class="accept-row" id="coinAcceptRow"></div>
+        <button class="bp" style="width:100%;margin-top:8px;" id="coinAcceptBtn" onclick="tapAccept()">Accept &amp; continue ✓</button>
+      </div>
     </div>
   </div>
 
-  <!-- FOOD -->
+  <!-- FOOD (multi-select — special step) -->
   <div class="step" id="sFood">
     <div class="vibe" id="foodVibe"></div>
     <span class="tag">food time 🍽️</span>
     <h2 id="foodTitle">What are we eating?</h2>
     <p class="sub">Pick as many as you want.</p>
     <div class="cw" id="foodChips"></div>
-    <div id="foodTogetherArea" style="display:none;margin-bottom:10px;">
-      <div class="picks-grid">
-        <div class="pick-side" id="myFoodSide"><div class="pick-label">Your picks</div><div class="pick-val" id="myFoodVal" style="font-size:11.5px;">—</div></div>
-        <div class="pick-side waiting-pick" id="theirFoodSide"><div class="pick-label">Their picks</div><div class="pick-val" id="theirFoodVal" style="font-size:11.5px;">—</div><div class="pick-wait" id="theirFoodWait">picking...</div></div>
+    <!-- together food sync display -->
+    <div id="foodTogetherUI" style="display:none;">
+      <div class="picks-row">
+        <div class="ps" id="myFoodPS"><div class="ps-lbl">Your picks</div><div class="ps-val" id="myFoodVal" style="font-size:11px;">—</div></div>
+        <div class="ps waiting" id="theirFoodPS"><div class="ps-lbl">Their picks</div><div class="ps-val" id="theirFoodVal" style="font-size:11px;">—</div><div class="ps-wait">picking...</div></div>
       </div>
     </div>
     <div class="nav">
       <button class="bs" onclick="flowBack()">← Back</button>
-      <button class="bp" id="foodNext" onclick="confirmFood()" disabled>Confirm food ✓</button>
+      <button class="bp" id="foodConfirmBtn" onclick="confirmFood()" disabled>Confirm ✓</button>
     </div>
   </div>
 
-  <!-- ALREADY DONE -->
+  <!-- SOLO PICK (non-together) -->
+  <div class="step" id="sSoloPick">
+    <div class="vibe" id="soloPickVibe"></div>
+    <span class="tag" id="soloPickTag">details</span>
+    <h2 id="soloPickTitle"></h2>
+    <p class="sub" id="soloPickSub"></p>
+    <div class="pl" id="soloPickList"></div>
+    <div class="nav" id="soloPickNav"></div>
+  </div>
+
+  <!-- SOLO MISSION -->
+  <div class="step" id="sSoloMission">
+    <div class="vibe">she said yes 🎉</div>
+    <span class="tag">pick our vibe</span>
+    <h2>What are we doing?</h2>
+    <p class="sub">Choose wisely.</p>
+    <div class="og" id="soloMissionGrid"></div>
+  </div>
+
+  <!-- DONE -->
   <div class="step" id="sDone">
     <div style="font-size:42px;margin-bottom:9px;">🎟️</div>
     <h2>Already confirmed!</h2>
@@ -456,78 +461,102 @@ footer{margin-top:18px;font-size:12px;color:var(--lb);}
       <button class="bs" onclick="addCal()">📅 Calendar</button>
     </div>
     <div class="fw" style="margin-top:13px;">
-      <label>Your email — so the plan actually lands somewhere</label>
+      <label>Your email — so the plan lands somewhere</label>
       <input type="email" id="emailIn" placeholder="you@example.com">
     </div>
     <div class="nav"><button class="bp" id="sendBtn" onclick="sendConf()">Send confirmation 💌</button></div>
-    <div class="status" id="confStatus"></div>
+    <div class="status-msg" id="confStatus"></div>
     <p class="sub" id="recapFoot" style="font-size:12px;margin-top:7px;"></p>
     <div class="nav" style="margin-top:9px;"><button class="bs" onclick="resetAll()">🏠 Start over</button></div>
   </div>
 
-</div><!-- .card -->
+</div>
 <footer id="foot" onclick="footTap()">made with way too many redrafted texts</footer>
 
 <script>
-/* ══ CONFIG ══ */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzf9T5VU46NFqjmQellNcwPEHxqDox0rGas7JKWYmgM6mE6ObMYytv428NivtXtTGCG/exec";
-const ADMIN_PWD  = "date2025";
-const NOTE       = "Hey — I've been meaning to say something for a while now. I kept finding reasons to wait for the right moment. This is me deciding the right moment is now. No big speech, just one honest question. 🥹";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbzf9T5VU46NFqjmQellNcwPEHxqDox0rGas7JKWYmgM6mE6ObMYytv428NivtXtTGCG/exec";
+const ADMIN_PWD="date2025";
+const NOTE="Hey — I've been meaning to say something for a while now. I kept finding reasons to wait for the right moment. This is me deciding the right moment is now. No big speech, just one honest question. 🥹";
 
-/* ══ THEMES ══ */
+/* ── THEMES ── */
 const THEMES=[{id:'blush',name:'Warm Blush',sub:'soft & romantic',em:'🌸',a:'#FF6F61',soft:'#FFD9E3'},{id:'midnight',name:'Midnight Romance',sub:'dark & mysterious',em:'🌙',a:'#c084fc',soft:'#3b1f6e'},{id:'mint',name:'Mint Chill',sub:'fresh & cool',em:'🌿',a:'#14b8a6',soft:'#ccfbf1'},{id:'golden',name:'Golden Hour',sub:'warm & golden',em:'☀️',a:'#f59e0b',soft:'#fde68a'}];
 let curTheme=THEMES[0];
-const tg=document.getElementById('themeGrid');
-THEMES.forEach(t=>{const el=document.createElement('div');el.className='tc'+(t.id==='blush'?' sel':'');el.style.borderColor=t.a;el.innerHTML=`<div class="sw" style="background:${t.soft}">${t.em}</div><div class="tn">${t.name}</div><div class="ts">${t.sub}</div>`;el.onclick=()=>{document.querySelectorAll('.tc').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');curTheme=t;document.body.setAttribute('data-theme',t.id);};tg.appendChild(el);});
+const tgEl=document.getElementById('themeGrid');
+THEMES.forEach(t=>{const el=document.createElement('div');el.className='tc'+(t.id==='blush'?' sel':'');el.style.borderColor=t.a;el.innerHTML=`<div class="sw" style="background:${t.soft}">${t.em}</div><div class="tn">${t.name}</div><div class="ts">${t.sub}</div>`;el.onclick=()=>{document.querySelectorAll('.tc').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');curTheme=t;document.body.setAttribute('data-theme',t.id);};tgEl.appendChild(el);});
 function pickTheme(){hide('themeOv');show_ov('nameOv');}
 
-/* ══ NAME ══ */
+/* ── NAME ── */
 let myName='',myRole='',roomId='',joiningRoom='';
-const NAME_OPTS=[{l:'that random guy',j:"we've all been there"},{l:'😬 unknown number',j:'bold of you to open this'},{l:'do not pick up 🚫',j:'okay but you did open it'},{l:'the coffee guy ☕',j:'at least we have history'},{l:'him 😏',j:'we both know which one'},{l:'Mr. Important 🎩',j:'very formal, I respect it'},{l:'that one person 👀',j:'the only one that matters'}];
+const NAME_OPTS=[{l:'that random guy',j:"we've all been there"},{l:'😬 unknown number',j:'bold of you to open this'},{l:'do not pick up 🚫',j:'okay but you did open it'},{l:'the coffee guy ☕',j:'at least we have history'},{l:'him 😏',j:'we both know which one'},{l:'Mr. Important 🎩',j:'very formal'},{l:'that one person 👀',j:'the only one that matters'}];
 const noEl=document.getElementById('nameOpts');
 NAME_OPTS.forEach(o=>{const el=document.createElement('div');el.className='no';el.innerHTML=`<span style="font-size:16px;">📱</span><div><span>${o.l}</span><span class="nj">${o.j}</span></div>`;el.onclick=()=>setName(o.l);noEl.appendChild(el);});
 document.getElementById('customName').addEventListener('keydown',e=>{if(e.key==='Enter')confirmName();});
 function confirmName(){setName(document.getElementById('customName').value.trim()||'mystery contact');}
+function nameHint(n){if(!n||n.length<1)return '???';return n[0]+'*'.repeat(Math.max(1,n.length-1))+` (${n.length} letters)`;}
 
 function setName(n){
-  myName=n; hide('nameOv');
+  myName=n;hide('nameOv');
   document.getElementById('senderLine').textContent=`saved as "${myName}" in your phone 📱`;
   document.getElementById('foot').textContent=`made with way too many redrafted texts — from "${myName}"`;
   document.getElementById('noteLetter').textContent=NOTE;
-  /* if joining a room from URL, skip mode select and go straight to join */
-  if(joiningRoom){ myRole='p2'; roomId=joiningRoom; doJoinRoom(); return; }
-  show('sModeSelect');
-  burst(15);
+  if(joiningRoom){myRole='p2';roomId=joiningRoom;doJoinRoom();return;}
+  show('sModeSelect');burst(15);
 }
 
-/* hint for partner: first char + stars */
-function nameHint(n){ if(!n||n.length<1)return '???'; return n[0]+'*'.repeat(Math.max(1,n.length-1))+` (${n.length} letters)`; }
-
-/* ══ DATA ══ */
+/* ── DATA ── */
 const MISSIONS=[
-  {id:'shopping',em:'🛍️',lb:'Shopping spree',jk:'I carry bags, you carry the budget',sq:[{k:'style',t:'Shopping energy?',s:'pick your fighting style',wheel:false,o:[{l:'Window shopping',s:'(lie)'},{l:'Full mall crawl',s:'no mercy'},{l:'Thrift hunting 🕵️',s:'hidden gems'},{l:'Retail therapy 💳',s:'bold'}]},{k:'eat',t:'Food after?',s:'not optional',wheel:false,o:[{l:'Obviously yes 🍔',s:''},{l:'Yes, snacks count 🍟',s:''}]}]},
-  {id:'finedine',em:'🍷',lb:'Fine dining',jk:'Forks left to right, panic optional',sq:[{k:'cuisine',t:'Cuisine vibes?',s:'no wrong answers, only expensive ones',wheel:true,o:[{l:'Italian 🍝',s:'pasta'},{l:'Indian 🍛',s:'ambitious'},{l:'Asian fusion 🍜',s:''},{l:'Continental 🥩',s:''},{l:'Mexican 🌮',s:''},{l:'Surprise 🎲',s:"chef's choice"}]}]},
-  {id:'movie',em:'🎬',lb:'Movie night',jk:'I will steal popcorn, no negotiations',sq:[{k:'genre',t:'What genre?',s:'choose carefully',wheel:true,o:[{l:'Comedy',s:''},{l:'Action',s:''},{l:'Horror 😱',s:'hand-holding mandatory'},{l:'Romance 🥀',s:'foreshadowing'},{l:'Animated',s:'still kids'},{l:'Sci-Fi 🚀',s:'big brain'}]},{k:'eat',t:'Dinner after?',s:'popcorn ≠ dinner',wheel:false,o:[{l:'Yes 🍿➡️🍝',s:''},{l:'Yes, dessert 🍰',s:''}]}]},
-  {id:'trip',em:'✈️',lb:'Spontaneous trip',jk:'Passport not included, vibes are',sq:[{k:'len',t:'Day or night trip?',s:'pack accordingly',wheel:false,o:[{l:'Day trip ☀️',s:'responsible'},{l:'Overnight ✨',s:'tell no one'}]},{k:'dest',t:'Where to?',s:'pick the vibe',wheel:true,o:[{l:'Sea 🌊',s:'sandy shoes'},{l:'Mountains ⛰️',s:'cold hands, warm chai'},{l:'River 🏞️',s:''},{l:'Forest 🌲',s:'main character'},{l:'Hill station 🌄',s:'chai & clouds'},{l:'Anywhere 😅',s:''}]}]},
-  {id:'coffee',em:'☕',lb:'Coffee & talk',jk:'Low effort, high emotional damage',sq:[{k:'cafe',t:'What kind of cafe?',s:'set the scene',wheel:false,o:[{l:'Cozy corner',s:'soft feelings'},{l:'Aesthetic 📸',s:'gram worthy'},{l:'Chai tapri',s:'no WiFi'},{l:'Bookstore cafe',s:'nothing productive'}]},{k:'coff',t:'How do you take it?',s:'matters more than you think',wheel:false,o:[{l:'Latte',s:''},{l:'Cappuccino',s:''},{l:'Cold brew',s:'unbothered'},{l:'Filter coffee',s:'purist'},{l:'Chai ☕',s:'let this slide'}]}]},
-  {id:'adventure',em:'🎢',lb:'Adventure outdoors',jk:'Screaming together builds trust',sq:[{k:'out',t:'Outdoor style?',s:'choose difficulty',wheel:true,o:[{l:'Hiking 🥾',s:'cardio romantic'},{l:'Beach walk 🌊',s:''},{l:'Amusement park 🎡',s:'mandatory screaming'},{l:'Picnic 🧺',s:'ants included'},{l:'Cycling 🚲',s:''},{l:'Stargazing 🌠',s:'max romance'}]},{k:'eat',t:'Food after?',s:'you earned it',wheel:false,o:[{l:'Yes 🍗',s:''},{l:'Picnic snacks 🧺',s:''}]}]},
+  {id:'shopping',em:'🛍️',lb:'Shopping spree',jk:'I carry bags, you carry the budget',sq:[{k:'style',t:'Shopping energy?',s:'pick your fighting style',wheel:false,o:[{l:'Window shopping',s:'(we both know it\'s a lie)'},{l:'Full mall crawl',s:'every floor, no mercy'},{l:'Thrift hunting 🕵️',s:'hidden gems only'},{l:'Retail therapy 💳',s:'bold and expensive'}]},{k:'eat',t:'Food after?',s:'not actually optional',wheel:false,o:[{l:'Obviously yes 🍔',s:'earned it'},{l:'Yes, snacks count 🍟',s:'a snack is a meal'}]}]},
+  {id:'finedine',em:'🍷',lb:'Fine dining',jk:'Forks left to right, panic optional',sq:[{k:'cuisine',t:'Cuisine vibes?',s:'no wrong answers, only expensive ones',wheel:true,o:[{l:'Italian 🍝',s:'pasta solves everything'},{l:'Indian 🍛',s:'spice level: ambitious'},{l:'Asian fusion 🍜',s:'chopsticks optional'},{l:'Continental 🥩',s:'committing'},{l:'Mexican 🌮',s:'tacos at fine dining, why not'},{l:'Surprise me 🎲',s:"chef's choice"}]}]},
+  {id:'movie',em:'🎬',lb:'Movie night',jk:'I will steal popcorn, no negotiations',sq:[{k:'genre',t:'What genre?',s:'choose carefully, I will judge slightly',wheel:true,o:[{l:'Comedy',s:'low effort, high laughs'},{l:'Action / Thriller',s:'grip the armrest'},{l:'Horror 😱',s:'hand-holding mandatory'},{l:'Romance 🥀',s:'foreshadowing, much?'},{l:'Animated',s:'we are still kids'},{l:'Sci-Fi 🚀',s:'big brain date'}]},{k:'eat',t:'Dinner after?',s:'popcorn does not count',wheel:false,o:[{l:'Yes obviously 🍿➡️🍝',s:''},{l:'Yes, dessert counts 🍰',s:''}]}]},
+  {id:'trip',em:'✈️',lb:'Spontaneous trip',jk:'Passport not included, vibes are',sq:[{k:'len',t:'Day or night trip?',s:'pack accordingly',wheel:false,o:[{l:'Day trip ☀️',s:'back by dinner, responsible'},{l:'Overnight ✨',s:'pack a bag, tell no one'}]},{k:'dest',t:'Where to?',s:'pick the vibe not the address',wheel:true,o:[{l:'Sea 🌊',s:'sandy shoes, no regrets'},{l:'Mountains ⛰️',s:'cold hands, warm chai'},{l:'River 🏞️',s:'underrated honestly'},{l:'Forest 🌲',s:'main character energy'},{l:'Hill station 🌄',s:'chai and clouds'},{l:'Anywhere with WiFi 😅',s:'a compromise'}]}]},
+  {id:'coffee',em:'☕',lb:'Coffee & talk',jk:'Low effort, high emotional damage',sq:[{k:'cafe',t:'What kind of cafe?',s:'set the scene',wheel:false,o:[{l:'Cozy corner spot',s:'soft lighting, soft feelings'},{l:'Aesthetic for the gram 📸',s:'coffee is secondary'},{l:'Old-school chai tapri',s:'no WiFi, all vibes'},{l:'Quiet bookstore cafe',s:'nothing productive will happen'}]},{k:'coff',t:'How do you take it?',s:'this matters more than you think',wheel:false,o:[{l:'Latte',s:'soft and predictable'},{l:'Cappuccino',s:'foam enthusiast'},{l:'Cold brew',s:'unbothered, built different'},{l:'Filter coffee',s:'a purist'},{l:'Chai ☕',s:'we will let this slide'}]}]},
+  {id:'adventure',em:'🎢',lb:'Adventure outdoors',jk:'Screaming together builds trust',sq:[{k:'out',t:'Outdoor style?',s:'choose your difficulty level',wheel:true,o:[{l:'Hiking 🥾',s:'cardio but romantic'},{l:'Beach walk 🌊',s:'low stakes, high charm'},{l:'Amusement park 🎡',s:'screaming is mandatory'},{l:'Picnic 🧺',s:'ants are part of the vibe'},{l:'Cycling 🚲',s:'racing each other, casually'},{l:'Stargazing 🌠',s:'minimal movement, max romance'}]},{k:'eat',t:'Food after all that?',s:'you earned it either way',wheel:false,o:[{l:'Yes, refuel required 🍗',s:''},{l:'Yes, picnic snacks count 🧺',s:''}]}]},
 ];
 const FOODS=[{id:'veg',l:'🥗 Veg'},{id:'nv',l:'🍗 Non-veg'},{id:'vgn',l:'🌱 Vegan'},{id:'sp',l:'🌶️ Spicy, always'},{id:'ds',l:'🍰 Dessert is main'},{id:'st',l:'🌮 Street food'},{id:'fn',l:'🍝 Fancy & overpriced'},{id:'sr',l:'🎲 Surprise me'}];
 const LOCS=[{em:'📍',lb:'Our city',jk:'home turf'},{em:'🚗',lb:'Day drive away',jk:'2hrs max'},{em:'🚆',lb:'Outstation',jk:'proper adventure'},{em:'🌍',lb:'Wherever we end up',jk:'chaotic neutral'}];
 const SUB_LBL={style:'Style',eat:'Food after',cuisine:'Cuisine',genre:'Genre',len:'Trip',dest:'Destination',cafe:'Cafe',coff:'Coffee',out:'Outdoor'};
 
-/* build mission grid */
-const mg=document.getElementById('missionGrid');
-MISSIONS.forEach(m=>{const el=document.createElement('div');el.className='oc';el.innerHTML=`<span class="em">${m.em}</span><span class="lb">${m.lb}</span><span class="jk">${m.jk}</span>`;el.onclick=()=>pickMission(m);mg.appendChild(el);});
-/* build food chips */
+/* Build SOLO mission grid */
+const smg=document.getElementById('soloMissionGrid');
+MISSIONS.forEach(m=>{const el=document.createElement('div');el.className='oc';el.innerHTML=`<span class="em">${m.em}</span><span class="lb">${m.lb}</span><span class="jk">${m.jk}</span>`;el.onclick=()=>{selMission=m;buildSoloFlow();setTimeout(soloFlowNext,80);};smg.appendChild(el);});
+/* Food chips */
 const fc=document.getElementById('foodChips');
-FOODS.forEach(f=>{const el=document.createElement('div');el.className='ch';el.textContent=f.l;el.onclick=()=>{if(selFoods.has(f.id)){selFoods.delete(f.id);el.classList.remove('sel');}else{selFoods.add(f.id);el.classList.add('sel');}document.getElementById('foodNext').disabled=selFoods.size===0;if(roomId)syncField('foodPick',[...selFoods].join(','));};fc.appendChild(el);});
+FOODS.forEach(f=>{const el=document.createElement('div');el.className='ch';el.textContent=f.l;el.onclick=()=>{if(selFoods.has(f.id)){selFoods.delete(f.id);el.classList.remove('sel');}else{selFoods.add(f.id);el.classList.add('sel');}document.getElementById('foodConfirmBtn').disabled=selFoods.size===0;if(roomId)fbUpdate(`rooms/${roomId}/${myRole}/foodPicks`,[...selFoods]);};fc.appendChild(el);});
 
-/* ══ STATE ══ */
-let selMission=null,answers={},selFoods=new Set(),selDate=null,selTime=null,selLoc=null,flow=[],fi=-1;
-let isSolo=true;
+/* ── STATE ── */
+let selMission=null,answers={},selFoods=new Set(),selDate=null,selTime=null,selLoc=null;
+let soloFlow=[],soloFi=-1;
 
-/* ══ FIREBASE HELPERS ══ */
+/* ══════════════════════════════
+   TOGETHER MODE — FIREBASE
+   ══════════════════════════════
+   KEY ARCHITECTURE:
+   Every decision step (including mission!) goes through a shared
+   "currentStep" node. Both clients react to it. Steps:
+     picking → both-picked (agree or disagree) → accepted → next
+   
+   Firebase structure:
+   rooms/{id}/
+     status: waiting|active
+     p1/{ name, nameHint, joined }
+     p2/{ name, nameHint, joined }
+     currentStep/{
+       key: 'mission'|'style'|'cuisine'|'loc'|'date'|'time'
+       p1Pick: '...'
+       p2Pick: '...'
+       p1Accepted: false
+       p2Accepted: false
+       coinResult: null|'...'
+       coinFlippedBy: null
+     }
+     agreedAnswers/{ mission:'...', style:'...', ... }
+     chat/{stepKey}/{pushId}: { role, text, ts }
+*/
+
+let togetherStepQueue=[];  /* ordered list of step keys for together mode, set after mission agreed */
+let togetherStepIndex=-1;  /* current index in togetherStepQueue */
+let chatListenerOff=null;  /* unsubscribe for chat listener */
+
 function waitFB(){return new Promise(r=>{if(window._fbReady)r();else window.addEventListener('fbready',r,{once:true});});}
 function fbSet(path,val){const {db,ref,set}=window._fb;return set(ref(db,path),val);}
 function fbUpdate(path,val){const {db,ref,update}=window._fb;return update(ref(db,path),val);}
@@ -535,357 +564,388 @@ function fbGet(path){const {db,ref,get}=window._fb;return get(ref(db,path)).then
 function fbPush(path,val){const {db,ref,push}=window._fb;return push(ref(db,path),val);}
 function fbListen(path,cb){const {db,ref,onValue}=window._fb;return onValue(ref(db,path),snap=>cb(snap.exists()?snap.val():null));}
 
-/* ══ MODE SELECT ══ */
-function startSolo(){isSolo=true;show('sNote');}
-function showTogetherEntry(){isSolo=false;show('sTogetherEntry');}
-
-/* ══ CREATE ROOM ══ */
+/* ── CREATE ROOM ── */
 async function createRoom(){
   await waitFB();
   const n=document.getElementById('createRoomInp').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
-  if(!n){alert('Enter a room name first!');return;}
-  roomId=n; myRole='p1';
-  await fbSet(`rooms/${roomId}`,{
-    status:'waiting',ts:Date.now(),
-    p1:{name:myName,nameHint:nameHint(myName),joined:true,ts:Date.now(),picks:{}},
-    p2:{joined:false}
-  });
+  if(!n){alert('Enter a room name!');return;}
+  roomId=n;myRole='p1';
+  await fbSet(`rooms/${roomId}`,{status:'waiting',ts:Date.now(),p1:{name:myName,nameHint:nameHint(myName),joined:true},p2:{joined:false},agreedAnswers:{},currentStep:{key:'mission',p1Pick:null,p2Pick:null,p1Accepted:false,p2Accepted:false,coinResult:null,coinFlippedBy:null}});
   startRoomListener();
   document.getElementById('waitTag').textContent=`room: ${roomId}`;
-  const link=location.href.split('#')[0]+'#room='+roomId;
-  document.getElementById('shareLink').textContent=link;
+  document.getElementById('shareLink').textContent=location.href.split('#')[0]+'#room='+roomId;
   show('sWaiting');
 }
 
-/* ══ JOIN ROOM ══ */
+/* ── JOIN ROOM ── */
 function joinRoomByName(){
   const n=document.getElementById('joinRoomInp').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
-  if(!n){alert('Enter a room name first!');return;}
-  joiningRoom=n; myRole='p2';
-  /* show name popup customised for joiner */
+  if(!n){alert('Enter a room name!');return;}
+  joiningRoom=n;
   document.getElementById('nameEmoji').textContent='🤝';
-  document.getElementById('nameTitle').textContent='Quick — before you join...';
-  document.getElementById('nameDesc').textContent='What is their number saved as in YOUR phone?';
+  document.getElementById('nameTitle').textContent='One sec before you join...';
+  document.getElementById('nameDesc').textContent='What is THEIR number saved as in YOUR phone?';
   show_ov('nameOv');
 }
 
 async function doJoinRoom(){
   await waitFB();
   const roomData=await fbGet(`rooms/${roomId}`);
-  if(!roomData){alert('Room not found! Check the room name.');show('sTogetherEntry');return;}
-  /* show partner hint */
-  const hint=roomData.p1?.nameHint||'someone';
-  const hintMsg=document.createElement('div');
-  hintMsg.style.cssText='background:var(--soft);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13.5px;font-weight:600;color:var(--a);text-align:center;';
-  hintMsg.textContent=`👀 Someone is waiting for you... they saved themselves as "${hint}"`;
-  document.getElementById('sMission').insertBefore(hintMsg,document.getElementById('sMission').firstChild);
-  await fbUpdate(`rooms/${roomId}/p2`,{name:myName,nameHint:nameHint(myName),joined:true,ts:Date.now(),picks:{}});
+  if(!roomData){alert('Room not found! Check the name.');show('sTogetherEntry');return;}
+  const p1hint=roomData.p1?.nameHint||'V**** (someone)';
+  await fbUpdate(`rooms/${roomId}/p2`,{name:myName,nameHint:nameHint(myName),joined:true});
   await fbUpdate(`rooms/${roomId}`,{status:'active'});
   startRoomListener();
-  show('sMission');
-  document.getElementById('missionVibe').textContent=`🤝 together mode — room: ${roomId}`;
-  document.getElementById('missionSub').textContent=`Both of you pick — disagreements → coin flip 🪙`;
+  /* show mission step with partner hint */
+  showTogetherMissionStep(p1hint);
   burst(20);
 }
 
-/* ══ ROOM LISTENER ══ */
-let unsubRoom=null,unsubChat=null,currentFlowKey='',awaitingBothAccept=false;
+/* ── ROOM LISTENER ── */
+let roomListenerOff=null;
 function startRoomListener(){
-  fbListen(`rooms/${roomId}`,data=>{
+  roomListenerOff=fbListen(`rooms/${roomId}`,data=>{
     if(!data)return;
+    /* P1: partner joined → show mission */
     if(myRole==='p1'&&data.status==='active'&&document.getElementById('sWaiting').classList.contains('on')){
-      const p2hint=data.p2?.nameHint||'someone';
-      show('sMission');
-      document.getElementById('missionVibe').textContent=`🤝 together mode — room: ${roomId}`;
-      document.getElementById('missionSub').textContent=`${p2hint} has joined! Both pick — disagreements → coin flip 🪙`;
-      burst(20); return;
+      const hint=data.p2?.nameHint||'someone';
+      showTogetherMissionStep(hint);burst(20);return;
     }
-    handleRoomData(data);
+    /* Handle currentStep updates */
+    if(data.currentStep)handleStepData(data.currentStep,data);
+    /* Handle food sync */
+    if(document.getElementById('sFood').classList.contains('on')&&roomId){
+      const them=data[myRole==='p1'?'p2':'p1']||{};
+      const theirFood=them.foodPicks;
+      if(theirFood){
+        const labels=Array.isArray(theirFood)?theirFood.map(id=>FOODS.find(f=>f.id===id)?.l||id):[];
+        document.getElementById('theirFoodPS').classList.add('picked');
+        document.getElementById('theirFoodVal').textContent=labels.join(', ')||'—';
+        document.getElementById('theirFoodPS').querySelector('.ps-wait').style.display='none';
+      }
+    }
   });
 }
 
-function handleRoomData(data){
-  const me=data[myRole]||{};const them=data[myRole==='p1'?'p2':'p1']||{};
-  const step=data.step||{};
-  if(!step.key) return;
+function handleStepData(step,roomData){
+  if(!document.getElementById('sTogetherStep').classList.contains('on'))return;
+  const myPick=step[myRole+'Pick'];
+  const theirPick=step[myRole==='p1'?'p2Pick':'p1Pick'];
 
-  /* ── update together pick UI ── */
-  if(document.getElementById('sTogetherPick').classList.contains('on')){
-    const myPick=me.picks?.[step.key];
-    const theirPick=them.picks?.[step.key];
-    updatePickUI(myPick,theirPick,step,data,me,them);
-  }
-
-  /* ── update negotiation UI ── */
-  if(document.getElementById('sNego').classList.contains('on')){
-    /* coin result arrived */
-    if(step.coinResult&&step.coinKey===currentFlowKey){
-      showCoinResult(step.coinResult,step);
-    }
-    /* check accept status */
-    updateNegoAccept(step,me,them);
-  }
-
-  /* ── update food ui ── */
-  if(document.getElementById('sFood').classList.contains('on')&&roomId){
-    const theirFood=them.picks?.foodPick||'';
-    if(theirFood){
-      document.getElementById('theirFoodSide').classList.add('has-pick');
-      document.getElementById('theirFoodVal').textContent=theirFood.split(',').map(id=>FOODS.find(f=>f.id===id)?.l||id).join(', ')||'—';
-      document.getElementById('theirFoodWait').style.display='none';
-    }
-  }
-}
-
-function updatePickUI(myPick,theirPick,step,data,me,them){
-  /* my side */
-  if(myPick){document.getElementById('myPickSide').classList.add('has-pick');document.getElementById('myPickVal').textContent=myPick;}
-  /* their side */
-  if(theirPick){document.getElementById('theirPickSide').classList.add('has-pick');document.getElementById('theirPickSide').classList.remove('waiting-pick');document.getElementById('theirPickVal').textContent=theirPick;document.getElementById('theirPickWait').style.display='none';}
+  /* update my side */
+  if(myPick){document.getElementById('myPS').classList.add('picked');document.getElementById('myPSVal').textContent=myPick;}
+  /* update their side */
+  if(theirPick){document.getElementById('theirPS').classList.add('picked');document.getElementById('theirPS').classList.remove('waiting');document.getElementById('theirPSVal').textContent=theirPick;document.getElementById('theirPS').querySelector('.ps-wait').style.display='none';}
 
   if(myPick&&theirPick){
     if(myPick===theirPick){
       /* AGREE */
-      document.getElementById('tpBadge').className='t-badge green';
-      document.getElementById('tpBadgeTxt').textContent='You agree! 🎉';
-      document.getElementById('tpAcceptArea').style.display='block';
-      document.getElementById('tpAgreeMsg').textContent=`🎉 You both chose "${myPick}"`;
-      /* show accept status */
-      const p1Acc=step.p1Accepted||false,p2Acc=step.p2Accepted||false;
-      const myAcc=myRole==='p1'?p1Acc:p2Acc,theirAcc=myRole==='p1'?p2Acc:p1Acc;
-      document.getElementById('tpAcceptStatus').innerHTML=`<div class="ac-side ${myAcc?'done':'pending'}">${myAcc?'✅ You':'⏳ You'}</div><div class="ac-side ${theirAcc?'done':'pending'}">${theirAcc?'✅ Them':'⏳ Them'}</div>`;
-      if(myAcc) document.getElementById('tpAcceptBtn').disabled=true;
+      document.getElementById('tBadge').className='t-badge green';
+      document.getElementById('tBadgeTxt').textContent='You agree! 🎉';
+      document.getElementById('agreeArea').style.display='block';
+      document.getElementById('negoArea').style.display='none';
+      document.getElementById('agreeVal').textContent=`"${myPick}"`;
+      /* lock options */
+      document.querySelectorAll('#tList .pc').forEach(p=>p.classList.add('locked'));
+      /* accept status */
+      const p1A=step.p1Accepted||false,p2A=step.p2Accepted||false;
+      const myA=myRole==='p1'?p1A:p2A,theirA=myRole==='p1'?p2A:p1A;
+      document.getElementById('agreeAcceptRow').innerHTML=`<div class="ac ${myA?'done':'wait'}">${myA?'✅ You':'⏳ You'}</div><div class="ac ${theirA?'done':'wait'}">${theirA?'✅ Them':'⏳ Them'}</div>`;
+      if(myA)document.getElementById('agreeAcceptBtn').disabled=true;
       /* both accepted → advance */
-      if(p1Acc&&p2Acc){setTimeout(()=>advanceAfterAccept(myPick,step),600);}
+      if(p1A&&p2A)setTimeout(()=>advanceTogetherStep(myPick,step.key),700);
     } else {
-      /* DISAGREE → go to negotiation */
-      if(!document.getElementById('sNego').classList.contains('on')){
-        currentFlowKey=step.key;
-        enterNegotiation(myPick,theirPick,step);
+      /* DISAGREE → show negotiation */
+      document.getElementById('tBadge').className='t-badge yellow';
+      document.getElementById('tBadgeTxt').textContent='Discuss & flip! 🪙';
+      document.getElementById('agreeArea').style.display='none';
+      document.getElementById('negoArea').style.display='block';
+      document.querySelectorAll('#tList .pc').forEach(p=>p.classList.add('locked'));
+      /* update nego picks display */
+      document.getElementById('negoPicks2').innerHTML=`<div class="np mine"><div class="np-lbl">Your pick</div><div class="np-val">${myPick}</div></div><div class="np theirs"><div class="np-lbl">Their pick</div><div class="np-val">${theirPick}</div></div>`;
+      /* setup chat listener for this step */
+      setupChatListener(step.key);
+      /* coin result */
+      if(step.coinResult){
+        document.getElementById('coinFlipArea').style.display='none';
+        document.getElementById('coinResultArea').style.display='block';
+        document.getElementById('coinWinnerTxt').textContent=step.coinResult;
+        const p1A=step.p1Accepted||false,p2A=step.p2Accepted||false;
+        const myA=myRole==='p1'?p1A:p2A,theirA=myRole==='p1'?p2A:p1A;
+        document.getElementById('coinAcceptRow').innerHTML=`<div class="ac ${myA?'done':'wait'}">${myA?'✅ You':'⏳ You'}</div><div class="ac ${theirA?'done':'wait'}">${theirA?'✅ Them':'⏳ Them'}</div>`;
+        if(myA)document.getElementById('coinAcceptBtn').disabled=true;
+        if(p1A&&p2A)setTimeout(()=>advanceTogetherStep(step.coinResult,step.key),700);
       }
     }
   } else {
-    document.getElementById('tpBadge').className='t-badge yellow';
-    document.getElementById('tpBadgeTxt').textContent=theirPick?'Waiting for you...':'Waiting for them...';
+    document.getElementById('tBadge').className='t-badge yellow';
+    document.getElementById('tBadgeTxt').textContent=myPick?'Waiting for them...':'Waiting for you...';
+    document.getElementById('agreeArea').style.display='none';
+    document.getElementById('negoArea').style.display='none';
   }
 }
 
-/* ══ TOGETHER STEP RENDER ══ */
-let currentStepOnPick=null;
-function renderTogetherStep(item,sn,st){
-  let title,sub,opts,key,canSpin=false;
-  if(item.k==='loc'){key='loc';title='Where are we doing this?';sub='city, road trip, or full send';opts=LOCS.map(l=>({l:l.em+' '+l.lb,s:l.jk}));}
-  else if(item.k==='date'){key='date';title="When's good?";sub="pick a real day, not 'someday'";opts=dateOpts().map(d=>({l:d.l,s:d.s}));}
-  else if(item.k==='time'){key='time';title='What time works?';sub="approximate is fine";opts=timeOpts().map(t=>({l:t.l,s:t.s}));}
-  else{const d=item.def;key=d.k;title=d.t;sub=d.s||'';opts=d.o;canSpin=!!d.wheel;}
-  currentFlowKey=key;
-
-  /* init step in Firebase */
-  fbUpdate(`rooms/${roomId}/step`,{key,phase:'picking',p1Accepted:false,p2Accepted:false,coinResult:null,coinKey:null});
-  fbUpdate(`rooms/${roomId}/${myRole}/picks`,{[key]:null,currentKey:key});
-  /* also clear partner's pick for this key */
-
-  document.getElementById('tpVibe').textContent=`${selMission.em} ${selMission.lb} — step ${sn} of ${st}`;
-  document.getElementById('tpTag').textContent=key==='loc'?'📍 location':key==='date'?'📅 when':key==='time'?'🕒 time':'✨ details';
-  document.getElementById('tpTitle').textContent=title;
-  document.getElementById('tpSub').textContent=sub;
-  document.getElementById('myPickSide').className='pick-side';document.getElementById('myPickVal').textContent='—';
-  document.getElementById('theirPickSide').className='pick-side waiting-pick';document.getElementById('theirPickVal').textContent='—';document.getElementById('theirPickWait').style.display='';
-  document.getElementById('tpAcceptArea').style.display='none';
-  document.getElementById('tpBadge').className='t-badge yellow';document.getElementById('tpBadgeTxt').textContent='both picking...';
-
-  /* label sides */
-  document.getElementById('myPickLabel').textContent='You';
-  document.getElementById('theirPickLabel').textContent='Them';
-
-  const list=document.getElementById('tpList');list.innerHTML='';
-  let myChosen=false;
-  opts.forEach((o,i)=>{
-    const r=document.createElement('div');r.className='pc';
-    r.innerHTML=`<div><div class="ml">${o.l}</div>${o.s?`<div class="sl">${o.s}</div>`:''}</div><div class="ck">✓</div>`;
-    r.onclick=()=>{
-      if(myChosen)return; myChosen=true;
-      document.querySelectorAll('#tpList .pc').forEach(x=>x.classList.remove('sel'));r.classList.add('sel');
-      fbUpdate(`rooms/${roomId}/${myRole}/picks`,{[key]:o.l,currentKey:key});
-      document.getElementById('myPickSide').classList.add('has-pick');
-      document.getElementById('myPickVal').textContent=o.l;
-      document.getElementById('tpBadge').className='t-badge yellow';document.getElementById('tpBadgeTxt').textContent='waiting for them...';
-    };
-    list.appendChild(r);
-  });
-  currentStepOnPick=opts;
-
-  const nav=document.getElementById('tpNav');nav.innerHTML='';
-  if(canSpin){const sb=document.createElement('button');sb.className='bs';sb.textContent='🎡 Spin to decide';sb.onclick=()=>openSpin(opts.map(o=>o.l),title,o=>{if(myChosen)return;myChosen=true;fbUpdate(`rooms/${roomId}/${myRole}/picks`,{[key]:o.l,currentKey:key});document.getElementById('myPickSide').classList.add('has-pick');document.getElementById('myPickVal').textContent=o.l;});nav.appendChild(sb);}
-
-  show('sTogetherPick');
-}
-
-async function acceptCurrentStep(){
-  document.getElementById('tpAcceptBtn').disabled=true;
-  await fbUpdate(`rooms/${roomId}/step`,{[myRole+'Accepted']:true});
-}
-
-function advanceAfterAccept(winner,step){
-  const k=step.key;
-  if(k==='loc'){selLoc=LOCS.find(l=>winner.includes(l.lb))||{em:'📍',lb:winner,jk:''};} 
-  else if(k==='date'){selDate={l:winner};} 
-  else if(k==='time'){selTime={l:winner};} 
-  else{answers[k]=winner;}
-  flowNext();
-}
-
-/* ══ NEGOTIATION ══ */
-function enterNegotiation(myPick,theirPick,step){
-  document.getElementById('negoTag').textContent=`${selMission.em} negotiation time 😂`;
-  document.getElementById('negoSub').textContent=`You picked "${myPick}" — they picked "${theirPick}". Make your case.`;
-  const np=document.getElementById('negoPicks');
-  np.innerHTML=`<div class="nego-pick mine"><div class="nego-pick-lbl">Your pick</div><div class="nego-pick-val">${myPick}</div></div><div class="nego-pick theirs"><div class="nego-pick-lbl">Their pick</div><div class="nego-pick-val">${theirPick}</div></div>`;
-  document.getElementById('coinArea').style.display='block';
-  document.getElementById('coinResultArea').style.display='none';
-  document.getElementById('coinEl').className='coin';document.getElementById('coinStatus').textContent='Ready to flip? Either of you can do it.';
-  document.getElementById('flipBtn').disabled=false;
-  /* start chat listener */
-  startChatListener();
-  show('sNego');
-}
-
-function startChatListener(){
-  if(unsubChat)return; /* already listening */
-  fbListen(`rooms/${roomId}/chat/${currentFlowKey}`,msgs=>{
+/* ── CHAT ── */
+function setupChatListener(stepKey){
+  if(chatListenerOff){chatListenerOff();chatListenerOff=null;}
+  chatListenerOff=fbListen(`rooms/${roomId}/chat/${stepKey}`,msgs=>{
     const box=document.getElementById('chatMsgs');
     box.innerHTML='';
-    if(!msgs||Object.keys(msgs).length===0){box.innerHTML='<div class="chat-empty" id="chatEmpty">No messages yet. Make your case! 🗣️</div>';return;}
+    if(!msgs||!Object.keys(msgs).length){box.innerHTML='<div class="chat-empty-msg">No messages yet. Make your case! 🗣️</div>';return;}
     Object.values(msgs).sort((a,b)=>a.ts-b.ts).forEach(m=>{
       const d=document.createElement('div');
-      d.className='chat-msg '+(m.role===myRole?'mine':'theirs');
-      d.innerHTML=`<div class="cm-from">${m.role===myRole?'You':'Them'}</div>${m.text}`;
+      d.className='msg '+(m.role===myRole?'me':'them');
+      d.innerHTML=`<div class="msg-from">${m.role===myRole?'You':'Them'}</div>${escHtml(m.text)}`;
       box.appendChild(d);
     });
     box.scrollTop=box.scrollHeight;
   });
 }
-
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 async function sendMsg(){
-  const inp=document.getElementById('chatInp');const txt=inp.value.trim();if(!txt)return;inp.value='';
-  await fbPush(`rooms/${roomId}/chat/${currentFlowKey}`,{role:myRole,text:txt,ts:Date.now()});
+  const inp=document.getElementById('chatInp');
+  const txt=inp.value.trim();if(!txt)return;inp.value='';
+  const stepKey=await fbGet(`rooms/${roomId}/currentStep/key`)||'unknown';
+  await fbPush(`rooms/${roomId}/chat/${stepKey}`,{role:myRole,text:txt,ts:Date.now()});
 }
 
+/* ── COIN ── */
 async function flipCoin(){
   document.getElementById('flipBtn').disabled=true;
   document.getElementById('coinEl').classList.add('spin');
+  const stepKey=await fbGet(`rooms/${roomId}/currentStep/key`);
+  const p1Pick=await fbGet(`rooms/${roomId}/currentStep/p1Pick`);
+  const p2Pick=await fbGet(`rooms/${roomId}/currentStep/p2Pick`);
+  const choices=[p1Pick,p2Pick].filter(Boolean);
+  const winner=choices[Math.floor(Math.random()*choices.length)];
   setTimeout(async()=>{
     document.getElementById('coinEl').classList.remove('spin');
-    const myPick=document.getElementById('myPickVal').textContent;
-    const theirPick=document.getElementById('theirPickVal').textContent;
-    const choices=[myPick,theirPick].filter(x=>x&&x!=='—');
-    const winner=choices[Math.floor(Math.random()*choices.length)];
-    await fbUpdate(`rooms/${roomId}/step`,{coinResult:winner,coinKey:currentFlowKey,coinChoices:choices,coinFlippedBy:myRole,p1Accepted:false,p2Accepted:false});
+    await fbUpdate(`rooms/${roomId}/currentStep`,{coinResult:winner,coinFlippedBy:myRole,p1Accepted:false,p2Accepted:false});
   },900);
 }
 
-function showCoinResult(winner,step){
-  document.getElementById('coinArea').style.display='none';
-  document.getElementById('coinResultArea').style.display='block';
-  document.getElementById('coinWinner').textContent=winner;
-  updateNegoAccept(step,null,null);
+/* ── ACCEPT ── */
+async function tapAccept(){
+  document.getElementById('agreeAcceptBtn').disabled=true;
+  document.getElementById('coinAcceptBtn').disabled=true;
+  await fbUpdate(`rooms/${roomId}/currentStep`,{[myRole+'Accepted']:true});
 }
 
-function updateNegoAccept(step,me,them){
-  if(!step.coinResult)return;
-  const p1A=step.p1Accepted||false,p2A=step.p2Accepted||false;
-  const myA=myRole==='p1'?p1A:p2A,theirA=myRole==='p1'?p2A:p1A;
-  document.getElementById('negoAcceptStatus').innerHTML=`<div class="ac-side ${myA?'done':'pending'}">${myA?'✅ You':'⏳ You'}</div><div class="ac-side ${theirA?'done':'pending'}">${theirA?'✅ Them':'⏳ Them'}</div>`;
-  if(myA)document.getElementById('negoAcceptBtn').disabled=true;
-  if(p1A&&p2A){setTimeout(()=>advanceAfterAccept(step.coinResult,step),600);}
+/* ── ADVANCE STEP ── */
+async function advanceTogetherStep(winner,key){
+  /* store agreed answer */
+  await fbUpdate(`rooms/${roomId}/agreedAnswers`,{[key]:winner});
+  /* apply locally */
+  applyAnswer(key,winner);
+  /* move to next step */
+  togetherStepIndex++;
+  if(togetherStepIndex>=togetherStepQueue.length){
+    /* food step */
+    showFoodStep();return;
+  }
+  renderTogetherStep();
 }
 
-async function acceptNegoResult(){
-  document.getElementById('negoAcceptBtn').disabled=true;
-  await fbUpdate(`rooms/${roomId}/step`,{[myRole+'Accepted']:true});
+function applyAnswer(key,winner){
+  if(key==='mission'){
+    selMission=MISSIONS.find(m=>m.lb===winner)||MISSIONS[0];
+    /* Now that mission is agreed, build the step queue */
+    buildTogetherStepQueue();
+  } else if(key==='loc'){selLoc=LOCS.find(l=>l.lb===winner.replace(/^[^\w]*/,'').trim())||{em:'📍',lb:winner,jk:''};}
+  else if(key==='date'){selDate={l:winner};}
+  else if(key==='time'){selTime={l:winner};}
+  else{answers[key]=winner;}
 }
 
-/* ══ FOOD (TOGETHER) ══ */
+function buildTogetherStepQueue(){
+  /* queue = mission sub-questions + loc + date + time (food handled separately) */
+  togetherStepQueue=[];
+  if(selMission){selMission.sq.forEach(q=>togetherStepQueue.push({k:'sub',def:q}));}
+  togetherStepQueue.push({k:'loc'},{k:'date'},{k:'time'});
+  /* DON'T reset index here — it stays at -1 and renderTogetherStep uses ++index */
+}
+
+/* ── SHOW MISSION STEP (Together) ── */
+function showTogetherMissionStep(partnerHint){
+  /* mission is step 0. Build queue placeholder so progress shows correctly */
+  togetherStepQueue=[];togetherStepIndex=-1;
+  document.getElementById('tVibe').textContent='🤝 Together mode — plan your date';
+  document.getElementById('tProg').textContent='Step 1 — pick your activity';
+  document.getElementById('tTag').textContent='🎯 mission';
+  document.getElementById('tTitle').textContent='What are we doing?';
+  document.getElementById('tSub').textContent=partnerHint?`Partner joined as "${partnerHint}" 👀 — both pick, then we compare`:'Both pick — if you disagree, a coin decides!';
+  /* reset sides */
+  document.getElementById('myPS').className='ps';document.getElementById('myPSVal').textContent='—';
+  document.getElementById('theirPS').className='ps waiting';document.getElementById('theirPSVal').textContent='—';
+  document.getElementById('theirPS').querySelector('.ps-wait').style.display='';
+  document.getElementById('agreeArea').style.display='none';
+  document.getElementById('negoArea').style.display='none';
+  document.getElementById('coinFlipArea').style.display='block';
+  document.getElementById('coinResultArea').style.display='none';
+  document.getElementById('coinEl').className='coin';
+  document.getElementById('flipBtn').disabled=false;
+  document.getElementById('agreeAcceptBtn').disabled=false;
+  document.getElementById('coinAcceptBtn').disabled=false;
+
+  /* build options as MISSION cards */
+  const list=document.getElementById('tList');list.innerHTML='';
+  /* use option-card style for mission in together step */
+  const grid=document.createElement('div');grid.className='og';
+  MISSIONS.forEach(m=>{
+    const el=document.createElement('div');el.className='oc';
+    el.innerHTML=`<span class="em">${m.em}</span><span class="lb">${m.lb}</span><span class="jk">${m.jk}</span>`;
+    el.onclick=()=>{
+      if(document.getElementById('myPS').classList.contains('picked'))return;
+      document.querySelectorAll('#tList .oc').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');
+      document.getElementById('myPS').classList.add('picked');
+      document.getElementById('myPSVal').textContent=m.lb;
+      /* write to Firebase */
+      fbUpdate(`rooms/${roomId}/currentStep`,{key:'mission',[myRole+'Pick']:m.lb});
+    };
+    grid.appendChild(el);
+  });
+  list.appendChild(grid);
+  const nav=document.getElementById('tNav');nav.innerHTML='';
+  show('sTogetherStep');
+  /* reset chat */
+  document.getElementById('chatMsgs').innerHTML='<div class="chat-empty-msg">No messages yet. Make your case! 🗣️</div>';
+  /* set currentStep key in Firebase to 'mission' */
+  fbUpdate(`rooms/${roomId}/currentStep`,{key:'mission',p1Pick:null,p2Pick:null,p1Accepted:false,p2Accepted:false,coinResult:null,coinFlippedBy:null});
+}
+
+/* ── RENDER TOGETHER SUB STEP ── */
+function renderTogetherStep(){
+  const item=togetherStepQueue[togetherStepIndex];
+  const sn=togetherStepIndex+2; /* +2 because mission was step 1 */
+  const total=togetherStepQueue.length+2; /* +2 for mission and food */
+
+  let key,title,sub,opts,canSpin=false;
+  if(item.k==='loc'){key='loc';title='Where are we doing this?';sub='city, road trip, or full send';opts=LOCS.map(l=>({l:l.em+' '+l.lb,s:l.jk}));}
+  else if(item.k==='date'){key='date';title="When's good?";sub="pick a real day";opts=dateOpts().map(d=>({l:d.l,s:d.s}));}
+  else if(item.k==='time'){key='time';title='What time works?';sub="approximate is fine";opts=timeOpts().map(t=>({l:t.l,s:t.s}));}
+  else{const d=item.def;key=d.k;title=d.t;sub=d.s||'';opts=d.o;canSpin=!!d.wheel;}
+
+  /* write new step to Firebase — this syncs the key to both clients */
+  fbUpdate(`rooms/${roomId}/currentStep`,{key,p1Pick:null,p2Pick:null,p1Accepted:false,p2Accepted:false,coinResult:null,coinFlippedBy:null});
+  /* reset chat listener */
+  if(chatListenerOff){chatListenerOff();chatListenerOff=null;}
+  document.getElementById('chatMsgs').innerHTML='<div class="chat-empty-msg">No messages yet. Make your case! 🗣️</div>';
+
+  document.getElementById('tVibe').textContent=`${selMission.em} ${selMission.lb}`;
+  document.getElementById('tProg').textContent=`Step ${sn} of ${total}`;
+  document.getElementById('tTag').textContent=key==='loc'?'📍 location':key==='date'?'📅 when':key==='time'?'🕒 time':'✨ details';
+  document.getElementById('tTitle').textContent=title;
+  document.getElementById('tSub').textContent=sub;
+
+  /* reset UI */
+  document.getElementById('myPS').className='ps';document.getElementById('myPSVal').textContent='—';
+  document.getElementById('theirPS').className='ps waiting';document.getElementById('theirPSVal').textContent='—';document.getElementById('theirPS').querySelector('.ps-wait').style.display='';
+  document.getElementById('tBadge').className='t-badge yellow';document.getElementById('tBadgeTxt').textContent='both picking...';
+  document.getElementById('agreeArea').style.display='none';document.getElementById('negoArea').style.display='none';
+  document.getElementById('coinFlipArea').style.display='block';document.getElementById('coinResultArea').style.display='none';
+  document.getElementById('coinEl').className='coin';document.getElementById('flipBtn').disabled=false;
+  document.getElementById('agreeAcceptBtn').disabled=false;document.getElementById('coinAcceptBtn').disabled=false;
+
+  const list=document.getElementById('tList');list.innerHTML='';
+  let picked=false;
+  opts.forEach(o=>{
+    const r=document.createElement('div');r.className='pc';
+    r.innerHTML=`<div><div class="ml">${o.l}</div>${o.s?`<div class="sl">${o.s}</div>`:''}</div><div class="ck">✓</div>`;
+    r.onclick=()=>{
+      if(picked)return;picked=true;
+      document.querySelectorAll('#tList .pc').forEach(x=>x.classList.remove('sel'));r.classList.add('sel');
+      document.getElementById('myPS').classList.add('picked');document.getElementById('myPSVal').textContent=o.l;
+      document.getElementById('tBadge').className='t-badge yellow';document.getElementById('tBadgeTxt').textContent='waiting for them...';
+      fbUpdate(`rooms/${roomId}/currentStep`,{[myRole+'Pick']:o.l});
+    };
+    list.appendChild(r);
+  });
+
+  const nav=document.getElementById('tNav');nav.innerHTML='';
+  if(canSpin){
+    const sb=document.createElement('button');sb.className='bs';sb.textContent='🎡 Spin to decide';
+    sb.onclick=()=>{if(picked)return;openSpin(opts.map(o=>o.l),title,o=>{if(picked)return;picked=true;document.getElementById('myPS').classList.add('picked');document.getElementById('myPSVal').textContent=o.l;fbUpdate(`rooms/${roomId}/currentStep`,{[myRole+'Pick']:o.l});});};
+    nav.appendChild(sb);
+  }
+  show('sTogetherStep');
+}
+
+/* ── FOOD STEP ── */
+function showFoodStep(){
+  document.getElementById('foodVibe').textContent=`${selMission?selMission.em+' '+selMission.lb:''} — almost done ✨`;
+  document.getElementById('foodTitle').textContent=selMission?.id==='coffee'?'Snacks on the side?':'What are we eating?';
+  document.getElementById('foodTogetherUI').style.display=roomId?'block':'none';
+  show('sFood');
+}
+
 async function confirmFood(){
   if(roomId){
-    const foodStr=[...selFoods].join(',');
-    await fbUpdate(`rooms/${roomId}/${myRole}/picks`,{foodPick:foodStr,foodDone:true});
-    /* wait for partner */
-    document.getElementById('foodNext').disabled=true;
-    document.getElementById('foodNext').textContent='Waiting for them...';
-    /* check if both done via listener — already running */
-    const checkBoth=setInterval(async()=>{
+    const myFoodArr=[...selFoods];
+    await fbUpdate(`rooms/${roomId}/${myRole}`,{foodPicks:myFoodArr,foodDone:true});
+    document.getElementById('foodConfirmBtn').disabled=true;
+    document.getElementById('foodConfirmBtn').textContent='Waiting for them...';
+    /* poll for partner */
+    const check=setInterval(async()=>{
       const data=await fbGet(`rooms/${roomId}`);
       if(!data)return;
       const them=data[myRole==='p1'?'p2':'p1']||{};
-      if(them.picks?.foodDone){
-        clearInterval(checkBoth);
-        toRecap();
-      }
+      if(them.foodDone){clearInterval(check);
+        /* merge both food picks */
+        const theirFoods=them.foodPicks||[];
+        const merged=[...new Set([...myFoodArr,...theirFoods])];
+        selFoods=new Set(merged);
+        toRecap();}
     },2000);
-  } else { toRecap(); }
+  } else {toRecap();}
 }
 
-/* ══ FLOW (SOLO) ══ */
-function buildFlow(){
-  flow=[];selMission.sq.forEach(q=>flow.push({k:'sub',def:q}));
-  flow.push({k:'loc'},{k:'date'},{k:'time'},{k:'food'});
-  fi=-1;answers={};selDate=null;selTime=null;selLoc=null;selFoods=new Set();
-  document.querySelectorAll('#foodChips .ch').forEach(c=>c.classList.remove('sel'));
-  document.getElementById('foodNext').disabled=true;document.getElementById('foodNext').textContent='Confirm food ✓';
+/* ── SOLO FLOW ── */
+function buildSoloFlow(){
+  soloFlow=[];selMission.sq.forEach(q=>soloFlow.push({k:'sub',def:q}));soloFlow.push({k:'loc'},{k:'date'},{k:'time'});
+  soloFi=-1;answers={};selDate=null;selTime=null;selLoc=null;selFoods=new Set();
+  document.querySelectorAll('#foodChips .ch').forEach(c=>c.classList.remove('sel'));document.getElementById('foodConfirmBtn').disabled=true;document.getElementById('foodConfirmBtn').textContent='Confirm ✓';
 }
-function flowNext(){fi++;if(fi>=flow.length){toRecap();return;}const item=flow[fi];if(roomId){renderTogetherStep(item,fi+2,flow.length+1);}else{renderSoloStep(item,fi+2,flow.length+1);}}
-function flowBack(){if(fi<=0){show(roomId?'sMission':'sMission');fi=-1;return;}fi--;if(roomId){renderTogetherStep(flow[fi],fi+2,flow.length+1);}else{renderSoloStep(flow[fi],fi+2,flow.length+1);}}
+function soloFlowNext(){soloFi++;if(soloFi>=soloFlow.length){showFoodStep();return;}renderSoloStep();}
+function flowBack(){if(soloFi<=0){show('sSoloMission');soloFi=-1;return;}soloFi--;renderSoloStep();}
+
+function renderSoloStep(){
+  const item=soloFlow[soloFi],sn=soloFi+2,st=soloFlow.length+2;
+  let title,sub,opts,onPick,canSpin=false;
+  if(item.k==='loc'){title='Where?';sub='set the range';opts=LOCS.map(l=>({l:l.em+' '+l.lb,s:l.jk}));onPick=(_,i)=>{selLoc=LOCS[i];soloFlowNext()};}
+  else if(item.k==='date'){title="When's good?";sub="pick a real day";opts=dateOpts().map(d=>({l:d.l,s:d.s}));onPick=o=>{selDate=o;soloFlowNext()};}
+  else if(item.k==='time'){title='What time?';sub='approximate is fine';opts=timeOpts().map(t=>({l:t.l,s:t.s}));onPick=o=>{selTime=o;soloFlowNext()};}
+  else{const d=item.def;title=d.t;sub=d.s||'';opts=d.o;canSpin=!!d.wheel;onPick=o=>{answers[d.k]=o.l;soloFlowNext()};}
+  document.getElementById('soloPickVibe').textContent=`${selMission.em} ${selMission.lb} — step ${sn} of ${st}`;
+  document.getElementById('soloPickTag').textContent=item.k==='loc'?'📍 location':item.k==='date'?'📅 when':item.k==='time'?'🕒 time':'✨ details';
+  document.getElementById('soloPickTitle').textContent=title;document.getElementById('soloPickSub').textContent=sub;
+  const pl=document.getElementById('soloPickList');pl.innerHTML='';
+  opts.forEach((o,i)=>{const r=document.createElement('div');r.className='pc';r.innerHTML=`<div><div class="ml">${o.l}</div>${o.s?`<div class="sl">${o.s}</div>`:''}</div><div class="ck">✓</div>`;r.onclick=()=>{r.classList.add('sel');setTimeout(()=>onPick(o,i),210);};pl.appendChild(r);});
+  const nav=document.getElementById('soloPickNav');nav.innerHTML='';
+  const bb=document.createElement('button');bb.className='bs';bb.textContent='← Back';bb.onclick=flowBack;nav.appendChild(bb);
+  if(canSpin){const sb=document.createElement('button');sb.className='bs';sb.textContent='🎡 Spin';sb.onclick=()=>openSpin(opts.map(o=>o.l),title,o=>{onPick(o,0);});nav.appendChild(sb);}
+  show('sSoloPick');
+}
 
 function fmtD(d){return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});}
 function nextDow(b,dow){const d=new Date(b);d.setDate(d.getDate()+(dow-d.getDay()+7)%7);return d;}
 function dateOpts(){const t=new Date(),tm=new Date(t);tm.setDate(t.getDate()+1);const sat=nextDow(t,6),sun=nextDow(t,0),wknd=sat<=sun?sat:sun;return[{l:'Today',s:fmtD(t)},{l:'Tomorrow',s:fmtD(tm)},{l:'This weekend 🎉',s:fmtD(wknd)},{l:'Saturday',s:fmtD(sat)},{l:'Whenever 🎲',s:'no pressure'}];}
 function timeOpts(){return[{l:'Morning ☀️',s:'9am–12pm'},{l:'Afternoon 🌤️',s:'12pm–4pm'},{l:'Evening 🌇',s:'4pm–7pm'},{l:'Night 🌙',s:'7pm onwards'}];}
 
-function renderSoloStep(item,sn,st){
-  if(item.k==='food'){document.getElementById('foodVibe').textContent=`${selMission.em} ${selMission.lb} — almost done ✨`;document.getElementById('foodTitle').textContent=selMission.id==='coffee'?'Snacks on the side?':'What are we eating?';document.getElementById('foodTogetherArea').style.display='none';show('sFood');return;}
-  let title,sub,opts,onPick,canSpin=false;
-  if(item.k==='loc'){title='Where?';sub='set the range';opts=LOCS.map(l=>({l:l.em+' '+l.lb,s:l.jk}));onPick=(_,i)=>{selLoc=LOCS[i];flowNext();};}
-  else if(item.k==='date'){title="When's good?";sub="pick a day";opts=dateOpts().map(d=>({l:d.l,s:d.s}));onPick=o=>{selDate=o;flowNext();};}
-  else if(item.k==='time'){title='What time?';sub="approximate is fine";opts=timeOpts().map(t=>({l:t.l,s:t.s}));onPick=o=>{selTime=o;flowNext();};}
-  else{const d=item.def;title=d.t;sub=d.s||'';opts=d.o;canSpin=!!d.wheel;onPick=o=>{answers[d.k]=o.l;flowNext();};}
-  // solo uses sPick step
-  document.getElementById('pickVibe').textContent=`${selMission.em} ${selMission.lb} — step ${sn} of ${st}`;
-  document.getElementById('pickTag').textContent=item.k==='loc'?'📍 location':item.k==='date'?'📅 when':item.k==='time'?'🕒 time':'✨ details';
-  document.getElementById('pickTitle').textContent=title;document.getElementById('pickSub').textContent=sub;
-  const pl=document.getElementById('pickList');pl.innerHTML='';
-  opts.forEach((o,i)=>{const r=document.createElement('div');r.className='pc';r.innerHTML=`<div><div class="ml">${o.l}</div>${o.s?`<div class="sl">${o.s}</div>`:''}</div><div class="ck">✓</div>`;r.onclick=()=>{r.classList.add('sel');setTimeout(()=>onPick(o,i),210);};pl.appendChild(r);});
-  const nav=document.getElementById('pickNav');nav.innerHTML='';
-  const bb=document.createElement('button');bb.className='bs';bb.textContent='← Back';bb.onclick=flowBack;nav.appendChild(bb);
-  if(canSpin){const sb=document.createElement('button');sb.className='bs';sb.textContent='🎡 Spin';sb.onclick=()=>openSpin(opts.map(o=>o.l),title,o=>{onPick(o,0);});nav.appendChild(sb);}
-  show('sPick');
-}
-
-function pickMission(m){
-  selMission=m;buildFlow();
-  if(roomId){
-    document.getElementById('foodVibe').textContent=`${selMission.em} ${selMission.lb} — almost done ✨`;
-    document.getElementById('foodTitle').textContent=selMission.id==='coffee'?'Snacks on the side?':'What are we eating?';
-    document.getElementById('foodTogetherArea').style.display='block';
-    fbUpdate(`rooms/${roomId}/${myRole}/picks`,{mission:m.lb});
-  }
-  setTimeout(flowNext,80);
-}
-
-/* ══ YES ══ */
-function sayYes(){if(navigator.vibrate)navigator.vibrate([50,30,80]);burst(30);show('sMission');}
+/* ── MODE ── */
+function startSolo(){show('sNote');}
+function sayYes(){if(navigator.vibrate)navigator.vibrate([50,30,80]);burst(30);if(roomId){show('sTogetherStep');}else{show('sSoloMission');}}
 function toRecap(){buildRecap();show('sRecap');burst(90);}
 
-/* ══ STEP CONTROL ══ */
+/* ── STEP UTIL ── */
 function show(id){document.querySelectorAll('.step').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
 function show_ov(id){document.getElementById(id).classList.add('on');}
 function hide(id){document.getElementById(id).classList.remove('on');}
 
-/* ══ RECAP ══ */
+/* ── RECAP ── */
 function buildRecap(){
-  const fl=[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD';
+  const fl=[...selFoods].map(id=>FOODS.find(f=>f.id===id)?.l||id).join(', ')||'TBD';
   const dp=Object.keys(answers).map(k=>`${SUB_LBL[k]||k}: ${answers[k]}`).join(' · ');
-  document.getElementById('bpMission').textContent=(selMission?selMission.em+' '+selMission.lb:'💌 Our date');
+  document.getElementById('bpMission').textContent=selMission?selMission.em+' '+selMission.lb:'💌 Our date';
   document.getElementById('bpDetails').textContent=dp||selMission?.jk||'';
   document.getElementById('bpLoc').textContent=selLoc?selLoc.em+' '+selLoc.lb:'TBD';
   document.getElementById('bpFood').textContent=fl;
@@ -895,78 +955,72 @@ function buildRecap(){
   document.getElementById('recapFoot').textContent=FT[Math.floor(Math.random()*FT.length)];
 }
 
-/* ══ TICKET ══ */
-function dlTicket(){const DPR=2,W=680,H=310,SP=468,R=16;const cv=document.createElement('canvas');cv.width=W*DPR;cv.height=H*DPR;const cx=cv.getContext('2d');cx.scale(DPR,DPR);const ac=curTheme.a,sf=curTheme.soft;cx.shadowColor='rgba(0,0,0,.18)';cx.shadowBlur=22;cx.shadowOffsetY=5;cx.fillStyle='#fff';rr(cx,0,0,W,H,R);cx.fill();cx.shadowColor='transparent';cx.fillStyle=ac;cx.beginPath();cx.moveTo(R,0);cx.lineTo(SP,0);cx.lineTo(SP,H);cx.lineTo(R,H);cx.quadraticCurveTo(0,H,0,H-R);cx.lineTo(0,R);cx.quadraticCurveTo(0,0,R,0);cx.closePath();cx.fill();cx.fillStyle=sf;cx.beginPath();cx.moveTo(SP,0);cx.lineTo(W-R,0);cx.quadraticCurveTo(W,0,W,R);cx.lineTo(W,H-R);cx.quadraticCurveTo(W,H,W-R,H);cx.lineTo(SP,H);cx.closePath();cx.fill();cx.fillStyle='#f0f0f0';for(let y=20;y<H-8;y+=16){cx.beginPath();cx.arc(SP,y,5,0,Math.PI*2);cx.fill();}cx.fillStyle='rgba(255,255,255,.5)';cx.font='bold 10px Quicksand';cx.fillText('DATE TICKET',26,30);cx.fillStyle='#fff';cx.font='bold 26px Fredoka';cx.fillText(selMission?selMission.em+' '+selMission.lb:'Our Date',26,70);cx.fillStyle='rgba(255,255,255,.25)';cx.fillRect(26,82,SP-46,1);const rows=[Object.keys(answers).length?['✦',Object.keys(answers).map(k=>`${SUB_LBL[k]||k}: ${answers[k]}`).join(' · ')]:null,selLoc?['📍',selLoc.em+' '+selLoc.lb]:null,['🍽',[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD']].filter(Boolean);cx.font='12.5px Quicksand';rows.forEach((r,i)=>{cx.fillStyle='rgba(255,255,255,.5)';cx.fillText(r[0],26,105+i*21);cx.fillStyle='rgba(255,255,255,.88)';cx.fillText(String(r[1]).substring(0,55),46,105+i*21);});cx.fillStyle='rgba(255,255,255,.18)';cx.font='13px monospace';cx.fillText('|||| ||| ||||| || ||||',26,H-22);cx.fillStyle='rgba(255,255,255,.35)';cx.font='italic 10px Quicksand';cx.fillText(`from "${myName||'someone special'}"`,26,H-8);const sx=SP+(W-SP)/2;cx.textAlign='center';cx.fillStyle='rgba(74,46,58,.35)';cx.font='bold 9px Quicksand';cx.fillText('DATE',sx,44);cx.fillStyle='#4A2E3A';cx.font='bold 14px Fredoka';(selDate?selDate.l:'TBD').split(' ').forEach((w,i)=>cx.fillText(w,sx,62+i*17));cx.fillStyle='rgba(74,46,58,.35)';cx.font='bold 9px Quicksand';cx.fillText('TIME',sx,146);cx.fillStyle='#4A2E3A';cx.font='bold 14px Fredoka';cx.fillText(selTime?selTime.l.split(' ')[0]:'TBD',sx,164);cx.font='28px serif';cx.fillText('💌',sx,218);cx.textAlign='left';const a=document.createElement('a');a.download='date-ticket.png';a.href=cv.toDataURL('image/png',1);document.body.appendChild(a);a.click();document.body.removeChild(a);}
+/* ── TICKET ── */
+function dlTicket(){const DPR=2,W=680,H=310,SP=468,R=16;const cv=document.createElement('canvas');cv.width=W*DPR;cv.height=H*DPR;const cx=cv.getContext('2d');cx.scale(DPR,DPR);const ac=curTheme.a,sf=curTheme.soft;cx.shadowColor='rgba(0,0,0,.18)';cx.shadowBlur=22;cx.shadowOffsetY=5;cx.fillStyle='#fff';rr(cx,0,0,W,H,R);cx.fill();cx.shadowColor='transparent';cx.fillStyle=ac;cx.beginPath();cx.moveTo(R,0);cx.lineTo(SP,0);cx.lineTo(SP,H);cx.lineTo(R,H);cx.quadraticCurveTo(0,H,0,H-R);cx.lineTo(0,R);cx.quadraticCurveTo(0,0,R,0);cx.closePath();cx.fill();cx.fillStyle=sf;cx.beginPath();cx.moveTo(SP,0);cx.lineTo(W-R,0);cx.quadraticCurveTo(W,0,W,R);cx.lineTo(W,H-R);cx.quadraticCurveTo(W,H,W-R,H);cx.lineTo(SP,H);cx.closePath();cx.fill();cx.fillStyle='#f0f0f0';for(let y=20;y<H-8;y+=16){cx.beginPath();cx.arc(SP,y,5,0,Math.PI*2);cx.fill();}cx.fillStyle='rgba(255,255,255,.5)';cx.font='bold 10px Quicksand';cx.fillText('DATE TICKET',26,30);cx.fillStyle='#fff';cx.font='bold 26px Fredoka';cx.fillText(selMission?selMission.em+' '+selMission.lb:'Our Date',26,70);cx.fillStyle='rgba(255,255,255,.25)';cx.fillRect(26,82,SP-46,1);const rows=[Object.keys(answers).length?['✦',Object.keys(answers).map(k=>`${SUB_LBL[k]||k}: ${answers[k]}`).join(' · ')]:null,selLoc?['📍',selLoc.em+' '+selLoc.lb]:null,['🍽',[...selFoods].map(id=>FOODS.find(f=>f.id===id)?.l||id).join(', ')||'TBD']].filter(Boolean);cx.font='12.5px Quicksand';rows.forEach((r,i)=>{cx.fillStyle='rgba(255,255,255,.5)';cx.fillText(r[0],26,105+i*21);cx.fillStyle='rgba(255,255,255,.88)';cx.fillText(String(r[1]).substring(0,55),46,105+i*21);});cx.fillStyle='rgba(255,255,255,.18)';cx.font='13px monospace';cx.fillText('|||| ||| ||||| || ||||',26,H-22);cx.fillStyle='rgba(255,255,255,.35)';cx.font='italic 10px Quicksand';cx.fillText(`from "${myName||'someone special'}"`,26,H-8);const sx=SP+(W-SP)/2;cx.textAlign='center';cx.fillStyle='rgba(74,46,58,.35)';cx.font='bold 9px Quicksand';cx.fillText('DATE',sx,44);cx.fillStyle='#4A2E3A';cx.font='bold 14px Fredoka';(selDate?selDate.l:'TBD').split(' ').forEach((w,i)=>cx.fillText(w,sx,62+i*17));cx.fillStyle='rgba(74,46,58,.35)';cx.font='bold 9px Quicksand';cx.fillText('TIME',sx,146);cx.fillStyle='#4A2E3A';cx.font='bold 14px Fredoka';cx.fillText(selTime?selTime.l.split(' ')[0]:'TBD',sx,164);cx.font='28px serif';cx.fillText('💌',sx,218);cx.textAlign='left';const a=document.createElement('a');a.download='date-ticket.png';a.href=cv.toDataURL('image/png',1);document.body.appendChild(a);a.click();document.body.removeChild(a);}
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();}
-function addCal(){const title=encodeURIComponent(`${selMission?selMission.em+' '+selMission.lb:'Date'} with ${myName}`);const details=encodeURIComponent(`Location: ${selLoc?selLoc.lb:'TBD'}\nFood: ${[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD'}`);window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`,'_blank');}
+function addCal(){const title=encodeURIComponent(`${selMission?selMission.em+' '+selMission.lb:'Date'} with ${myName}`);const details=encodeURIComponent(`Location: ${selLoc?selLoc.lb:'TBD'}\nFood: ${[...selFoods].map(id=>FOODS.find(f=>f.id===id)?.l||id).join(', ')||'TBD'}`);window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`,'_blank');}
+function copyLink(){const link=location.href.split('#')[0]+'#room='+roomId;navigator.clipboard.writeText(link).then(()=>{document.getElementById('copyMsg').textContent='✅ Copied!';setTimeout(()=>document.getElementById('copyMsg').textContent='',2000);});}
 
-/* ══ COPY LINK ══ */
-function copyLink(){const link=location.href.split('#')[0]+'#room='+roomId;navigator.clipboard.writeText(link).then(()=>{document.getElementById('copyMsg').textContent='✅ Copied!';setTimeout(()=>document.getElementById('copyMsg').textContent='',2000);}).catch(()=>{document.getElementById('copyMsg').textContent='Copy manually: '+link;});}
-function syncField(k,v){if(!roomId)return;fbUpdate(`rooms/${roomId}/${myRole}/picks`,{[k]:v});}
-
-/* ══ EMAIL ══ */
+/* ── EMAIL ── */
 function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
-async function sendConf(){const ev=document.getElementById('emailIn').value.trim();const st=document.getElementById('confStatus');const btn=document.getElementById('sendBtn');if(!validEmail(ev)){st.style.color='var(--a)';st.textContent="not a real email 👀";return;}const fl=[...selFoods].map(id=>FOODS.find(f=>f.id===id).l).join(', ')||'TBD';const dp=Object.keys(answers).map(k=>`${SUB_LBL[k]||k}: ${answers[k]}`).join(' | ');btn.disabled=true;btn.textContent='Sending...';st.style.color='var(--mt)';st.textContent='';const p=new URLSearchParams({email:ev,askedBy:myName,mission:selMission?selMission.lb:'',details:dp,location:selLoc?selLoc.lb:'',date:selDate?selDate.l:'',time:selTime?selTime.l:'',food:fl,mode:roomId?'together':'solo',room:roomId||''});try{await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()});st.style.color='#3f9c7d';st.textContent='confirmation sent! 💌';btn.textContent='Confirmation sent ✓';localStorage.setItem('dateDone','1');}catch(e){st.style.color='var(--a)';st.textContent="didn't go through — try again?";btn.disabled=false;btn.textContent='Send confirmation 💌';}}
+async function sendConf(){const ev=document.getElementById('emailIn').value.trim();const st=document.getElementById('confStatus');const btn=document.getElementById('sendBtn');if(!validEmail(ev)){st.style.color='var(--a)';st.textContent='not a real email 👀';return;}const fl=[...selFoods].map(id=>FOODS.find(f=>f.id===id)?.l||id).join(', ')||'TBD';const dp=Object.keys(answers).map(k=>`${SUB_LBL[k]||k}: ${answers[k]}`).join(' | ');btn.disabled=true;btn.textContent='Sending...';const p=new URLSearchParams({email:ev,askedBy:myName,mission:selMission?selMission.lb:'',details:dp,location:selLoc?selLoc.lb:'',date:selDate?selDate.l:'',time:selTime?selTime.l:'',food:fl,mode:roomId?'together':'solo',room:roomId||''});try{await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()});st.style.color='#3f9c7d';st.textContent='confirmation sent! 💌';btn.textContent='Confirmation sent ✓';localStorage.setItem('dateDone','1');}catch(e){st.style.color='var(--a)';st.textContent="didn't go through — try again?";btn.disabled=false;btn.textContent='Send confirmation 💌';}}
 
-/* ══ ADMIN ══ */
+/* ── ADMIN ── */
 function openAdmin(){document.getElementById('adminPage').classList.add('on');}
 function closeAdmin(){document.getElementById('adminPage').classList.remove('on');document.getElementById('adminLogin').style.display='block';document.getElementById('adminData').style.display='none';document.getElementById('adminPass').value='';document.getElementById('adminErr').textContent='';}
 function loadAdmin(){const pw=document.getElementById('adminPass').value.trim();const err=document.getElementById('adminErr');if(!pw){err.textContent='enter a password';return;}if(pw!==ADMIN_PWD){err.textContent='wrong password 🔐';document.getElementById('adminPass').value='';return;}document.getElementById('adminLogin').style.display='none';document.getElementById('adminData').style.display='block';}
 
-/* ══ TIMER ══ */
+/* ── TIMER ── */
 let timerInt=null;
 function startTimer(){let s=15;setTimeout(()=>{const T=document.getElementById('timerEl');T.classList.add('on');const msgs=["⏳ offer expires in {s}s","🚨 {s} seconds left","😤 {s}s before I adopt a cat","🔥 {s}s — yes button is impatient"];const m=msgs[Math.floor(Math.random()*msgs.length)];timerInt=setInterval(()=>{s--;T.textContent=m.replace('{s}',s);if(s<=0){clearInterval(timerInt);T.textContent="offer technically expired. yes still works 😏";}},1000);T.textContent=m.replace('{s}',s);},8000);}
 
-/* ══ CARD TILT ══ */
+/* ── CARD TILT ── */
 document.addEventListener('mousemove',e=>{if(!document.getElementById('sQuestion').classList.contains('on'))return;const nb=document.getElementById('noBtn');if(nb.classList.contains('away')||nb.classList.contains('poof')||nb.style.display==='none')return;const r=nb.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dist=Math.hypot(e.clientX-cx,e.clientY-cy);const card=document.getElementById('mainCard');if(dist<180){card.style.transform=`perspective(900px) rotateX(${(e.clientY-cy)/22}deg) rotateY(${-(e.clientX-cx)/22}deg)`;}else card.style.transform='';});
 
-/* ══ WHY REASONS ══ */
+/* ── WHY ── */
 const WHYS=["Because I make genuinely great playlists 🎵","Because I let you pick the restaurant... 60% of the time","Because I will pretend to understand your coffee order","Because I laugh at your jokes even the terrible ones","Because I won't judge your movie picks. (Much.)","Because someone has to be the first to say it","Because you're already smiling reading this 😊","Because we both deserve a good story to tell"];
 let whyI=0;
 function showWhy(){const w=document.getElementById('whyCard');w.textContent=WHYS[whyI%WHYS.length];w.classList.add('on');whyI++;}
 
-/* ══ NO DODGE ══ */
-const EXCUSES=["camera-shy 📸","nope, try again 😏","doesn't believe in 'no'","so close! and yet... no.","button has anxiety","commitment issues","404: No not found","only responds to 'yes' energy","the button is also nervous","'no' has left the building","the button called its lawyer","the button's villain origin story","rejected by the rejection button","the button is in therapy","No has left you on read","it broke. you broke it."];
-const NO_LBLS=["No","Nope","Still no","Are you sure?","Really??","Think again","Hmm, no","Persistent aren't you","Plot twist: no","Almost convinced...","Okay fine, no","This is awkward","Getting tired","One more try?","Seriously though","It's basically a yes now"];
-const MTR_LBLS=["Mild curiosity","Getting invested","Mild panic","Full commitment","Send help","This is a sport now","Legendary","Maximum chaos"];
+/* ── NO DODGE ── */
+const EXCUSES=["camera-shy 📸","nope, try again 😏","doesn't believe in 'no'","so close! and yet... no.","button has anxiety","commitment issues","404: No not found","only responds to 'yes' energy","button is also nervous","'no' has left the building","the button called its lawyer","the button's villain origin story","rejected by the rejection button","in therapy","No has left you on read","it broke. you broke it."];
+const NO_LBLS=["No","Nope","Still no","Are you sure?","Really??","Think again","Hmm, no","Persistent","Plot twist: no","Almost convinced...","Okay fine, no","This is awkward","Getting tired","One more try?","Seriously though","It's basically a yes now"];
+const MTR_LBLS=["Mild curiosity","Getting invested","Mild panic","Full commitment","Send help","Sport now","Legendary","Maximum chaos"];
 let dc=0,ys=1,ldt=0;
 function dodge(e){if(e)e.preventDefault();const nb=document.getElementById('noBtn');if(nb.classList.contains('poof'))return;const now=Date.now();if(now-ldt<280)return;ldt=now;dc++;if(dc===1)document.getElementById('meterWrap').classList.add('on');nb.classList.add('away');const r=nb.getBoundingClientRect(),m=16;nb.style.left=Math.max(m,Math.random()*(window.innerWidth-r.width-m))+'px';nb.style.top=Math.max(m,Math.random()*(window.innerHeight-r.height-m))+'px';nb.textContent=NO_LBLS[Math.min(dc-1,NO_LBLS.length-1)];document.getElementById('excuse').textContent=EXCUSES[Math.min(dc-1,EXCUSES.length-1)];const pct=Math.min(100,(dc/13)*100);document.getElementById('meterFi').style.width=pct+'%';document.getElementById('meterLbl').textContent='Regret-o-meter: '+MTR_LBLS[Math.min(MTR_LBLS.length-1,Math.floor((pct/100)*MTR_LBLS.length))];if(dc===5)document.getElementById('mainTag').textContent='still one question...';if(dc===9)document.getElementById('mainTag').textContent='genuinely, just one question';ys=Math.min(1.7,ys+0.06);document.getElementById('yesBtn').style.transform=`scale(${ys})`;document.getElementById('yesBtn').style.fontSize=(18+dc*.6)+'px';nb.style.transform=`scale(${Math.max(.5,1-dc*.03)})`;const card=document.getElementById('mainCard');card.classList.remove('shake');void card.offsetWidth;card.classList.add('shake');if(dc>=13){nb.classList.add('poof');document.getElementById('excuse').textContent="No button has left the chat 👻";setTimeout(()=>{nb.style.display='none';},400);}}
 
-/* ══ SPIN WHEEL ══ */
+/* ── SPIN WHEEL ── */
 const WC=document.getElementById('wc'),WCTX=WC.getContext('2d');
 const WCOLS=['#FF6F61','#FFC857','#8FD9C4','#c084fc','#fb923c','#34d399','#f472b6','#60a5fa'];
 let wOpts=[],wAngle=0,wSpin=false,wIdx=-1,wCB=null;
 function openSpin(opts,title,cb){wOpts=opts;wCB=cb;wIdx=-1;document.getElementById('spinTitle').textContent=title+' 🎡';document.getElementById('spinResult').textContent='';document.getElementById('useSpinBtn').style.display='none';drawW(0);show_ov('spinOv');}
-function drawW(a){const cx=115,cy=115,r=110,n=wOpts.length;WCTX.clearRect(0,0,230,230);for(let i=0;i<n;i++){const s=a+(i*2*Math.PI/n)-Math.PI/2,e=a+((i+1)*2*Math.PI/n)-Math.PI/2;WCTX.beginPath();WCTX.moveTo(cx,cy);WCTX.arc(cx,cy,r,s,e);WCTX.closePath();WCTX.fillStyle=WCOLS[i%WCOLS.length];WCTX.fill();WCTX.strokeStyle='#fff';WCTX.lineWidth=2;WCTX.stroke();WCTX.save();WCTX.translate(cx,cy);WCTX.rotate(s+Math.PI/n);WCTX.textAlign='right';WCTX.fillStyle='#fff';WCTX.font='bold 10px Quicksand';WCTX.fillText(wOpts[i].replace(/[^\w\s,]/g,'').trim().substring(0,13),r-5,4);WCTX.restore();}WCTX.beginPath();WCTX.arc(cx,cy,18,0,2*Math.PI);WCTX.fillStyle='#fff';WCTX.fill();WCTX.fillStyle=curTheme.a;WCTX.font='bold 11px sans-serif';WCTX.textAlign='center';WCTX.fillText('✨',cx,cy+4);}
+function drawW(a){const cx=110,cy=110,r=106,n=wOpts.length;WCTX.clearRect(0,0,220,220);for(let i=0;i<n;i++){const s=a+(i*2*Math.PI/n)-Math.PI/2,e=a+((i+1)*2*Math.PI/n)-Math.PI/2;WCTX.beginPath();WCTX.moveTo(cx,cy);WCTX.arc(cx,cy,r,s,e);WCTX.closePath();WCTX.fillStyle=WCOLS[i%WCOLS.length];WCTX.fill();WCTX.strokeStyle='#fff';WCTX.lineWidth=2;WCTX.stroke();WCTX.save();WCTX.translate(cx,cy);WCTX.rotate(s+Math.PI/n);WCTX.textAlign='right';WCTX.fillStyle='#fff';WCTX.font='bold 10px Quicksand';WCTX.fillText(wOpts[i].replace(/[^\w\s,]/g,'').trim().substring(0,13),r-5,4);WCTX.restore();}WCTX.beginPath();WCTX.arc(cx,cy,18,0,2*Math.PI);WCTX.fillStyle='#fff';WCTX.fill();WCTX.fillStyle=curTheme.a;WCTX.font='bold 11px sans-serif';WCTX.textAlign='center';WCTX.fillText('✨',cx,cy+4);}
 function doSpin(){if(wSpin)return;wSpin=true;wIdx=-1;document.getElementById('spinResult').textContent='';document.getElementById('useSpinBtn').style.display='none';const dur=3500+Math.random()*1500,extra=(5+Math.floor(Math.random()*4))*2*Math.PI+Math.random()*2*Math.PI,start=performance.now(),sA=wAngle,tA=sA+extra;function an(now){const p=Math.min((now-start)/dur,1),ep=1-Math.pow(1-p,3);wAngle=sA+(tA-sA)*ep;drawW(wAngle);if(p<1){requestAnimationFrame(an);}else{wSpin=false;const nm=((-wAngle%(2*Math.PI))+(2*Math.PI))%(2*Math.PI);wIdx=Math.floor(nm/(2*Math.PI/wOpts.length))%wOpts.length;document.getElementById('spinResult').textContent='✨ '+wOpts[wIdx].split(' ')[0]+' it is!';document.getElementById('useSpinBtn').style.display='';burst(20);}}requestAnimationFrame(an);}
 function acceptSpin(){hide('spinOv');if(wIdx>=0&&wCB)setTimeout(()=>wCB({l:wOpts[wIdx],s:''},wIdx),150);}
 
-/* ══ CONFETTI + HEARTS ══ */
+/* ── CONFETTI ── */
 function burst(n){const C=[curTheme.a,curTheme.soft,'#FFC857','#8FD9C4','#fff'];for(let i=0;i<n;i++){const p=document.createElement('div');p.className='cf';p.style.left=Math.random()*100+'vw';p.style.background=C[Math.floor(Math.random()*C.length)];p.style.animationDuration=(2.2+Math.random()*1.8)+'s';p.style.animationDelay=(Math.random()*.4)+'s';document.body.appendChild(p);setTimeout(()=>p.remove(),4500);}}
 function spawnH(){const h=document.createElement('div');h.className='bh';h.textContent=['💕','💗','💖','✨','🌸'][Math.floor(Math.random()*5)];h.style.left=Math.random()*100+'vw';h.style.animationDuration=(8+Math.random()*6)+'s';h.style.fontSize=(16+Math.random()*16)+'px';document.body.appendChild(h);setTimeout(()=>h.remove(),15000);}
 setInterval(spawnH,900);for(let i=0;i<5;i++)setTimeout(spawnH,i*300);
 
-/* ══ RESET ══ */
-function resetAll(){selMission=null;answers={};selFoods=new Set();selDate=null;selTime=null;selLoc=null;flow=[];fi=-1;dc=0;ys=1;whyI=0;roomId='';isSolo=true;joiningRoom='';document.querySelectorAll('#foodChips .ch').forEach(c=>c.classList.remove('sel'));document.getElementById('foodNext').disabled=true;document.getElementById('foodNext').textContent='Confirm food ✓';document.getElementById('emailIn').value='';document.getElementById('confStatus').textContent='';document.getElementById('sendBtn').disabled=false;document.getElementById('sendBtn').textContent='Send confirmation 💌';document.getElementById('excuse').textContent='';document.getElementById('timerEl').classList.remove('on');clearInterval(timerInt);document.getElementById('meterWrap').classList.remove('on');document.getElementById('meterFi').style.width='0';document.getElementById('meterLbl').textContent='Regret-o-meter';document.getElementById('mainTag').textContent='something important';document.getElementById('yesBtn').style.transform='scale(1)';document.getElementById('yesBtn').style.fontSize='18px';document.getElementById('whyCard').classList.remove('on');const nb=document.getElementById('noBtn');nb.classList.remove('away','poof');nb.style.display='';nb.style.transform='scale(1)';nb.style.left='';nb.style.top='';nb.textContent='No';document.getElementById('mainCard').style.transform='';show('sModeSelect');}
+/* ── RESET ── */
+function resetAll(){selMission=null;answers={};selFoods=new Set();selDate=null;selTime=null;selLoc=null;soloFlow=[];soloFi=-1;togetherStepQueue=[];togetherStepIndex=-1;roomId='';joiningRoom='';myRole='';dc=0;ys=1;whyI=0;if(chatListenerOff){chatListenerOff();chatListenerOff=null;}if(roomListenerOff){roomListenerOff();roomListenerOff=null;}document.querySelectorAll('#foodChips .ch').forEach(c=>c.classList.remove('sel'));document.getElementById('foodConfirmBtn').disabled=true;document.getElementById('foodConfirmBtn').textContent='Confirm ✓';document.getElementById('emailIn').value='';document.getElementById('confStatus').textContent='';document.getElementById('sendBtn').disabled=false;document.getElementById('sendBtn').textContent='Send confirmation 💌';document.getElementById('excuse').textContent='';document.getElementById('timerEl').classList.remove('on');clearInterval(timerInt);document.getElementById('meterWrap').classList.remove('on');document.getElementById('meterFi').style.width='0';document.getElementById('meterLbl').textContent='Regret-o-meter';document.getElementById('mainTag').textContent='something important';document.getElementById('yesBtn').style.transform='scale(1)';document.getElementById('yesBtn').style.fontSize='18px';document.getElementById('whyCard').classList.remove('on');const nb=document.getElementById('noBtn');nb.classList.remove('away','poof');nb.style.display='';nb.style.transform='scale(1)';nb.style.left='';nb.style.top='';nb.textContent='No';document.getElementById('mainCard').style.transform='';show('sModeSelect');}
 
-/* ══ FOOTER TRIPLE TAP ══ */
+/* ── FOOTER ── */
 let ftaps=0,ftimer=null;
 function footTap(){ftaps++;if(ftimer)clearTimeout(ftimer);ftimer=setTimeout(()=>{ftaps=0;},1200);if(ftaps>=3){ftaps=0;localStorage.removeItem('dateDone');location.reload();}}
 
-/* ══ INIT ══ */
+/* ── INIT ── */
 (function init(){
   if(window.location.hash==='#admin'){openAdmin();return;}
   if(localStorage.getItem('dateDone')==='1'){show('sDone');return;}
-  /* room link — skip mode select, ask name then auto-join */
   const hashRoom=window.location.hash.match(/^#room=([a-z0-9]+)$/i);
   if(hashRoom){
     joiningRoom=hashRoom[1].toLowerCase();
-    /* customise name popup for joiner */
     document.getElementById('nameEmoji').textContent='🤝';
-    document.getElementById('nameTitle').textContent='Quick — before you join...';
+    document.getElementById('nameTitle').textContent='One sec before you join...';
     document.getElementById('nameDesc').textContent='What is THEIR number saved as in YOUR phone?';
-    show_ov('nameOv');
-    return;
+    show_ov('nameOv');return;
   }
   show_ov('themeOv');
 })();
