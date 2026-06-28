@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Social Life 💌</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, update, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+const app = initializeApp({apiKey:"AIzaSyAZKDsckbraD_kXtmkNuXmLNsA30quuNdI",authDomain:"date-planner-77589.firebaseapp.com",databaseURL:"https://date-planner-77589-default-rtdb.firebaseio.com",projectId:"date-planner-77589",storageBucket:"date-planner-77589.firebasestorage.app",messagingSenderId:"420757943384",appId:"1:420757943384:web:630e1883fa1cbc535bc62d"});
+const db=getDatabase(app);
+window._fb={db,ref,set,get,update,push,onValue,remove};
+window._fbReady=true;
+window.dispatchEvent(new Event('fbready'));
+</script>
+<style>
+:root{--bg:#FFF6EE;--a:#FF6F61;--a2:#e85d51;--soft:#FFD9E3;--text:#4A2E3A;--card:#fff;--c2:#fffaf6;--bd:#f0dee3;--mt:#9b818a;--lb:#b69aa3;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100vh;background:var(--bg);font-family:'Quicksand',sans-serif;color:var(--text);overflow-x:hidden;}
+
+/* LOGIN */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.auth-card{background:var(--card);border-radius:28px;border:3px solid var(--soft);box-shadow:0 20px 55px rgba(0,0,0,.14);max-width:420px;width:100%;padding:36px 28px 28px;text-align:center;}
+.auth-card h1{font-family:'Fredoka',sans-serif;font-size:28px;margin:0 0 6px;}
+.auth-card p{font-size:14px;color:var(--mt);margin:0 0 22px;line-height:1.5;}
+.auth-inp{width:100%;padding:13px 15px;border-radius:14px;border:2px solid var(--bd);font-family:'Quicksand',sans-serif;font-size:15px;color:var(--text);background:var(--c2);margin-bottom:12px;}
+.auth-inp:focus{outline:none;border-color:var(--a);}
+.auth-inp.err{border-color:#e85d51;}
+.auth-lbl{font-family:'Fredoka',sans-serif;font-size:12px;font-weight:600;color:var(--lb);text-align:left;display:block;margin-bottom:5px;}
+.auth-err{font-size:13px;color:var(--a);font-weight:600;min-height:18px;margin-bottom:10px;}
+.auth-toggle{font-size:13px;color:var(--lb);margin-top:14px;}
+.auth-toggle a{color:var(--a);cursor:pointer;font-weight:700;text-decoration:none;}
+.auth-toggle a:hover{text-decoration:underline;}
+
+/* BUTTONS */
+.bp{font-family:'Fredoka',sans-serif;font-weight:600;font-size:15px;border:none;border-radius:999px;padding:13px 24px;cursor:pointer;background:var(--a);color:#fff;box-shadow:0 9px 20px rgba(0,0,0,.17);transition:transform .18s,opacity .2s;}
+.bp:hover{transform:translateY(-2px);}
+.bp:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.bs{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;border:2px solid var(--bd);border-radius:999px;padding:10px 18px;cursor:pointer;background:var(--card);color:var(--text);transition:background .16s;}
+.bs:hover{background:var(--c2);}
+.bsg{font-family:'Fredoka',sans-serif;font-weight:600;font-size:13px;border:2px solid #34d399;border-radius:999px;padding:10px 18px;cursor:pointer;background:#d1fae5;color:#065f46;transition:all .16s;}
+.bsg:hover{background:#34d399;color:#fff;}
+
+/* DASHBOARD */
+#dashApp{display:none;min-height:100vh;}
+.dash-header{background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;padding:28px 24px 60px;position:relative;overflow:hidden;}
+.dash-header::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.08);}
+.dash-header::after{content:'';position:absolute;bottom:-60px;left:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);}
+.dash-header-inner{max-width:640px;margin:0 auto;position:relative;z-index:1;}
+.dash-hello{font-size:14px;opacity:.75;margin-bottom:4px;}
+.dash-name{font-family:'Fredoka',sans-serif;font-size:30px;font-weight:700;margin-bottom:10px;}
+.dash-logout{position:absolute;top:0;right:0;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12px;background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:999px;padding:7px 14px;cursor:pointer;}
+.dash-logout:hover{background:rgba(255,255,255,.28);}
+/* score badge */
+.score-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);border-radius:999px;padding:8px 16px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;}
+
+/* STATS STRIP */
+.stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:-36px auto 0;max-width:640px;padding:0 20px;position:relative;z-index:2;}
+.stat-card{background:var(--card);border-radius:18px;border:2px solid var(--bd);padding:16px 12px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.1);}
+.stat-num{font-family:'Fredoka',sans-serif;font-size:28px;font-weight:700;color:var(--a);}
+.stat-lbl{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--lb);margin-top:2px;}
+
+/* ACTIONS */
+.actions{max-width:640px;margin:24px auto 0;padding:0 20px;display:flex;gap:12px;flex-wrap:wrap;}
+.action-btn{flex:1;min-width:140px;border:2px solid var(--bd);border-radius:18px;padding:16px 14px;text-align:center;cursor:pointer;background:var(--card);transition:all .18s;}
+.action-btn:hover{border-color:var(--a);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.08);}
+.action-btn .ab-em{font-size:28px;display:block;margin-bottom:6px;}
+.action-btn .ab-lb{font-family:'Fredoka',sans-serif;font-weight:700;font-size:14px;display:block;}
+.action-btn .ab-sub{font-size:11.5px;color:var(--mt);margin-top:3px;display:block;}
+
+/* TABS */
+.tabs-wrap{max-width:640px;margin:24px auto 0;padding:0 20px;}
+.tabs{display:flex;gap:0;background:var(--c2);border-radius:14px;padding:4px;margin-bottom:20px;border:2px solid var(--bd);}
+.tab{flex:1;font-family:'Fredoka',sans-serif;font-weight:600;font-size:13.5px;padding:9px 8px;border-radius:11px;cursor:pointer;transition:all .18s;text-align:center;border:none;background:none;color:var(--mt);}
+.tab.active{background:var(--card);color:var(--a);box-shadow:0 3px 10px rgba(0,0,0,.1);}
+
+/* EVENT CARDS */
+.event-card{background:var(--card);border-radius:20px;border:2px solid var(--bd);overflow:hidden;margin-bottom:14px;box-shadow:0 4px 16px rgba(0,0,0,.07);transition:all .18s;}
+.event-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.12);transform:translateY(-1px);}
+.ec-main{padding:18px 18px 14px;}
+.ec-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.ec-title{font-family:'Fredoka',sans-serif;font-weight:700;font-size:18px;color:var(--text);}
+.ec-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;}
+.ec-badge.upcoming{background:#dbeafe;color:#1e40af;}
+.ec-badge.past{background:var(--soft);color:var(--a);}
+.ec-badge.group{background:#d1fae5;color:#065f46;}
+.ec-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:12.5px;color:var(--mt);margin-bottom:10px;}
+.ec-meta span{display:flex;align-items:center;gap:4px;}
+/* boarding pass strip at bottom */
+.ec-ticket{background:linear-gradient(90deg,var(--a),var(--a2));padding:10px 18px;display:flex;align-items:center;justify-content:space-between;}
+.ec-ticket-left{color:rgba(255,255,255,.8);font-size:12px;}
+.ec-ticket-right{color:#fff;font-family:'Fredoka',sans-serif;font-weight:700;font-size:13px;}
+
+/* RATING */
+.star-row{display:flex;gap:4px;margin:8px 0;}
+.star{font-size:22px;cursor:pointer;transition:transform .15s;filter:grayscale(1);opacity:.4;}
+.star.on{filter:none;opacity:1;}
+.star:hover{transform:scale(1.2);}
+
+/* CAPTION */
+.caption-box{background:var(--c2);border-left:3px solid var(--a);border-radius:0 12px 12px 0;padding:10px 14px;margin-top:8px;font-size:13px;font-style:italic;color:var(--text);line-height:1.5;}
+.caption-gen{font-size:12px;color:var(--a);cursor:pointer;font-weight:700;margin-top:6px;background:none;border:none;font-family:'Quicksand',sans-serif;}
+.caption-gen:hover{text-decoration:underline;}
+
+/* COUNTDOWN */
+.countdown{font-family:'Fredoka',sans-serif;font-weight:700;font-size:13px;color:var(--a);background:var(--soft);border-radius:999px;padding:4px 12px;display:inline-block;margin-top:4px;}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:40px 20px;}
+.empty-state .es-em{font-size:48px;margin-bottom:12px;}
+.empty-state h3{font-family:'Fredoka',sans-serif;font-size:20px;margin-bottom:6px;}
+.empty-state p{font-size:14px;color:var(--mt);}
+
+/* GROUP CREATION MODAL */
+.modal-bg{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:20px;}
+.modal-bg.on{display:flex;}
+.modal-box{background:var(--card);border-radius:26px;border:3px solid var(--soft);box-shadow:0 20px 55px rgba(0,0,0,.2);max-width:460px;width:100%;padding:28px 24px 22px;max-height:90vh;overflow-y:auto;}
+.modal-box h2{font-family:'Fredoka',sans-serif;font-size:22px;margin:0 0 6px;}
+.modal-box p{font-size:13.5px;color:var(--mt);margin:0 0 18px;}
+.mstep{display:none;}.mstep.on{display:block;}
+.opt-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:16px;}
+.opt-row{border:2px solid var(--bd);background:var(--c2);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:12px;}
+.opt-row:hover{border-color:var(--a);transform:translateY(-1px);}
+.opt-row.sel{border-color:var(--a);background:var(--soft);}
+.opt-row .or-em{font-size:24px;flex-shrink:0;}
+.opt-row .or-title{font-family:'Fredoka',sans-serif;font-weight:600;font-size:14.5px;}
+.opt-row .or-sub{font-size:11.5px;color:var(--mt);margin-top:2px;}
+.fi{width:100%;padding:11px 14px;border-radius:12px;border:2px solid var(--bd);font-family:'Quicksand',sans-serif;font-size:14px;color:var(--text);background:var(--c2);margin-bottom:10px;}
+.fi:focus{outline:none;border-color:var(--a);}
+.link-share{background:var(--c2);border:2px solid var(--soft);border-radius:11px;padding:12px 14px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:12.5px;word-break:break-all;color:var(--a);margin-bottom:12px;}
+
+/* RSVP VIEW */
+#rsvpView{display:none;min-height:100vh;padding:24px;display:none;align-items:center;justify-content:center;}
+#rsvpView.on{display:flex;}
+.rsvp-card{max-width:460px;width:100%;background:var(--card);border-radius:28px;border:3px solid var(--soft);box-shadow:0 20px 55px rgba(0,0,0,.14);padding:32px 24px 26px;text-align:center;}
+.rsvp-votes{display:flex;justify-content:center;gap:16px;margin:16px 0;flex-wrap:wrap;}
+.rsvp-btn{font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;border:2px solid var(--bd);border-radius:16px;padding:14px 20px;cursor:pointer;background:var(--c2);transition:all .18s;}
+.rsvp-btn:hover{transform:translateY(-2px);}
+.rsvp-btn.yes{background:#d1fae5;border-color:#34d399;color:#065f46;}
+.rsvp-btn.maybe{background:#fef3c7;border-color:#f59e0b;color:#92400e;}
+.rsvp-btn.no{background:#fee2e2;border-color:#f87171;color:#991b1b;}
+.rsvp-tally{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;}
+.rt{border-radius:12px;padding:10px;text-align:center;font-family:'Fredoka',sans-serif;font-weight:700;font-size:14px;}
+.rt.yes{background:#d1fae5;color:#065f46;}.rt.maybe{background:#fef3c7;color:#92400e;}.rt.no{background:#fee2e2;color:#991b1b;}
+
+/* MISC */
+.section-title{font-family:'Fredoka',sans-serif;font-size:17px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.fade-in{animation:fi .35s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.spinner{width:36px;height:36px;border:4px solid var(--soft);border-top-color:var(--a);border-radius:50%;animation:spin .8s linear infinite;margin:40px auto;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bh{position:fixed;bottom:-10vh;opacity:.4;animation:fu linear infinite;pointer-events:none;z-index:0;}
+@keyframes fu{0%{transform:translateY(0);opacity:0}10%{opacity:.4}90%{opacity:.3}100%{transform:translateY(-115vh) rotate(25deg);opacity:0}}
+footer{text-align:center;padding:24px;font-size:12px;color:var(--lb);}
+@media(max-width:480px){.stats-strip{grid-template-columns:repeat(3,1fr);}.actions{flex-direction:column;}.stat-num{font-size:22px;}.stat-card{padding:12px 8px;}}
+</style>
+</head>
+<body>
+
+<!-- HEARTS -->
+<div id="hearts"></div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="auth-card" id="authCard">
+    <div style="font-size:40px;margin-bottom:10px;" id="authEmoji">💌</div>
+    <h1 id="authTitle">Welcome back</h1>
+    <p id="authDesc">Your social life has been waiting for you</p>
+
+    <div id="signupExtra" style="display:none;">
+      <label class="auth-lbl">Your name (the fun one)</label>
+      <input class="auth-inp" type="text" id="displayNameInp" placeholder="e.g. Vikas" maxlength="24">
+    </div>
+
+    <label class="auth-lbl" id="usernameLabel">Username (all lowercase, no spaces)</label>
+    <input class="auth-inp" type="text" id="usernameInp" placeholder="e.g. vikas2025" maxlength="20" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('passwordInp').focus()">
+
+    <label class="auth-lbl">Password <span style="font-weight:400;color:var(--lb)">(something only you'd remember)</span></label>
+    <input class="auth-inp" type="password" id="passwordInp" placeholder="not your birthday, we know" autocomplete="current-password" onkeydown="if(event.key==='Enter')submitAuth()">
+
+    <div class="auth-err" id="authErr"></div>
+
+    <button class="bp" style="width:100%;font-size:16px;" onclick="submitAuth()" id="authBtn">Let me in →</button>
+
+    <div class="auth-toggle" id="authToggle">
+      New here? <a onclick="toggleAuthMode()">Create an account</a>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD APP -->
+<div id="dashApp">
+  <!-- HEADER -->
+  <div class="dash-header">
+    <div class="dash-header-inner">
+      <button class="dash-logout" onclick="logout()">Log out</button>
+      <div class="dash-hello">hey there 👋</div>
+      <div class="dash-name" id="dashName">Loading...</div>
+      <div class="score-badge" id="scoreBadge">🌑 loading your social life...</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">Plans made</div></div>
+    <div class="stat-card"><div class="stat-num" id="statUpcoming">0</div><div class="stat-lbl">Upcoming</div></div>
+    <div class="stat-card"><div class="stat-num" id="statStreak">0</div><div class="stat-lbl">This month</div></div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <div class="action-btn" onclick="goToPlan('date')">
+      <span class="ab-em">💌</span>
+      <span class="ab-lb">Plan a Date</span>
+      <span class="ab-sub">solo or together mode</span>
+    </div>
+    <div class="action-btn" onclick="openGroupModal()">
+      <span class="ab-em">👥</span>
+      <span class="ab-lb">Group Outing</span>
+      <span class="ab-sub">friends, pick how to decide</span>
+    </div>
+  </div>
+
+  <!-- TABS + EVENTS -->
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab active" id="tabUpcoming" onclick="switchTab('upcoming')">🔮 Upcoming</button>
+      <button class="tab" id="tabPast" onclick="switchTab('past')">📚 Past</button>
+      <button class="tab" id="tabGroup" onclick="switchTab('group')">👥 Groups</button>
+    </div>
+    <div id="eventsContainer"><div class="spinner"></div></div>
+  </div>
+
+  <footer>made with too many redrafted texts 💌 &nbsp;·&nbsp; <a href="index.html" style="color:var(--a);text-decoration:none;font-weight:700;">← back to planning</a></footer>
+</div>
+
+<!-- RSVP VIEW (when opened via group link) -->
+<div id="rsvpView">
+  <div class="rsvp-card" id="rsvpCard">
+    <div style="font-size:40px;margin-bottom:8px;">👥</div>
+    <h2 id="rsvpTitle">Loading event...</h2>
+    <p style="color:var(--mt);font-size:14px;margin-bottom:14px;" id="rsvpDesc"></p>
+    <div id="rsvpDetails"></div>
+    <div class="rsvp-votes" id="rsvpVotes"></div>
+    <div class="rsvp-tally" id="rsvpTally"></div>
+    <div id="rsvpStatus" style="font-size:13px;color:var(--mt);margin-top:8px;"></div>
+  </div>
+</div>
+
+<!-- GROUP MODAL -->
+<div class="modal-bg" id="groupModal">
+  <div class="modal-box">
+    <!-- Step 1: decision method -->
+    <div class="mstep on" id="gmStep1">
+      <h2>👥 Group Outing</h2>
+      <p>First — how should decisions get made when the group disagrees?</p>
+      <div class="opt-grid" id="decisionGrid"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="bs" onclick="closeGroupModal()">Cancel</button>
+        <button class="bp" id="gmNextBtn" onclick="goGmStep(2)" disabled>Next →</button>
+      </div>
+    </div>
+    <!-- Step 2: event details -->
+    <div class="mstep" id="gmStep2">
+      <h2>📝 Event details</h2>
+      <p>Fill in what you have in mind — you can always update before everyone joins.</p>
+      <label class="auth-lbl">Event name</label>
+      <input class="fi" type="text" id="gmTitle" placeholder="e.g. Sunday Funday, Goa Trip...">
+      <label class="auth-lbl">Activity</label>
+      <select class="fi" id="gmActivity">
+        <option value="">Pick one...</option>
+        <option value="movie">🎬 Movie night</option>
+        <option value="finedine">🍷 Fine dining</option>
+        <option value="shopping">🛍️ Shopping spree</option>
+        <option value="trip">✈️ Trip</option>
+        <option value="coffee">☕ Coffee & chill</option>
+        <option value="adventure">🎢 Adventure / outdoors</option>
+        <option value="other">🎉 Something else</option>
+      </select>
+      <label class="auth-lbl">Date & time (rough)</label>
+      <input class="fi" type="text" id="gmDate" placeholder="e.g. This Saturday evening">
+      <label class="auth-lbl">Location / venue</label>
+      <input class="fi" type="text" id="gmLocation" placeholder="e.g. Juhu, Mumbai or TBD">
+      <label class="auth-lbl">Max group size</label>
+      <select class="fi" id="gmSize">
+        <option value="4">Up to 4 people</option>
+        <option value="6" selected>Up to 6 people</option>
+        <option value="8">Up to 8 people</option>
+        <option value="99">No limit</option>
+      </select>
+      <div style="display:flex;gap:10px;justify-content:space-between;">
+        <button class="bs" onclick="goGmStep(1)">← Back</button>
+        <button class="bp" onclick="createGroupEvent()">Create & get link 🚀</button>
+      </div>
+    </div>
+    <!-- Step 3: share link -->
+    <div class="mstep" id="gmStep3">
+      <h2>🎉 Group created!</h2>
+      <p>Share this link with your people. They can RSVP and vote once they open it.</p>
+      <div class="link-share" id="gmShareLink"></div>
+      <button class="bp" style="width:100%;margin-bottom:10px;" onclick="copyGroupLink()">📋 Copy link</button>
+      <div style="font-size:12px;color:var(--lb);margin-bottom:14px;" id="gmCopyMsg"></div>
+      <div id="gmRSVPList" style="margin-bottom:12px;"></div>
+      <button class="bs" style="width:100%;" onclick="closeGroupModal()">Done ✓</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── FB HELPERS ── */
+function waitFB(){return new Promise(r=>{if(window._fbReady)r();else window.addEventListener('fbready',r,{once:true});});}
+function fbSet(p,v){const{db,ref,set}=window._fb;return set(ref(db,p),v);}
+function fbGet(p){const{db,ref,get}=window._fb;return get(ref(db,p)).then(s=>s.exists()?s.val():null);}
+function fbUpdate(p,v){const{db,ref,update}=window._fb;return update(ref(db,p),v);}
+function fbPush(p,v){const{db,ref,push}=window._fb;return push(ref(db,p),v);}
+function fbListen(p,cb){const{db,ref,onValue}=window._fb;return onValue(ref(db,p),s=>cb(s.exists()?s.val():null));}
+
+/* ── PASSWORD HASH ── */
+async function hashPwd(pwd){
+  const enc=new TextEncoder();
+  const buf=await crypto.subtle.digest('SHA-256',enc.encode(pwd+'datesalt2025xK9m'));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ── SESSION ── */
+let currentUser=null;
+function getSession(){try{return JSON.parse(localStorage.getItem('dashSession'));}catch{return null;}}
+function setSession(u){localStorage.setItem('dashSession',JSON.stringify(u));}
+function clearSession(){localStorage.removeItem('dashSession');}
+
+/* ── AUTH UI ── */
+let isSignup=false;
+function toggleAuthMode(){
+  isSignup=!isSignup;
+  document.getElementById('authTitle').textContent=isSignup?'Create account':'Welcome back';
+  document.getElementById('authDesc').textContent=isSignup?'Join the fun — no email required 🎉':'Your social life has been waiting for you';
+  document.getElementById('authEmoji').textContent=isSignup?'🌟':'💌';
+  document.getElementById('authBtn').textContent=isSignup?'Create account →':'Let me in →';
+  document.getElementById('authToggle').innerHTML=isSignup?'Already have one? <a onclick="toggleAuthMode()">Log in</a>':'New here? <a onclick="toggleAuthMode()">Create an account</a>';
+  document.getElementById('signupExtra').style.display=isSignup?'block':'none';
+  document.getElementById('usernameLabel').textContent=isSignup?'Pick a username (lowercase, no spaces)':'Username';
+  document.getElementById('authErr').textContent='';
+}
+
+async function submitAuth(){
+  await waitFB();
+  const username=document.getElementById('usernameInp').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+  const password=document.getElementById('passwordInp').value;
+  const err=document.getElementById('authErr');
+  const btn=document.getElementById('authBtn');
+
+  if(!username||username.length<3){err.textContent='username needs at least 3 characters';return;}
+  if(!password||password.length<4){err.textContent='password needs at least 4 characters';return;}
+
+  btn.disabled=true;btn.textContent=isSignup?'Creating...':'Logging in...';err.textContent='';
+
+  try{
+    const hash=await hashPwd(password);
+    if(isSignup){
+      const displayName=document.getElementById('displayNameInp').value.trim()||username;
+      const existing=await fbGet(`users/${username}`);
+      if(existing){err.textContent='username already taken — try another one 😅';btn.disabled=false;btn.textContent='Create account →';return;}
+      await fbSet(`users/${username}`,{hash,displayName,createdAt:Date.now()});
+      currentUser={username,displayName};
+      setSession(currentUser);
+      showDash();
+    } else {
+      const userData=await fbGet(`users/${username}`);
+      if(!userData){err.textContent="account not found — typo? or sign up?";btn.disabled=false;btn.textContent='Let me in →';return;}
+      if(userData.hash!==hash){err.textContent="wrong password 🔐 (or wrong account?)";btn.disabled=false;btn.textContent='Let me in →';return;}
+      currentUser={username,displayName:userData.displayName||username};
+      setSession(currentUser);
+      showDash();
+    }
+  }catch(e){
+    console.error('Auth error:',e);
+    err.textContent='Error: '+(e?.message||'something went wrong — check console');
+    btn.disabled=false;
+    btn.textContent=isSignup?'Create account →':'Let me in →';
+  }
+}
+
+function logout(){currentUser=null;clearSession();location.reload();}
+
+/* ── SHOW DASHBOARD ── */
+async function showDash(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('dashApp').style.display='block';
+  document.getElementById('dashName').textContent=currentUser.displayName||currentUser.username;
+  await waitFB();
+  await loadDashData();
+  spawnHearts();
+}
+
+/* ── LOAD DATA ── */
+let allEvents=[];
+async function loadDashData(){
+  const container=document.getElementById('eventsContainer');
+  container.innerHTML='<div class="spinner"></div>';
+
+  /* load user's event index */
+  const userEvIdx=await fbGet(`userEvents/${currentUser.username}`)||{};
+  const eventIds=Object.keys(userEvIdx);
+
+  /* load each event */
+  const events=await Promise.all(eventIds.map(id=>fbGet(`events/${id}`).then(e=>e?{...e,id}:null)));
+  allEvents=events.filter(Boolean).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+  /* stats */
+  const now=Date.now();
+  const upcoming=allEvents.filter(e=>isUpcoming(e));
+  const thisMonth=allEvents.filter(e=>e.createdAt&&new Date(e.createdAt).getMonth()===new Date().getMonth());
+  document.getElementById('statTotal').textContent=allEvents.length;
+  document.getElementById('statUpcoming').textContent=upcoming.length;
+  document.getElementById('statStreak').textContent=thisMonth.length;
+
+  /* social score */
+  const score=socialScore(allEvents.length);
+  document.getElementById('scoreBadge').textContent=score.emoji+' '+score.label;
+
+  renderTab('upcoming');
+}
+
+function isUpcoming(e){
+  if(e.dateIso&&e.dateIso!=='custom'){
+    try{return new Date(e.dateIso)>=new Date(new Date().toDateString());}catch{}
+  }
+  return e.status==='upcoming';
+}
+
+function renderTab(tab){
+  const container=document.getElementById('eventsContainer');
+  container.innerHTML='';
+
+  let events;
+  if(tab==='upcoming') events=allEvents.filter(e=>isUpcoming(e)&&e.type!=='group');
+  else if(tab==='past') events=allEvents.filter(e=>!isUpcoming(e)&&e.type!=='group');
+  else events=allEvents.filter(e=>e.type==='group');
+
+  if(!events.length){
+    const emptyMsgs={
+      upcoming:['No plans yet 😴','The calendar is wide open. Fix that.','Zero upcoming plans. Zero. This is a problem.'],
+      past:['No history yet 🌑','You have no story to tell yet. Go make one.','The past is empty. The future better not be.'],
+      group:['No group events yet 👻','Nobody invited you? Or did you not invite anyone?','The group chat is silent. Say something.'],
+    };
+    const msgs=emptyMsgs[tab];const msg=msgs[Math.floor(Math.random()*msgs.length)];
+    container.innerHTML=`<div class="empty-state fade-in"><div class="es-em">${tab==='past'?'📚':tab==='group'?'👥':'🔮'}</div><h3>${msg}</h3><p style="margin-top:8px;">Time to change that.</p></div>`;
+    return;
+  }
+
+  events.forEach(e=>{
+    const card=createEventCard(e,tab);
+    container.appendChild(card);
+  });
+}
+
+/* ── EVENT CARD ── */
+const ACTIVITY_EMOJIS={movie:'🎬',finedine:'🍷',shopping:'🛍️',trip:'✈️',coffee:'☕',adventure:'🎢',other:'🎉'};
+const CAPTIONS={
+  movie:{5:["Cried at an animated movie. Called it 'character development'. 10/10.","The popcorn didn't survive. Neither did our composure.","Stayed through the credits. That's how you know it was good."],4:["Movie: good. Company: better. Popcorn: gone.","Would watch again. Would not admit which genre."],3:["The plot was questionable. The snacks were not.","3 stars for the film, 5 stars for the company."],2:["Next time we're letting someone else pick.","The movie aged poorly. The jokes about it will not."],1:["We stayed till the end. That's commitment.","Character building. Really builds character."]},
+  finedine:{5:["Ordered things we couldn't pronounce. They were excellent.","Felt fancy for 2 hours. No notes.","Used the wrong fork. Nobody said anything. 10/10."],4:["Forks used correctly: approximately half the time.","Expensive, worth it, would do again."],3:["The vibe was there. The bill was too.","Fine dining: fine."],2:["We've had better. For a lot less."],1:["Lesson learned. At fine-dining prices."]},
+  shopping:{5:["The budget was a suggestion. We ignored it beautifully.","Came for one thing. Left with seven. Classic.","Retail therapy: successful. Wallet: less so."],4:["Spent 3 hours for 2 purchases. Quality over quantity.","Mission accomplished, sort of."],3:["Bought some things. Returned some things. Net zero."],2:["Next time we make a list. And stick to it."],1:["The mall won today. We'll come back."]},
+  trip:{5:["Got lost twice, found ourselves once. Standard.","Photos taken: 247. Shared: 12. Vibes: immaculate.","The plan was a suggestion. Adventure was the destination."],4:["Went, saw, came back wanting more.","Would revisit. Would bring better snacks."],3:["It was fine. The chai was good."],2:["The journey was better than the destination."],1:["Next time we research the place first."]},
+  coffee:{5:["2 coffees, 4 hours, zero productivity. Peak existence.","Solved 3 world problems. Remembered none of them.","The coffee was good. The conversation was better."],4:["Stayed way too long. Zero regrets.","Would sit here every weekend. Actually might."],3:["Good coffee. Could've stayed longer."],2:["The coffee was fine. The vibe needed work."],1:["Next time: different cafe, same people."]},
+  adventure:{5:["Screamed on 3 rides. Dignity: gone. Memories: priceless.","The body said no. The soul said yes. The soul won.","Would do again. Arms might not agree."],4:["Exhausted and happy. The best kind.","Pushed limits. Limits were very polite about it."],3:["Adventure level: medium. Fun level: high."],2:["Less intense next time, maybe."],1:["We survived. That's the takeaway."]},
+  other:{5:["Whatever we did, it worked. Let's do it again.","10/10 experience. No notes."],4:["Good times were had."],3:["Solid. Would consider again."],2:["Next time: different plan."],1:["We were there. That counts."]}
+};
+
+function getCaption(activityId,rating){
+  const pool=CAPTIONS[activityId||'other'];
+  if(!pool)return"Good times were had.";
+  const tier=pool[rating]||pool[3]||pool[Object.keys(pool)[0]];
+  return tier[Math.floor(Math.random()*tier.length)];
+}
+
+function createEventCard(e,tab){
+  const card=document.createElement('div');
+  card.className='event-card fade-in';
+  const em=ACTIVITY_EMOJIS[e.activityId]||'🎉';
+  const isGroup=e.type==='group';
+  const up=isUpcoming(e);
+
+  /* countdown */
+  let countdownHtml='';
+  if(up&&e.dateIso&&e.dateIso!=='custom'){
+    const days=Math.ceil((new Date(e.dateIso)-new Date())/(1000*60*60*24));
+    if(days===0) countdownHtml=`<div class="countdown">Today! 🎉</div>`;
+    else if(days===1) countdownHtml=`<div class="countdown">Tomorrow!</div>`;
+    else if(days>0) countdownHtml=`<div class="countdown">In ${days} days</div>`;
+  }
+
+  /* members */
+  const memberStr=e.members&&e.members.length>1?e.members.filter(m=>m!==currentUser.username).join(', '):'';
+  const withStr=memberStr?`with ${memberStr}`:'';
+
+  /* food */
+  const foodStr=Array.isArray(e.food)&&e.food.length?e.food.slice(0,3).join(', '):'';
+
+  /* time since (for past) */
+  let timeSince='';
+  if(!up&&e.createdAt){
+    const d=Math.floor((Date.now()-e.createdAt)/(1000*60*60*24));
+    if(d===0)timeSince='Today';else if(d===1)timeSince='Yesterday';else if(d<7)timeSince=`${d} days ago`;else if(d<30)timeSince=`${Math.floor(d/7)} week${Math.floor(d/7)>1?'s':''} ago`;else timeSince=`${Math.floor(d/30)} month${Math.floor(d/30)>1?'s':''} ago`;
+  }
+
+  /* star rating HTML */
+  const currentRating=e.rating||0;
+  let starsHtml='';
+  if(!up){
+    starsHtml=`<div class="star-row" id="stars_${e.id}">`;
+    for(let i=1;i<=5;i++){starsHtml+=`<span class="star ${i<=currentRating?'on':''}" onclick="rateEvent('${e.id}',${i})" title="${i} star${i>1?'s':''}">⭐</span>`;}
+    starsHtml+=`</div>`;
+  }
+
+  /* caption */
+  let captionHtml='';
+  if(!up){
+    if(e.caption){
+      captionHtml=`<div class="caption-box">"${e.caption}"</div>`;
+    } else if(e.rating){
+      const cap=getCaption(e.activityId,e.rating);
+      captionHtml=`<div class="caption-box">"${cap}"</div><button class="caption-gen" onclick="regenCaption('${e.id}','${e.activityId}',${e.rating})">↻ different caption</button>`;
+      /* save it */
+      fbUpdate(`events/${e.id}`,{caption:cap});
+    } else {
+      captionHtml=`<div style="font-size:12px;color:var(--lb);margin-top:6px;font-style:italic;">Rate this to unlock your memory caption ✨</div>`;
+    }
+  }
+
+  card.innerHTML=`
+    <div class="ec-main">
+      <div class="ec-header">
+        <div class="ec-title">${em} ${e.title||e.activityLabel||'Date'}</div>
+        <span class="ec-badge ${up?'upcoming':''} ${isGroup?'group':''}">${isGroup?'👥 group':up?'upcoming':'done'}</span>
+      </div>
+      <div class="ec-meta">
+        ${withStr?`<span>👤 ${withStr}</span>`:''}
+        ${e.dateFull||e.dateLabel?`<span>📅 ${e.dateFull||e.dateLabel}</span>`:''}
+        ${e.timeLabel?`<span>🕒 ${e.timeLabel}</span>`:''}
+        ${e.venue?`<span>📍 ${e.venue}</span>`:e.location?`<span>📍 ${e.location}</span>`:''}
+        ${timeSince?`<span style="margin-left:auto;color:var(--lb)">${timeSince}</span>`:''}
+      </div>
+      ${countdownHtml}
+      ${starsHtml}
+      ${captionHtml}
+      ${isGroup?`<button class="bsg" style="margin-top:8px;width:100%;" onclick="viewGroupEvent('${e.id}')">View group & RSVPs →</button>`:''}
+    </div>
+    <div class="ec-ticket">
+      <div class="ec-ticket-left">${foodStr||'food TBD'}</div>
+      <div class="ec-ticket-right">${e.decisionMethod?'🪙 '+e.decisionMethod:'💌 date ticket'}</div>
+    </div>
+  `;
+  return card;
+}
+
+async function rateEvent(eventId,rating){
+  await fbUpdate(`events/${eventId}`,{rating,caption:null});
+  const cap=getCaption(allEvents.find(e=>e.id===eventId)?.activityId,rating);
+  await fbUpdate(`events/${eventId}`,{caption:cap});
+  /* update local */
+  const ev=allEvents.find(e=>e.id===eventId);
+  if(ev){ev.rating=rating;ev.caption=cap;}
+  renderTab(currentTab);
+}
+
+async function regenCaption(eventId,activityId,rating){
+  const cap=getCaption(activityId,rating);
+  await fbUpdate(`events/${eventId}`,{caption:cap});
+  const ev=allEvents.find(e=>e.id===eventId);if(ev)ev.caption=cap;
+  renderTab(currentTab);
+}
+
+/* ── SOCIAL SCORE ── */
+function socialScore(n){
+  if(n===0)return{emoji:'🌑',label:'Still loading social life...'};
+  if(n<=2)return{emoji:'🌱',label:'Just getting started'};
+  if(n<=5)return{emoji:'🏄',label:'Weekend Warrior'};
+  if(n<=10)return{emoji:'🦋',label:'Social Butterfly'};
+  if(n<=20)return{emoji:'⭐',label:'Certified People Person'};
+  return{emoji:'🔥',label:'Absolutely Unhinged (in the best way)'};
+}
+
+/* ── TABS ── */
+let currentTab='upcoming';
+function switchTab(tab){
+  currentTab=tab;
+  ['upcoming','past','group'].forEach(t=>{
+    document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active',t===tab);
+  });
+  renderTab(tab);
+}
+
+/* ── GO TO PLAN ── */
+function goToPlan(type){
+  if(currentUser) sessionStorage.setItem('dashUser',JSON.stringify(currentUser));
+  window.location.href='index.html';
+}
+
+/* ── GROUP MODAL ── */
+const DECISION_METHODS=[
+  {id:'coin',em:'🪙',title:'Coin flip decides',sub:'any disagreement → coin flips it. fast & chaotic.'},
+  {id:'majority',em:'👥',title:'Majority rules',sub:'everyone votes → most votes wins → coin on tie.'},
+  {id:'organiser',em:'👑',title:'I decide everything',sub:'you set the plan, others just RSVP yes/no.'},
+];
+let gmDecision=null;
+const dg=document.getElementById('decisionGrid');
+DECISION_METHODS.forEach(m=>{
+  const el=document.createElement('div');el.className='opt-row';
+  el.innerHTML=`<div class="or-em">${m.em}</div><div><div class="or-title">${m.title}</div><div class="or-sub">${m.sub}</div></div>`;
+  el.onclick=()=>{document.querySelectorAll('#decisionGrid .opt-row').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');gmDecision=m;document.getElementById('gmNextBtn').disabled=false;};
+  dg.appendChild(el);
+});
+function openGroupModal(){document.getElementById('groupModal').classList.add('on');goGmStep(1);}
+function closeGroupModal(){document.getElementById('groupModal').classList.remove('on');}
+function goGmStep(n){document.querySelectorAll('.mstep').forEach(s=>s.classList.remove('on'));document.getElementById('gmStep'+n).classList.add('on');}
+
+let createdGroupId=null;
+async function createGroupEvent(){
+  await waitFB();
+  const title=document.getElementById('gmTitle').value.trim();
+  const activity=document.getElementById('gmActivity').value;
+  const date=document.getElementById('gmDate').value.trim();
+  const location=document.getElementById('gmLocation').value.trim();
+  const size=parseInt(document.getElementById('gmSize').value);
+  if(!title){alert('Give the event a name first!');return;}
+
+  const em=ACTIVITY_EMOJIS[activity]||'🎉';
+  const eventId='g'+Date.now().toString(36)+Math.random().toString(36).substr(2,4);
+  createdGroupId=eventId;
+
+  const eventData={
+    type:'group',
+    creator:currentUser.username,
+    title,
+    activityId:activity,
+    activityLabel:document.getElementById('gmActivity').options[document.getElementById('gmActivity').selectedIndex].text||title,
+    activityEmoji:em,
+    dateLabel:date||'TBD',
+    location:location||'TBD',
+    members:[currentUser.username],
+    decisionMethod:gmDecision?.title||'Coin flip',
+    decisionId:gmDecision?.id||'coin',
+    maxSize:size,
+    status:'open',
+    rsvp:{[currentUser.username]:'yes'},
+    createdAt:Date.now(),
+  };
+
+  await fbSet(`events/${eventId}`,eventData);
+  await fbUpdate(`userEvents/${currentUser.username}`,{[eventId]:Date.now()});
+  allEvents.unshift({...eventData,id:eventId});
+
+  /* show link */
+  const link=location.origin+location.pathname.replace('dashboard.html','dashboard.html')+'#group='+eventId;
+  document.getElementById('gmShareLink').textContent=link;
+  document.getElementById('gmCopyMsg').textContent='';
+  goGmStep(3);
+  /* listen for RSVPs */
+  fbListen(`events/${eventId}/rsvp`,rsvps=>{renderRSVPList(rsvps||{});});
+}
+
+function copyGroupLink(){
+  const link=document.getElementById('gmShareLink').textContent;
+  navigator.clipboard.writeText(link).then(()=>{document.getElementById('gmCopyMsg').textContent='✅ Copied!';setTimeout(()=>document.getElementById('gmCopyMsg').textContent='',2000);});
+}
+
+function renderRSVPList(rsvps){
+  const list=document.getElementById('gmRSVPList');
+  const entries=Object.entries(rsvps);
+  if(!entries.length){list.innerHTML='<div style="font-size:13px;color:var(--lb);text-align:center;">Waiting for people to join...</div>';return;}
+  const yes=entries.filter(([,v])=>v==='yes').length;
+  const maybe=entries.filter(([,v])=>v==='maybe').length;
+  const no=entries.filter(([,v])=>v==='no').length;
+  list.innerHTML=`<div class="rsvp-tally"><div class="rt yes">✅ ${yes} in</div><div class="rt maybe">🤔 ${maybe} maybe</div><div class="rt no">❌ ${no} out</div></div>`;
+}
+
+/* ── RSVP VIEW (joining via link) ── */
+async function loadGroupRSVP(groupId){
+  await waitFB();
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('dashApp').style.display='none';
+  document.getElementById('rsvpView').classList.add('on');
+
+  const event=await fbGet(`events/${groupId}`);
+  if(!event){document.getElementById('rsvpCard').innerHTML='<h2>Event not found 😅</h2><p>Check the link and try again.</p>';return;}
+
+  document.getElementById('rsvpTitle').textContent=event.activityEmoji+' '+event.title;
+  document.getElementById('rsvpDesc').textContent=`Created by ${event.creator} · ${event.decisionMethod||'Coin flip decides'}`;
+
+  document.getElementById('rsvpDetails').innerHTML=`
+    <div style="background:var(--c2);border-radius:14px;padding:14px;margin-bottom:14px;text-align:left;">
+      <div style="font-size:13px;color:var(--mt);margin-bottom:5px;">📅 ${event.dateLabel||'TBD'} &nbsp;·&nbsp; 📍 ${event.location||'TBD'}</div>
+      <div style="font-size:13px;color:var(--mt);">👥 Max ${event.maxSize||6} people</div>
+    </div>
+  `;
+
+  /* get user identity */
+  const sess=getSession();
+  if(!sess){
+    /* quick name entry */
+    document.getElementById('rsvpVotes').innerHTML=`
+      <div style="width:100%;">
+        <p style="font-size:13.5px;color:var(--mt);margin-bottom:10px;">Enter your name to RSVP:</p>
+        <input class="fi" type="text" id="rsvpName" placeholder="Your name" style="margin-bottom:8px;">
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <button class="rsvp-btn yes" onclick="submitRSVP('${groupId}','yes')">✅ I'm in!</button>
+          <button class="rsvp-btn maybe" onclick="submitRSVP('${groupId}','maybe')">🤔 Maybe</button>
+          <button class="rsvp-btn no" onclick="submitRSVP('${groupId}','no')">❌ Can't make it</button>
+        </div>
+      </div>
+    `;
+  } else {
+    currentUser=sess;
+    const myRsvp=event.rsvp?.[sess.username];
+    document.getElementById('rsvpVotes').innerHTML=`
+      <div style="width:100%;">
+        <p style="font-size:13.5px;color:var(--mt);margin-bottom:10px;">Hey ${sess.displayName||sess.username}! Are you in?</p>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <button class="rsvp-btn yes ${myRsvp==='yes'?'':''}" onclick="submitRSVP('${groupId}','yes')">✅ I'm in!</button>
+          <button class="rsvp-btn maybe" onclick="submitRSVP('${groupId}','maybe')">🤔 Maybe</button>
+          <button class="rsvp-btn no" onclick="submitRSVP('${groupId}','no')">❌ Can't make it</button>
+        </div>
+      </div>
+    `;
+  }
+  document.getElementById('rsvpStatus').textContent='';
+
+  /* live tally */
+  fbListen(`events/${groupId}/rsvp`,rsvps=>{
+    if(!rsvps)return;
+    const entries=Object.entries(rsvps);
+    const yes=entries.filter(([,v])=>v==='yes').length;
+    const maybe=entries.filter(([,v])=>v==='maybe').length;
+    const no=entries.filter(([,v])=>v==='no').length;
+    document.getElementById('rsvpTally').innerHTML=`<div class="rt yes">✅ ${yes}</div><div class="rt maybe">🤔 ${maybe}</div><div class="rt no">❌ ${no}</div>`;
+  });
+}
+
+async function submitRSVP(groupId,answer){
+  await waitFB();
+  const sess=getSession();
+  let username=sess?.username;
+  if(!username){
+    const nameInp=document.getElementById('rsvpName');
+    username=(nameInp?.value.trim()||'guest').toLowerCase().replace(/\s+/g,'_');
+  }
+  await fbUpdate(`events/${groupId}/rsvp`,{[username]:answer});
+  await fbUpdate(`events/${groupId}/members_list`,{[username]:true});
+  await fbUpdate(`userEvents/${username}`,{[groupId]:Date.now()});
+  const emoji={yes:'✅',maybe:'🤔',no:'❌'}[answer];
+  document.getElementById('rsvpStatus').textContent=`${emoji} Response saved! The organiser will see your RSVP.`;
+  document.getElementById('rsvpVotes').querySelectorAll('.rsvp-btn').forEach(b=>b.disabled=true);
+}
+
+function viewGroupEvent(eventId){
+  loadGroupRSVP(eventId);
+}
+
+/* ── HEARTS ── */
+function spawnHearts(){
+  const h=document.getElementById('hearts');
+  setInterval(()=>{
+    const el=document.createElement('div');el.className='bh';
+    el.textContent=['💕','💗','💖','✨','🌸'][Math.floor(Math.random()*5)];
+    el.style.left=Math.random()*100+'vw';el.style.animationDuration=(8+Math.random()*6)+'s';el.style.fontSize=(14+Math.random()*14)+'px';
+    h.appendChild(el);setTimeout(()=>el.remove(),15000);
+  },2000);
+}
+
+/* ── INIT ── */
+window.addEventListener('load',async()=>{
+  await waitFB();
+
+  /* check for group link */
+  const hashGroup=window.location.hash.match(/^#group=([a-z0-9]+)$/i);
+  if(hashGroup){loadGroupRSVP(hashGroup[1]);return;}
+
+  /* check session */
+  const sess=getSession();
+  if(sess){
+    currentUser=sess;
+    showDash();
+    return;
+  }
+  /* show login */
+  document.getElementById('loginScreen').style.display='flex';
+});
+</script>
+</body>
+</html>
