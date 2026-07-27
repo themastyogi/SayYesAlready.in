@@ -328,17 +328,22 @@ async function createTrip(){
   tripId='rt'+Date.now().toString(36)+Math.random().toString(36).substr(2,5);
   myName=mn;
   myId=mn.toLowerCase().replace(/\W/g,'_')+'_'+Date.now().toString(36).slice(-4);
-  await fb.set(`trips/${tripId}`,{
-    name,type:selType?.id||'other',typeEmoji:selType?.em||'🎉',
-    createdBy:myName,createdAt:Date.now(),status:'active'
-  });
-  await fb.set(`trips/${tripId}/members/${myId}`,{
-    name:myName,status:'moving',lat:null,lng:null,speed:0,
-    lastSeen:Date.now(),isCreator:true
-  });
-  const link=buildLink();
-  document.getElementById('tripLinkBox').textContent=link;
-  showSec('secShare');
+  try{
+    await fb.set(`trips/${tripId}`,{
+      name,type:selType?.id||'other',typeEmoji:selType?.em||'🎉',
+      createdBy:myName,createdAt:Date.now(),status:'active'
+    });
+    await fb.set(`trips/${tripId}/members/${myId}`,{
+      name:myName,status:'moving',lat:null,lng:null,speed:0,
+      lastSeen:Date.now(),isCreator:true
+    });
+    const link=buildLink();
+    document.getElementById('tripLinkBox').textContent=link;
+    showSec('secShare');
+  }catch(err){
+    console.error('createTrip error:',err);
+    toast('❌ Error: '+( err?.message||'check Firebase rules — trips path must be allowed'),4000);
+  }
 }
 
 function buildLink(){return window.location.href.split('?')[0]+'?trip='+tripId;}
