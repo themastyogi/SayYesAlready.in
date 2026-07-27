@@ -64,12 +64,13 @@ html,body{min-height:100vh;background:var(--bg);font-family:'Quicksand',sans-ser
 .stat-lbl{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--lb);margin-top:2px;}
 
 /* ACTIONS */
-.actions{max-width:640px;margin:24px auto 0;padding:0 20px;display:flex;gap:12px;flex-wrap:wrap;}
-.action-btn{flex:1;min-width:140px;border:2px solid var(--bd);border-radius:18px;padding:16px 14px;text-align:center;cursor:pointer;background:var(--card);transition:all .18s;}
+.actions{max-width:640px;margin:24px auto 0;padding:0 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.action-btn{border:2px solid var(--bd);border-radius:18px;padding:14px 10px;text-align:center;cursor:pointer;background:var(--card);transition:all .18s;}
 .action-btn:hover{border-color:var(--a);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.08);}
-.action-btn .ab-em{font-size:28px;display:block;margin-bottom:6px;}
-.action-btn .ab-lb{font-family:'Fredoka',sans-serif;font-weight:700;font-size:14px;display:block;}
-.action-btn .ab-sub{font-size:11.5px;color:var(--mt);margin-top:3px;display:block;}
+.action-btn .ab-em{font-size:26px;display:block;margin-bottom:5px;}
+.action-btn .ab-lb{font-family:'Fredoka',sans-serif;font-weight:700;font-size:13px;display:block;}
+.action-btn .ab-sub{font-size:11px;color:var(--mt);margin-top:3px;display:block;}
+@media(max-width:400px){.actions{grid-template-columns:1fr 1fr;}.action-btn:last-child{grid-column:span 2;}}
 
 /* TABS */
 .tabs-wrap{max-width:640px;margin:24px auto 0;padding:0 20px;}
@@ -222,6 +223,11 @@ footer{text-align:center;padding:24px;font-size:12px;color:var(--lb);}
       <span class="ab-lb">Group Outing</span>
       <span class="ab-sub">friends, pick how to decide</span>
     </div>
+    <div class="action-btn" onclick="window.location.href='roadtrip.html'" style="border-color:#22c55e;">
+      <span class="ab-em">🏍️</span>
+      <span class="ab-lb">Road Trip</span>
+      <span class="ab-sub">track crew live on map</span>
+    </div>
   </div>
 
   <!-- TABS + EVENTS -->
@@ -234,7 +240,7 @@ footer{text-align:center;padding:24px;font-size:12px;color:var(--lb);}
     <div id="eventsContainer"><div class="spinner"></div></div>
   </div>
 
-  <footer>made with too many redrafted texts 💌 &nbsp;·&nbsp; <a href="index.html" style="color:var(--a);text-decoration:none;font-weight:700;">← back to planning</a></footer>
+  <footer>made with too many redrafted texts 💌 &nbsp;·&nbsp; <a href="index.html" style="color:var(--a);text-decoration:none;font-weight:700;">💌 Plan a date</a> &nbsp;·&nbsp; <a href="roadtrip.html" style="color:#22c55e;text-decoration:none;font-weight:700;">🏍️ Road trip</a></footer>
 </div>
 
 <!-- RSVP VIEW (when opened via group link) -->
